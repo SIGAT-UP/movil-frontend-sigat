@@ -1,0 +1,33 @@
+name: sigat_mobile
+description: Aplicación móvil de monitoreo fitosanitario del durazno (ICA).
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
+
+# Dependencias previstas (se agregan al implementar cada capa):
+#   flutter_riverpod, go_router, dio, drift, sqlite3_flutter_libs,
+#   maplibre_gl, connectivity_plus, path_provider,
+#   freezed_annotation + json_annotation (con build_runner).
