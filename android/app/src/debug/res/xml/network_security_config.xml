@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SIGAT · SOLO compilaciones debug (este archivo reemplaza al de src/main en debug):
+     permite http:// para el backend local (emulador 10.0.2.2, localhost o la IP de su equipo).
+     Nunca se incluye en profile ni en release. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

@@ -1,0 +1,71 @@
+# =============================================================================
+# vigilancia_durazno (Flutter) · .gitignore
+# Nunca se suben: secretos, llaves de firma, builds ni archivos del editor.
+# Las carpetas android/ ios/ web/ SÍ se versionan (manifiestos, permisos, firma sin claves).
+# =============================================================================
+
+# --- Flutter / Dart -----------------------------------------------------------
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+*.g.dart.incremental
+.metadata.bak
+
+# --- Android ------------------------------------------------------------------
+android/.gradle/
+android/.kotlin/
+android/captures/
+android/local.properties
+android/key.properties
+android/app/debug/
+android/app/profile/
+android/app/release/
+**/android/**/gradle-wrapper.jar
+*.jks
+*.keystore
+*.aab
+*.apk
+
+# --- iOS / macOS --------------------------------------------------------------
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/ephemeral/
+ios/Pods/
+ios/.symlinks/
+**/xcuserdata/
+*.mobileprovision
+*.p12
+*.ipa
+DerivedData/
+
+# --- Web ----------------------------------------------------------------------
+web/.dart_tool/
+
+# --- Secretos y configuración local ---------------------------------------------
+.env
+.env.*
+*.pem
+*.key
+google-services.json
+GoogleService-Info.plist
+
+# --- Editores y sistema ---------------------------------------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+*.log
+
+# --- Configuración de compilación local (usar dart_defines.example.json) -----
+dart_defines.json
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+ios/Runner/GeneratedPluginRegistrant.*

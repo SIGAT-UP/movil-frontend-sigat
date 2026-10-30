@@ -1,0 +1,6 @@
+# Copie este archivo como android/key.properties (está en .gitignore) y complete los valores.
+# NUNCA suba key.properties ni el archivo .jks/.keystore al repositorio.
+storePassword=CAMBIAR
+keyPassword=CAMBIAR
+keyAlias=sigat
+storeFile=/ruta/segura/fuera/del/repositorio/sigat-release.jks

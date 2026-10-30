@@ -1,0 +1,64 @@
+name: vigilancia_durazno
+description: SIGAT Vigilancia Durazno - Monitoreo fitosanitario (app móvil).
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+  # initialValue (DropdownButtonFormField) y activeThumbColor (Switch) existen desde 3.35.
+  flutter: ">=3.35.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  # Cámara real: lector QR de trampas y fotos de evidencia (móvil y web)
+  mobile_scanner: ^7.0.0
+  image_picker: ^1.1.2
+  # Elegir documentos PDF o Word del dispositivo (instrucciones de la planeación).
+  # Paquete oficial del equipo de Flutter: Android, iOS, web y escritorio.
+  file_selector: ^1.0.3
+  # Estado real de conexión (Android, iOS y web)
+  connectivity_plus: ^7.0.0
+  # Generación y descarga/impresión de PDF (resumen del lote e instrucciones)
+  pdf: ^3.13.0
+  printing: ^5.15.1
+  # Backend sigat-durazno-api: peticiones HTTP (Android, iOS y web)
+  http: ^1.2.2
+  # Tokens de sesión y disp_id en Keystore (Android) / Keychain (iOS) — SEGURIDAD S-09
+  flutter_secure_storage: ^9.2.2
+  # Cola local de registros pendientes de sincronizar (lecturas, autorreportes):
+  # sobrevive a cerrar la app. Android, iOS y web.
+  shared_preferences: ^2.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  # Genera el ícono de la app en el teléfono a partir de assets/images/logoapp.png
+  flutter_launcher_icons: ^0.14.4
+
+# Ícono de la app instalada (Android, iOS y web): isotipo SIGAT sobre blanco.
+# Para regenerar los íconos después de cambiar assets/images/logoapp.png:
+#   flutter pub get
+#   dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "assets/images/logoapp.png"
+  android: "launcher_icon"
+  min_sdk_android: 21
+  # Ícono adaptativo de Android: el logo sobre fondo blanco.
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/logoapp.png"
+  ios: true
+  # iOS no admite transparencia en el ícono: se rellena con blanco.
+  remove_alpha_ios: true
+  background_color_ios: "#FFFFFF"
+  web:
+    generate: true
+    background_color: "#FFFFFF"
+    theme_color: "#0B8A4E"
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/

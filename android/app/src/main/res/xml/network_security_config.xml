@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SIGAT · producción: solo HTTPS, solo certificados de las autoridades del sistema.
+     El tráfico sin cifrar (http://) queda bloqueado. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

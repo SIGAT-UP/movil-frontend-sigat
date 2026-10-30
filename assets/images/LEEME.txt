@@ -1,0 +1,38 @@
+IMÁGENES DE LA APP
+
+=== LOGOS SIGAT (los mismos de la web: src/assets/brand/*.svg exportados a PNG) ===
+
+sigat_logo_vertical.png -> Logotipo completo (isotipo + SIGAT + MONITOREO / AGTECH), fondo transparente.
+                           Se ve en la bienvenida (splash) y en el login.
+sigat_isotipo.png       -> Solo el isotipo (la mosca en el visor), fondo transparente.
+                           Se ve en tamaños pequeños: menú lateral, contexto de acceso, visor de documentos.
+                Ambos se referencian en UN SOLO lugar del código:
+                  lib/core/widgets/brand.dart  ->  BrandLogo.assetPath / BrandLogo.isotipoPath
+
+logoapp.png   -> ÍCONO DE LA APP instalada en el teléfono (isotipo sobre blanco, 1024 x 1024 px).
+                Está configurado en pubspec.yaml (sección flutter_launcher_icons).
+                Después de cambiarlo, ejecuta una sola vez:
+                  flutter pub get
+                  dart run flutter_launcher_icons
+                Eso genera los íconos de Android, iOS y web.
+
+=== ILUSTRACIONES DEL DISEÑO (opcionales) ===
+Si no existen, la app muestra un respaldo verde y NO falla.
+
+login_hero.jpg        -> foto del cultivo, fondo de la cabecera del login detrás
+                         del logo. Para cambiarla, reemplaza este archivo con el
+                         mismo nombre. Un velo verde oscuro abajo mantiene
+                         legible el texto.
+home_banner.jpg       -> banner "Tu jornada de campo" (inicio del técnico). El
+                         texto va dentro de la imagen.
+stat_lotes.png        -> ilustración de lotes (tarjeta "Mis lotes asignados")
+stat_pendientes.png   -> ilustración de checklist (tarjeta "Pendiente de visita")
+planeacion.png        -> ilustración del menú Planeación (agrónomo)
+planeacion1.png       -> ilustración de los submenús de Planeación (agrónomo)
+
+=== TAMAÑO DE LAS IMÁGENES ===
+Guárdalas al tamaño en que se ven (aprox. 3 veces su tamaño en pantalla),
+no más: una imagen gigante pesa en la app y gasta memoria al cargarse.
+  fotos (login, banner) ............ 1200 px de ancho, en JPG (calidad ~85)
+  ilustraciones con transparencia .. PNG; ~520 px las de Planeación,
+                                     ~300-600 px las de las tarjetas

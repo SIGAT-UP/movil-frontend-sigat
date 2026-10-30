@@ -1,0 +1,36 @@
+# CI de la app móvil SIGAT. No usa credenciales: compila en debug y no firma.
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+jobs:
+  calidad:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sin secretos ni archivos locales en el repositorio
+        run: |
+          if git ls-files | grep -E '(^|/)(key\.properties|local\.properties|dart_defines\.json|Generated\.xcconfig)$|\.(jks|keystore|p12|mobileprovision)$'; then
+            echo "Hay archivos que no deben versionarse (ver .gitignore)"; exit 1
+          fi
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      # pubspec.lock exige Flutter >= 3.47 (sdks.flutter). Fije aquí la versión exacta del equipo.
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+      - run: flutter --version
+      - run: flutter pub get
+      - name: Formato (obligatorio)
+        run: dart format --output=none --set-exit-if-changed lib test
+      - run: flutter analyze
+      - run: flutter test
+      - name: Compilación debug (Android)
+        run: flutter build apk --debug
+      - name: Un release sin firma de producción debe fallar
+        # No hay android/key.properties en la CI: la compilación release tiene que detenerse.
+        run: |
+          if flutter build apk --release --dart-define=API_URL=https://ejemplo.invalid/api/v1; then
+            echo "El release compiló sin firma de producción"; exit 1
+          fi

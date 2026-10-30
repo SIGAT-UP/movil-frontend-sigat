@@ -1,0 +1,9 @@
+# Reglas de análisis estático (flutter analyze). Base: flutter_lints.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - "**/*.g.dart"
+    - android/**
+    - ios/**
