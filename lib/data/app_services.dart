@@ -45,7 +45,8 @@ class AppServices {
   static HistoryRepository history = ApiHistoryRepository(api, pending);
   static ProducerRepository producer = ApiProducerRepository(api, pending);
   static ProfileRepository profile = ApiProfileRepository(api);
-  static NotificationsRepository notifications = ApiNotificationsRepository(api, routeFor: rutaDeAviso);
+  static NotificationsRepository notifications =
+      ApiNotificationsRepository(api, routeFor: rutaDeAviso);
   static PlanningRepository plannings = ApiPlanningRepository(api, pending);
   static AgronomistRepository agronomist = ApiAgronomistRepository(api);
 

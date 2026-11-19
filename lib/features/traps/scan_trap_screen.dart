@@ -47,13 +47,18 @@ class _ScanTrapScreenState extends State<ScanTrapScreen> {
   void _armIllegibleTimer() {
     _illegibleTimer?.cancel();
     _illegibleTimer = Timer(_illegibleAfter, () {
-      if (mounted && _state == _ScanState.scanning) setState(() => _state = _ScanState.illegible);
+      if (mounted && _state == _ScanState.scanning) {
+        setState(() => _state = _ScanState.illegible);
+      }
     });
   }
 
   Future<void> _onDetect(BarcodeCapture capture) async {
-    if (_state == _ScanState.validating || _state == _ScanState.notFound) return;
-    final raw = capture.barcodes.map((b) => b.rawValue).whereType<String>().firstOrNull;
+    if (_state == _ScanState.validating || _state == _ScanState.notFound) {
+      return;
+    }
+    final raw =
+        capture.barcodes.map((b) => b.rawValue).whereType<String>().firstOrNull;
     if (raw == null || raw.trim().isEmpty) return;
 
     _illegibleTimer?.cancel();
@@ -111,8 +116,11 @@ class _ScanTrapScreenState extends State<ScanTrapScreen> {
             alignment: const Alignment(0, .42),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(color: AppColors.overlayDark, borderRadius: BorderRadius.circular(AppSpacing.radiusPill)),
-              child: const Text('Coloque el código QR de la trampa dentro del área',
+              decoration: BoxDecoration(
+                  color: AppColors.overlayDark,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusPill)),
+              child: const Text(
+                  'Coloque el código QR de la trampa dentro del área',
                   style: AppText.onDarkBody),
             ),
           ),
@@ -129,8 +137,7 @@ class _ScanTrapScreenState extends State<ScanTrapScreen> {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   const SizedBox(width: 10),
-                  const Text('Escanear trampa',
-                      style: AppText.onDarkTitle),
+                  const Text('Escanear trampa', style: AppText.onDarkTitle),
                   const Spacer(),
                   AppIconButton(
                     icon: _torchOn ? Icons.flash_on : Icons.flash_off,
@@ -159,7 +166,11 @@ class _ScanTrapScreenState extends State<ScanTrapScreen> {
           'El QR es una ayuda de captura',
           'La trampa se identifica con su código ICA oficial (ej. 54518-602-5).'
         ),
-      _ScanState.validating => (AlertType.info, 'Validando código...', _lastCode ?? ''),
+      _ScanState.validating => (
+          AlertType.info,
+          'Validando código...',
+          _lastCode ?? ''
+        ),
       _ScanState.illegible => (
           AlertType.warning,
           'QR ilegible',
@@ -176,7 +187,8 @@ class _ScanTrapScreenState extends State<ScanTrapScreen> {
       width: double.infinity,
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
+        borderRadius:
+            BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
       ),
       child: SafeArea(
         top: false,
@@ -188,12 +200,14 @@ class _ScanTrapScreenState extends State<ScanTrapScreen> {
               AlertBanner(type: type, title: title, message: msg),
               const SizedBox(height: 14),
               if (_state == _ScanState.validating)
-                const PrimaryButton(label: 'Validando...', isLoading: true, onPressed: null)
+                const PrimaryButton(
+                    label: 'Validando...', isLoading: true, onPressed: null)
               else if (_state == _ScanState.scanning)
                 SecondaryButton(
                   label: 'Ingresar código ICA',
                   icon: Icons.tag,
-                  onPressed: () => Navigator.of(context).pushReplacementNamed(AppRoutes.identifyTrap),
+                  onPressed: () => Navigator.of(context)
+                      .pushReplacementNamed(AppRoutes.identifyTrap),
                 )
               else ...[
                 PrimaryButton(label: 'Reintentar escaneo', onPressed: _retry),
@@ -201,8 +215,9 @@ class _ScanTrapScreenState extends State<ScanTrapScreen> {
                 SecondaryButton(
                   label: 'Ingresar código ICA',
                   icon: Icons.tag,
-                  onPressed: () => Navigator.of(context)
-                      .pushReplacementNamed(AppRoutes.identifyTrap, arguments: _lastCode),
+                  onPressed: () => Navigator.of(context).pushReplacementNamed(
+                      AppRoutes.identifyTrap,
+                      arguments: _lastCode),
                 ),
               ],
             ],

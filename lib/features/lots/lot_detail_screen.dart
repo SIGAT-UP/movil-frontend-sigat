@@ -26,7 +26,8 @@ class _LotDetailScreenState extends State<LotDetailScreen> {
       final ok = await showAppConfirmDialog(
         context,
         title: 'Hay un lote en curso',
-        message: 'Tienes ${current.name} sin finalizar. ¿Quieres cambiar a ${lot.name}? '
+        message:
+            'Tienes ${current.name} sin finalizar. ¿Quieres cambiar a ${lot.name}? '
             'Las lecturas ya guardadas se conservan.',
         confirmLabel: 'Cambiar',
       );
@@ -39,7 +40,8 @@ class _LotDetailScreenState extends State<LotDetailScreen> {
       if (mounted) ShellNav.goTo(context, AppTab.mapa);
     } catch (e) {
       if (mounted) {
-        AppMessenger.error('No se pudo iniciar la inspección', message: 'Intenta de nuevo.');
+        AppMessenger.error('No se pudo iniciar la inspección',
+            message: 'Intenta de nuevo.');
       }
     } finally {
       if (mounted) setState(() => _starting = false);
@@ -53,7 +55,10 @@ class _LotDetailScreenState extends State<LotDetailScreen> {
       builder: (context, snap) {
         final lot = snap.data;
         return Scaffold(
-          appBar: SimpleAppBar(title: lot == null ? 'Detalle del lote' : '${lot.name} · ${lot.crop}'),
+          appBar: SimpleAppBar(
+              title: lot == null
+                  ? 'Detalle del lote'
+                  : '${lot.name} · ${lot.crop}'),
           body: switch (snap.connectionState) {
             ConnectionState.done when snap.hasError => EmptyState(
                 icon: Icons.error_outline,
@@ -61,7 +66,8 @@ class _LotDetailScreenState extends State<LotDetailScreen> {
                 message: '${snap.error}',
                 action: SecondaryButton(
                   label: 'Reintentar',
-                  onPressed: () => setState(() => _future = AppServices.lots.getLot(widget.lotId)),
+                  onPressed: () => setState(
+                      () => _future = AppServices.lots.getLot(widget.lotId)),
                 ),
               ),
             ConnectionState.done => _content(lot!),
@@ -71,11 +77,15 @@ class _LotDetailScreenState extends State<LotDetailScreen> {
               ? null
               : BottomActions(children: [
                   PrimaryButton(
-                    label: lot.status == LotStatus.visitado ? 'Lote finalizado' : 'Iniciar inspección',
+                    label: lot.status == LotStatus.visitado
+                        ? 'Lote finalizado'
+                        : 'Iniciar inspección',
                     loadingLabel: 'Preparando...',
                     isLoading: _starting,
                     color: AppColors.primaryDark,
-                    onPressed: lot.status == LotStatus.visitado ? null : () => _start(lot),
+                    onPressed: lot.status == LotStatus.visitado
+                        ? null
+                        : () => _start(lot),
                   ),
                 ]),
         );
@@ -90,13 +100,18 @@ class _LotDetailScreenState extends State<LotDetailScreen> {
         InfoTableCard(rows: [
           InfoRowData('Propietario', value: lot.owner),
           InfoRowData('Cultivo', value: lot.crop),
-          InfoRowData('Área', value: '${lot.areaHa.toStringAsFixed(1).replaceAll('.', ',')} ha'),
+          InfoRowData('Área',
+              value:
+                  '${lot.areaHa.toStringAsFixed(1).replaceAll('.', ',')} ha'),
           InfoRowData('Estado de vigilancia',
               trailing: lot.vigilanceActive
                   ? const StatusBadge('Activa', icon: Icons.check)
                   : const StatusBadge('Inactiva', tone: StatusTone.neutral)),
           InfoRowData('Número de trampas', value: '${lot.trapCount}'),
-          InfoRowData('Última visita', value: lot.lastVisit == null ? 'Sin visitas' : Fmt.date(lot.lastVisit!)),
+          InfoRowData('Última visita',
+              value: lot.lastVisit == null
+                  ? 'Sin visitas'
+                  : Fmt.date(lot.lastVisit!)),
         ]),
         if (lot.control != null) ...[
           const SizedBox(height: AppSpacing.lg),
@@ -106,8 +121,11 @@ class _LotDetailScreenState extends State<LotDetailScreen> {
             showDividers: false,
             footer: lot.control!.note,
             rows: [
-              InfoRowData('MTD estimado', value: '${lot.control!.mtd.toStringAsFixed(2).replaceAll('.', ',')} mosc./trampa/día'),
-              InfoRowData('Umbral exportación', value: lot.control!.exportThreshold),
+              InfoRowData('MTD estimado',
+                  value:
+                      '${lot.control!.mtd.toStringAsFixed(2).replaceAll('.', ',')} mosc./trampa/día'),
+              InfoRowData('Umbral exportación',
+                  value: lot.control!.exportThreshold),
               InfoRowData('Concepto de aptitud', value: lot.control!.aptitude),
             ],
           ),
@@ -115,16 +133,17 @@ class _LotDetailScreenState extends State<LotDetailScreen> {
         if (lot.program != null) ...[
           const SizedBox(height: AppSpacing.lg),
           const Center(
-            child: Text('Programa de inspección vigente',
-                style: AppText.title),
+            child: Text('Programa de inspección vigente', style: AppText.title),
           ),
           InfoTableCard(
             showDividers: false,
             rows: [
-              InfoRowData('Periodo de lectura', value: lot.program!.readingPeriod),
+              InfoRowData('Periodo de lectura',
+                  value: lot.program!.readingPeriod),
               InfoRowData('Buenas prácticas',
                   trailing: Text(lot.program!.goodPractices,
-                      style: AppText.bodySmStrong.copyWith(color: AppColors.primary))),
+                      style: AppText.bodySmStrong
+                          .copyWith(color: AppColors.primary))),
               InfoRowData('Escenario de trampeo', value: lot.program!.scenario),
             ],
           ),

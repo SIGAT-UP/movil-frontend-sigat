@@ -27,14 +27,17 @@ class VisitRecord {
   final int lotsTotal;
   final VisitStatus status;
 
-  String get title => status == VisitStatus.enProgreso ? 'Visita en curso' : 'Visita completada';
+  String get title => status == VisitStatus.enProgreso
+      ? 'Visita en curso'
+      : 'Visita completada';
 
   factory VisitRecord.fromJson(Map<String, dynamic> j) => VisitRecord(
         id: j['id'].toString(),
         date: DateTime.parse(j['date'] as String),
         lotsDone: j['lots_done'] as int,
         lotsTotal: j['lots_total'] as int,
-        status: VisitStatus.values.firstWhere((s) => s.name == j['status'], orElse: () => VisitStatus.completada),
+        status: VisitStatus.values.firstWhere((s) => s.name == j['status'],
+            orElse: () => VisitStatus.completada),
       );
 
   Map<String, dynamic> toJson() => {
@@ -83,5 +86,10 @@ class SyncItem {
   final String? lastError;
 
   /// Úselo SOLO cuando el servidor confirmó que recibió el registro.
-  SyncItem markSynced() => SyncItem(id: id, ownerId: ownerId, label: label, observedAt: observedAt, synced: true);
+  SyncItem markSynced() => SyncItem(
+      id: id,
+      ownerId: ownerId,
+      label: label,
+      observedAt: observedAt,
+      synced: true);
 }

@@ -35,7 +35,8 @@ extension StatusToneColors on StatusTone {
 
 /// Píldora de estado: "Pendiente", "Activa", "Identificada", "Sincronizado", "En progreso"...
 class StatusBadge extends StatelessWidget {
-  const StatusBadge(this.label, {super.key, this.tone = StatusTone.success, this.icon});
+  const StatusBadge(this.label,
+      {super.key, this.tone = StatusTone.success, this.icon});
 
   final String label;
   final StatusTone tone;
@@ -53,8 +54,13 @@ class StatusBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[Icon(icon, size: 11, color: tone.fg), const SizedBox(width: 3)],
-          Text(label, style: AppText.micro.copyWith(fontWeight: FontWeight.w700, color: tone.fg)),
+          if (icon != null) ...[
+            Icon(icon, size: 11, color: tone.fg),
+            const SizedBox(width: 3)
+          ],
+          Text(label,
+              style: AppText.micro
+                  .copyWith(fontWeight: FontWeight.w700, color: tone.fg)),
         ],
       ),
     );

@@ -50,16 +50,21 @@ class VisitController extends ChangeNotifier {
       .length;
 
   // ---------- Derivados ----------
-  int get registeredCount => trapStates.values.where((s) => s == TrapVisitState.registrada).length;
-  int get handledCount => trapStates.values.where((s) => s != TrapVisitState.pendiente).length;
+  int get registeredCount =>
+      trapStates.values.where((s) => s == TrapVisitState.registrada).length;
+  int get handledCount =>
+      trapStates.values.where((s) => s != TrapVisitState.pendiente).length;
   int get pendingCount => activeTraps.length - handledCount;
-  bool get canFinishLot => activeLot != null && activeTraps.isNotEmpty && pendingCount == 0;
+  bool get canFinishLot =>
+      activeLot != null && activeTraps.isNotEmpty && pendingCount == 0;
 
   int get lotsTotal => assignedLots.length;
-  int get lotsDone => assignedLots.where((l) => l.status == LotStatus.visitado).length;
+  int get lotsDone =>
+      assignedLots.where((l) => l.status == LotStatus.visitado).length;
   bool get canFinishVisit => lotsTotal > 0 && lotsDone == lotsTotal;
 
-  TrapVisitState stateOf(Trap t) => trapStates[t.id] ?? TrapVisitState.pendiente;
+  TrapVisitState stateOf(Trap t) =>
+      trapStates[t.id] ?? TrapVisitState.pendiente;
 
   /// Recorrido en orden: la siguiente trampa a visitar es la primera pendiente.
   Trap? get nextTrap {
@@ -70,7 +75,8 @@ class VisitController extends ChangeNotifier {
   }
 
   /// Una trampa pendiente que NO es la siguiente queda bloqueada.
-  bool isLocked(Trap t) => stateOf(t) == TrapVisitState.pendiente && nextTrap?.id != t.id;
+  bool isLocked(Trap t) =>
+      stateOf(t) == TrapVisitState.pendiente && nextTrap?.id != t.id;
 
   // ---------- Acciones ----------
   Future<void> loadLots() async {
@@ -78,7 +84,8 @@ class VisitController extends ChangeNotifier {
     lotsError = null;
     notifyListeners();
     try {
-      assignedLots = await AppServices.lots.getAssignedLots(AppServices.session.value?.userId ?? '');
+      assignedLots = await AppServices.lots
+          .getAssignedLots(AppServices.session.value?.userId ?? '');
     } catch (e) {
       lotsError = e.toString();
     } finally {
@@ -99,7 +106,8 @@ class VisitController extends ChangeNotifier {
     activeTraps = await AppServices.lots.getTraps(lot.id);
     trapStates
       ..clear()
-      ..addEntries(activeTraps.map((t) => MapEntry(t.id, TrapVisitState.pendiente)));
+      ..addEntries(
+          activeTraps.map((t) => MapEntry(t.id, TrapVisitState.pendiente)));
     skipReasons.clear();
 
     // Si este lote ya se trabajó en ESTA visita (se salió y volvió), se respeta
@@ -118,17 +126,20 @@ class VisitController extends ChangeNotifier {
     await AppServices.readings.saveReading(reading);
     trapStates[reading.trapId] = TrapVisitState.registrada;
     skipReasons.remove(reading.trapId);
-    _visitProgress.putIfAbsent(reading.lotId, () => {})[reading.trapId] = TrapVisitState.registrada;
+    _visitProgress.putIfAbsent(reading.lotId, () => {})[reading.trapId] =
+        TrapVisitState.registrada;
     _visitSkipReasons[reading.lotId]?.remove(reading.trapId);
     notifyListeners();
   }
 
   /// Trampa que no se pudo registrar: queda justificada con el motivo.
   Future<void> justifyTrap(Trap trap, String reason) async {
-    await AppServices.readings.justifyTrap(trapId: trap.id, lotId: trap.lotId, reason: reason);
+    await AppServices.readings
+        .justifyTrap(trapId: trap.id, lotId: trap.lotId, reason: reason);
     trapStates[trap.id] = TrapVisitState.justificada;
     skipReasons[trap.id] = reason;
-    _visitProgress.putIfAbsent(trap.lotId, () => {})[trap.id] = TrapVisitState.justificada;
+    _visitProgress.putIfAbsent(trap.lotId, () => {})[trap.id] =
+        TrapVisitState.justificada;
     _visitSkipReasons.putIfAbsent(trap.lotId, () => {})[trap.id] = reason;
     notifyListeners();
   }
@@ -141,7 +152,8 @@ class VisitController extends ChangeNotifier {
     // BD: terminar el lote cumple su parte en las actividades asignadas al técnico
     // (`planificacion_lote` → ejecutada). Si era el último, la actividad se completa sola.
     // Sin sesión válida lanza SinSesionException: nunca se guarda un resultado sin dueño.
-    await AppServices.plannings.markLotExecutedForUser(RecordOwner.requerido(), lot.name);
+    await AppServices.plannings
+        .markLotExecutedForUser(RecordOwner.requerido(), lot.name);
     activeLot = null;
     activeTraps = [];
     trapStates.clear();

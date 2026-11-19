@@ -2,17 +2,40 @@
 class Fmt {
   Fmt._();
 
-  static const _months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  static const _months = [
+    'ene',
+    'feb',
+    'mar',
+    'abr',
+    'may',
+    'jun',
+    'jul',
+    'ago',
+    'sep',
+    'oct',
+    'nov',
+    'dic'
+  ];
 
   static String dosDigitos(int n) => n.toString().padLeft(2, '0');
 
   /// 05 oct 2026
-  static String date(DateTime d) => '${dosDigitos(d.day)} ${_months[d.month - 1]} ${d.year}';
+  static String date(DateTime d) =>
+      '${dosDigitos(d.day)} ${_months[d.month - 1]} ${d.year}';
 
   /// 05 oct
-  static String dayMonth(DateTime d) => '${dosDigitos(d.day)} ${_months[d.month - 1]}';
+  static String dayMonth(DateTime d) =>
+      '${dosDigitos(d.day)} ${_months[d.month - 1]}';
 
-  static const _weekdays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  static const _weekdays = [
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+    'Domingo'
+  ];
 
   /// Lunes, 18 nov. 2026
   static String weekdayDate(DateTime d) =>
@@ -23,7 +46,8 @@ class Fmt {
       '${dosDigitos(d.day)} ${_months[d.month - 1]}. ${d.year} – ${time24(d)}';
 
   /// 08 / 10 / 2026
-  static String dateNumeric(DateTime d) => '${dosDigitos(d.day)} / ${dosDigitos(d.month)} / ${d.year}';
+  static String dateNumeric(DateTime d) =>
+      '${dosDigitos(d.day)} / ${dosDigitos(d.month)} / ${d.year}';
 
   /// 10:35 a. m.
   static String time(DateTime d) {
@@ -32,7 +56,8 @@ class Fmt {
   }
 
   /// 10:35 (24 h)
-  static String time24(DateTime d) => '${dosDigitos(d.hour)}:${dosDigitos(d.minute)}';
+  static String time24(DateTime d) =>
+      '${dosDigitos(d.hour)}:${dosDigitos(d.minute)}';
 
   /// "Hoy, 08 oct 2026" o "01 oct 2026"
   static String relativeDay(DateTime d) {
@@ -47,7 +72,9 @@ class Fmt {
   /// "Hoy", "Ayer", "Hace 3 días"
   static String ago(DateTime d) {
     final now = DateTime.now();
-    final days = DateTime(now.year, now.month, now.day).difference(DateTime(d.year, d.month, d.day)).inDays;
+    final days = DateTime(now.year, now.month, now.day)
+        .difference(DateTime(d.year, d.month, d.day))
+        .inDays;
     if (days <= 0) return 'Hoy';
     if (days == 1) return 'Ayer';
     return 'Hace $days días';
@@ -61,5 +88,6 @@ class Fmt {
   }
 
   /// 0,36 (siempre con el número de decimales indicado)
-  static String fixed(num v, int decimals) => v.toStringAsFixed(decimals).replaceAll('.', ',');
+  static String fixed(num v, int decimals) =>
+      v.toStringAsFixed(decimals).replaceAll('.', ',');
 }

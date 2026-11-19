@@ -52,7 +52,8 @@ class AppMessenger {
         AppMessageType.info => const Duration(seconds: 4),
         AppMessageType.warning => const Duration(seconds: 5),
         AppMessageType.error => const Duration(seconds: 6),
-        AppMessageType.loading => const Duration(days: 1), // hasta que se cierre
+        AppMessageType.loading =>
+          const Duration(days: 1), // hasta que se cierre
       };
 
   /// La operación terminó correctamente.
@@ -73,13 +74,15 @@ class AppMessenger {
   /// Es un caso aparte de [success] a propósito, para no afirmar de más.
   static void pending(String title, {String? message}) => show(
         title,
-        message: message ?? 'Quedó guardado en el dispositivo, pendiente de sincronizar.',
+        message: message ??
+            'Quedó guardado en el dispositivo, pendiente de sincronizar.',
         type: AppMessageType.info,
       );
 
   /// Muestra una operación en curso. Cerrar con `.close()`.
   static AppMessageHandle loading(String title, {String? message}) {
-    show(title, message: message, type: AppMessageType.loading, allowRepeat: true);
+    show(title,
+        message: message, type: AppMessageType.loading, allowRepeat: true);
     return const AppMessageHandle();
   }
 
@@ -106,7 +109,8 @@ class AppMessenger {
     _lastSignature = signature;
     _lastShownAt = now;
 
-    final dismissible = type == AppMessageType.error || type == AppMessageType.warning;
+    final dismissible =
+        type == AppMessageType.error || type == AppMessageType.warning;
 
     messenger
       ..clearSnackBars()
@@ -156,7 +160,12 @@ class AppMessageHandle {
 
 /// Tarjeta visual del mensaje. Usa los tokens del sistema de diseño.
 class AppMessageCard extends StatelessWidget {
-  const AppMessageCard({super.key, required this.title, this.message, required this.type, this.onClose});
+  const AppMessageCard(
+      {super.key,
+      required this.title,
+      this.message,
+      required this.type,
+      this.onClose});
 
   final String title;
   final String? message;
@@ -166,18 +175,44 @@ class AppMessageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (Color bg, Color border, Color fg, IconData? icon) = switch (type) {
-      AppMessageType.success => (AppColors.primaryLight, AppColors.successBorder, AppColors.primaryDark, Icons.check_circle_outline),
-      AppMessageType.error => (AppColors.errorLight, AppColors.errorBorder, AppColors.error, Icons.error_outline),
-      AppMessageType.warning => (AppColors.warningLight, AppColors.warningBorder, AppColors.warningText, Icons.warning_amber_rounded),
-      AppMessageType.info => (AppColors.infoLight, AppColors.infoBorder, AppColors.info, Icons.info_outline),
-      AppMessageType.loading => (AppColors.infoLight, AppColors.infoBorder, AppColors.info, null),
+      AppMessageType.success => (
+          AppColors.primaryLight,
+          AppColors.successBorder,
+          AppColors.primaryDark,
+          Icons.check_circle_outline
+        ),
+      AppMessageType.error => (
+          AppColors.errorLight,
+          AppColors.errorBorder,
+          AppColors.error,
+          Icons.error_outline
+        ),
+      AppMessageType.warning => (
+          AppColors.warningLight,
+          AppColors.warningBorder,
+          AppColors.warningText,
+          Icons.warning_amber_rounded
+        ),
+      AppMessageType.info => (
+          AppColors.infoLight,
+          AppColors.infoBorder,
+          AppColors.info,
+          Icons.info_outline
+        ),
+      AppMessageType.loading => (
+          AppColors.infoLight,
+          AppColors.infoBorder,
+          AppColors.info,
+          null
+        ),
     };
 
     return Semantics(
       liveRegion: true,
       container: true,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.md),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md, vertical: AppSpacing.md),
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -200,7 +235,9 @@ class AppMessageCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: AppText.bodySmStrong.copyWith(color: AppColors.textPrimary)),
+                  Text(title,
+                      style: AppText.bodySmStrong
+                          .copyWith(color: AppColors.textPrimary)),
                   if (message != null) ...[
                     const SizedBox(height: 2),
                     Text(message!, style: AppText.caption.copyWith(color: fg)),

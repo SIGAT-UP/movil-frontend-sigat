@@ -43,12 +43,18 @@ class PhotoRules {
   /// Calidad de compresión JPEG (0-100).
   static const int quality = 85;
 
-  static const Set<String> allowedMimeTypes = {'image/jpeg', 'image/png', 'image/webp'};
+  static const Set<String> allowedMimeTypes = {
+    'image/jpeg',
+    'image/png',
+    'image/webp'
+  };
 
   static String get allowedLabel => 'JPG, PNG o WebP';
 
   static String sizeLabel(int bytes) {
-    if (bytes >= 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1).replaceAll('.', ',')} MB';
+    if (bytes >= 1024 * 1024) {
+      return '${(bytes / (1024 * 1024)).toStringAsFixed(1).replaceAll('.', ',')} MB';
+    }
     return '${(bytes / 1024).round()} KB';
   }
 
@@ -58,7 +64,9 @@ class PhotoRules {
   static String? sniffMimeType(Uint8List bytes) {
     if (bytes.length < 12) return null;
     // JPEG: FF D8 FF
-    if (bytes[0] == 0xFF && bytes[1] == 0xD8 && bytes[2] == 0xFF) return 'image/jpeg';
+    if (bytes[0] == 0xFF && bytes[1] == 0xD8 && bytes[2] == 0xFF) {
+      return 'image/jpeg';
+    }
     // PNG: 89 50 4E 47 0D 0A 1A 0A
     const png = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
     if (_startsWith(bytes, png)) return 'image/png';

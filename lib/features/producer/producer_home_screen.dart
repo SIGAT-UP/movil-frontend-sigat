@@ -69,7 +69,8 @@ class _ProducerHomeScreenState extends State<ProducerHomeScreen> {
                     if (_ctrl.error != null && s == null)
                       AlertBanner(
                         title: 'No se pudo cargar tu cultivo',
-                        message: '${_ctrl.error} Desliza hacia abajo para reintentar.',
+                        message:
+                            '${_ctrl.error} Desliza hacia abajo para reintentar.',
                       )
                     else if (s == null)
                       const AppLoader(padding: EdgeInsets.all(AppSpacing.xl))
@@ -77,7 +78,8 @@ class _ProducerHomeScreenState extends State<ProducerHomeScreen> {
                       AppCard(
                         tone: AppCardTone.highlighted,
                         borderColor: AppColors.primary,
-                        padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, AppSpacing.xs),
+                        padding: const EdgeInsets.fromLTRB(AppSpacing.lg,
+                            AppSpacing.lg, AppSpacing.lg, AppSpacing.xs),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -86,14 +88,18 @@ class _ProducerHomeScreenState extends State<ProducerHomeScreen> {
                                 Container(
                                   width: 40,
                                   height: 40,
-                                  decoration:
-                                      const BoxDecoration(color: AppColors.primaryDark, shape: BoxShape.circle),
-                                  child: const Icon(Icons.eco_outlined, color: Colors.white, size: AppIconSize.md),
+                                  decoration: const BoxDecoration(
+                                      color: AppColors.primaryDark,
+                                      shape: BoxShape.circle),
+                                  child: const Icon(Icons.eco_outlined,
+                                      color: Colors.white,
+                                      size: AppIconSize.md),
                                 ),
                                 const SizedBox(width: AppSpacing.md),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(s.crop, style: AppText.h3),
                                       Text(s.lotLabel, style: AppText.caption),
@@ -104,12 +110,17 @@ class _ProducerHomeScreenState extends State<ProducerHomeScreen> {
                             ),
                             const SizedBox(height: AppSpacing.sm),
                             s.vigilanceActive
-                                ? const StatusBadge('Vigilancia activa', icon: Icons.check)
-                                : const StatusBadge('Vigilancia inactiva', tone: StatusTone.neutral),
+                                ? const StatusBadge('Vigilancia activa',
+                                    icon: Icons.check)
+                                : const StatusBadge('Vigilancia inactiva',
+                                    tone: StatusTone.neutral),
                             const SizedBox(height: AppSpacing.xs),
                             InfoRow(InfoRowData('Última visita',
-                                value: s.lastVisit == null ? 'Sin visitas' : Fmt.date(s.lastVisit!))),
-                            InfoRow(InfoRowData('Estado del cultivo', value: s.cropStatus)),
+                                value: s.lastVisit == null
+                                    ? 'Sin visitas'
+                                    : Fmt.date(s.lastVisit!))),
+                            InfoRow(InfoRowData('Estado del cultivo',
+                                value: s.cropStatus)),
                             InfoRow(InfoRowData(
                               'Último resultado',
                               trailing: MtdIndicator(
@@ -131,12 +142,14 @@ class _ProducerHomeScreenState extends State<ProducerHomeScreen> {
                     PrimaryButton(
                       label: 'Registrar aplicación',
                       color: AppColors.primaryDark,
-                      onPressed: () => Navigator.of(context).pushNamed(AppRoutes.producerApplication),
+                      onPressed: () => Navigator.of(context)
+                          .pushNamed(AppRoutes.producerApplication),
                     ),
                     const SizedBox(height: AppSpacing.md),
                     SecondaryButton(
                       label: 'Registrar cosecha',
-                      onPressed: () => Navigator.of(context).pushNamed(AppRoutes.producerHarvest),
+                      onPressed: () => Navigator.of(context)
+                          .pushNamed(AppRoutes.producerHarvest),
                     ),
                     const SizedBox(height: AppSpacing.xl),
                     Center(
@@ -145,7 +158,8 @@ class _ProducerHomeScreenState extends State<ProducerHomeScreen> {
                         icon: Icons.sync,
                         expand: false,
                         color: AppColors.primaryDark,
-                        onPressed: () => Navigator.of(context).pushNamed(AppRoutes.producerSync),
+                        onPressed: () => Navigator.of(context)
+                            .pushNamed(AppRoutes.producerSync),
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),

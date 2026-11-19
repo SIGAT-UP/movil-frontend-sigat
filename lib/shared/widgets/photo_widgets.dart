@@ -18,7 +18,8 @@ Future<PhotoSourceChoice?> showPhotoSourceSheet(
     showDragHandle: true,
     builder: (ctx) => SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.lg),
+        padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.lg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -32,7 +33,9 @@ Future<PhotoSourceChoice?> showPhotoSourceSheet(
             _SourceOption(
               icon: Icons.photo_camera_outlined,
               title: 'Tomar fotografía',
-              subtitle: isWeb ? 'En web el navegador puede pedir un archivo' : 'Abre la cámara del dispositivo',
+              subtitle: isWeb
+                  ? 'En web el navegador puede pedir un archivo'
+                  : 'Abre la cámara del dispositivo',
               onTap: () => Navigator.pop(ctx, PhotoSourceChoice.camara),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -78,14 +81,16 @@ Future<DocumentSourceChoice?> showDocumentSourceSheet(
     showDragHandle: true,
     builder: (ctx) => SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.lg),
+        padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.lg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text('Adjuntar instrucciones', style: AppText.h3),
             const SizedBox(height: AppSpacing.xs),
-            const Text('Elige un documento o una imagen guardada en el dispositivo.',
+            const Text(
+                'Elige un documento o una imagen guardada en el dispositivo.',
                 style: AppText.secondary),
             const SizedBox(height: AppSpacing.lg),
             _SourceOption(
@@ -106,7 +111,8 @@ Future<DocumentSourceChoice?> showDocumentSourceSheet(
               DestructiveButton(
                 label: 'Quitar archivo adjunto',
                 icon: Icons.delete_outline,
-                onPressed: () => Navigator.pop(ctx, DocumentSourceChoice.quitar),
+                onPressed: () =>
+                    Navigator.pop(ctx, DocumentSourceChoice.quitar),
               ),
             ],
             const SizedBox(height: AppSpacing.sm),
@@ -126,7 +132,11 @@ Future<DocumentSourceChoice?> showDocumentSourceSheet(
 enum DocumentSourceChoice { documento, imagen, quitar }
 
 class _SourceOption extends StatelessWidget {
-  const _SourceOption({required this.icon, required this.title, required this.subtitle, required this.onTap});
+  const _SourceOption(
+      {required this.icon,
+      required this.title,
+      required this.subtitle,
+      required this.onTap});
 
   final IconData icon;
   final String title;
@@ -137,14 +147,17 @@ class _SourceOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppCard(
       onTap: onTap,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg, vertical: AppSpacing.md),
       child: Row(
         children: [
           Container(
             width: 42,
             height: 42,
-            decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
-            child: Icon(icon, color: AppColors.primaryDark, size: AppIconSize.lg),
+            decoration: const BoxDecoration(
+                color: AppColors.primaryLight, shape: BoxShape.circle),
+            child:
+                Icon(icon, color: AppColors.primaryDark, size: AppIconSize.lg),
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
@@ -166,7 +179,11 @@ class _SourceOption extends StatelessWidget {
 /// Vista previa de una foto ya validada, con su peso y formato.
 /// Compartida por la confirmación de evidencia y la de foto de perfil.
 class PhotoPreview extends StatelessWidget {
-  const PhotoPreview({super.key, required this.photo, this.aspectRatio = 3 / 4, this.circular = false});
+  const PhotoPreview(
+      {super.key,
+      required this.photo,
+      this.aspectRatio = 3 / 4,
+      this.circular = false});
 
   final PhotoFile photo;
   final double aspectRatio;
@@ -176,7 +193,8 @@ class PhotoPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = Image.memory(photo.bytes, fit: BoxFit.cover, gaplessPlayback: true);
+    final image =
+        Image.memory(photo.bytes, fit: BoxFit.cover, gaplessPlayback: true);
     if (circular) {
       return ClipOval(child: SizedBox(width: 180, height: 180, child: image));
     }

@@ -43,7 +43,8 @@ abstract class ReadingsRepository {
   Future<void> saveReading(Reading reading);
 
   /// Marca una trampa como no registrada con su motivo.
-  Future<void> justifyTrap({required String trapId, required String lotId, required String reason});
+  Future<void> justifyTrap(
+      {required String trapId, required String lotId, required String reason});
 
   Future<List<Reading>> readingsForLot(String lotId);
 }
@@ -53,7 +54,8 @@ abstract class MapRepository {
   Future<bool> isMapDownloaded(String predioId);
 
   /// Descarga el mapa (requiere conexión). `onProgress` de 0 a 1.
-  Future<void> downloadMap(String predioId, {void Function(double progress)? onProgress});
+  Future<void> downloadMap(String predioId,
+      {void Function(double progress)? onProgress});
 }
 
 abstract class SyncRepository {

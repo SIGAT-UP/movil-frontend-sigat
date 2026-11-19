@@ -43,7 +43,8 @@ class AppTheme {
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
-      snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
+      snackBarTheme:
+          const SnackBarThemeData(behavior: SnackBarBehavior.floating),
       // Transición entre pantallas: un deslizamiento corto con fundido.
       // En iOS se conserva la nativa (con el gesto de deslizar para volver).
       pageTransitionsTheme: const PageTransitionsTheme(
@@ -62,10 +63,12 @@ class AppTheme {
         showDragHandle: true,
         dragHandleColor: AppColors.border,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
+          borderRadius:
+              BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
         ),
       ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.primary),
+      progressIndicatorTheme:
+          const ProgressIndicatorThemeData(color: AppColors.primary),
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
           color: AppColors.navInk,
@@ -77,7 +80,8 @@ class AppTheme {
         filled: true,
         fillColor: AppColors.background,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
         hintStyle: const TextStyle(color: AppColors.textHint, fontSize: 14),
         border: _border(AppColors.border),
         enabledBorder: _border(AppColors.border),
@@ -89,7 +93,8 @@ class AppTheme {
     );
   }
 
-  static OutlineInputBorder _border(Color c, [double w = 1]) => OutlineInputBorder(
+  static OutlineInputBorder _border(Color c, [double w = 1]) =>
+      OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
         borderSide: BorderSide(color: c, width: w),
       );
@@ -102,8 +107,10 @@ class _GlidePageTransitionsBuilder extends PageTransitionsBuilder {
   const _GlidePageTransitionsBuilder();
 
   static final _curva = CurveTween(curve: Curves.easeOutCubic);
-  static final _entrada = Tween(begin: const Offset(0.06, 0), end: Offset.zero).chain(_curva);
-  static final _salida = Tween(begin: Offset.zero, end: const Offset(-0.04, 0)).chain(_curva);
+  static final _entrada =
+      Tween(begin: const Offset(0.06, 0), end: Offset.zero).chain(_curva);
+  static final _salida =
+      Tween(begin: Offset.zero, end: const Offset(-0.04, 0)).chain(_curva);
 
   @override
   Widget buildTransitions<T>(
@@ -118,7 +125,8 @@ class _GlidePageTransitionsBuilder extends PageTransitionsBuilder {
       position: secondaryAnimation.drive(_salida),
       child: FadeTransition(
         opacity: animation.drive(_curva),
-        child: SlideTransition(position: animation.drive(_entrada), child: child),
+        child:
+            SlideTransition(position: animation.drive(_entrada), child: child),
       ),
     );
   }

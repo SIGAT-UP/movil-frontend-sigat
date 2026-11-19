@@ -36,7 +36,12 @@ class _RecordLotsScreenState extends State<RecordLotsScreen> {
       body: FutureBuilder<List<Lot>>(
         future: _future,
         builder: (context, snap) {
-          if (snap.hasError) return ErrorState(error: snap.error, what: 'los lotes de la visita', onRetry: _reload);
+          if (snap.hasError) {
+            return ErrorState(
+                error: snap.error,
+                what: 'los lotes de la visita',
+                onRetry: _reload);
+          }
           if (!snap.hasData) return const AppLoader();
           final lotes = snap.data!;
           if (lotes.isEmpty) {
@@ -57,7 +62,8 @@ class _RecordLotsScreenState extends State<RecordLotsScreen> {
                     icon: Icons.eco_outlined,
                     title: l.name,
                     subtitle: '${l.trapCount} trampas · ${l.producer}',
-                    onTap: () => Navigator.of(context).pushNamed(AppRoutes.agroRecordTraps, arguments: l.id),
+                    onTap: () => Navigator.of(context)
+                        .pushNamed(AppRoutes.agroRecordTraps, arguments: l.id),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                 ],

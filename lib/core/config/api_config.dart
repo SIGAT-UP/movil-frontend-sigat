@@ -27,7 +27,8 @@ class ApiConfig {
   }
 
   /// Motivo por el que esta compilación no debe conectarse al backend, o null si todo está bien.
-  static String? get problemaDeConfiguracion => problemaUrl(_definida, release: kReleaseMode);
+  static String? get problemaDeConfiguracion =>
+      problemaUrl(_definida, release: kReleaseMode);
 
   /// Regla de [problemaDeConfiguracion], separada para poder probarla.
   @visibleForTesting
@@ -49,5 +50,6 @@ class ApiConfig {
 
   /// Versión que se informa al backend (cabecera X-App-Version y registro del dispositivo).
   /// Mantenerla igual a `version` de pubspec.yaml, o pasarla con --dart-define=APP_VERSION=...
-  static const appVersion = String.fromEnvironment('APP_VERSION', defaultValue: '1.0.0');
+  static const appVersion =
+      String.fromEnvironment('APP_VERSION', defaultValue: '1.0.0');
 }

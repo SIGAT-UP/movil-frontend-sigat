@@ -90,9 +90,13 @@ class _MapScreenState extends State<MapScreen> {
               children: [
                 MapTopBar(
                   title: 'Mapa del predio',
-                  subtitle: lot == null ? 'Sin lote activo' : '${lot.predioName} · ${lot.name}',
+                  subtitle: lot == null
+                      ? 'Sin lote activo'
+                      : '${lot.predioName} · ${lot.name}',
                   onBack: () => ShellNav.tab.value = AppTab.inicio,
-                  onList: lot == null ? null : () => ShellNav.tab.value = AppTab.trampas,
+                  onList: lot == null
+                      ? null
+                      : () => ShellNav.tab.value = AppTab.trampas,
                 ),
                 const SizedBox(height: 8),
                 const Center(child: MapLegend()),
@@ -100,7 +104,9 @@ class _MapScreenState extends State<MapScreen> {
                   valueListenable: AppServices.isOnline,
                   builder: (_, online, __) => online
                       ? const SizedBox.shrink()
-                      : const Padding(padding: EdgeInsets.only(top: 8), child: MapOfflineBanner()),
+                      : const Padding(
+                          padding: EdgeInsets.only(top: 8),
+                          child: MapOfflineBanner()),
                 ),
                 Expanded(child: _middle(lot != null)),
                 if (lot != null && _downloaded == true) ...[
@@ -108,21 +114,27 @@ class _MapScreenState extends State<MapScreen> {
                     TrapMapSheet(
                       trap: focused,
                       lotName: lot.name,
-                      headline: _visit.nextTrap?.id == focused.id ? 'Siguiente trampa del recorrido' : null,
+                      headline: _visit.nextTrap?.id == focused.id
+                          ? 'Siguiente trampa del recorrido'
+                          : null,
                       onClose: () => _visit.focusTrap(null),
                       // Al llegar a la trampa se escanea (o se usa "Ingresar código ICA").
-                      actionLabel: _visit.stateOf(focused) == TrapVisitState.pendiente
-                          ? 'Llegué · Escanear trampa'
-                          : 'Ver trampa',
-                      onViewTrap: () => _visit.stateOf(focused) == TrapVisitState.pendiente
+                      actionLabel:
+                          _visit.stateOf(focused) == TrapVisitState.pendiente
+                              ? 'Llegué · Escanear trampa'
+                              : 'Ver trampa',
+                      onViewTrap: () => _visit.stateOf(focused) ==
+                              TrapVisitState.pendiente
                           ? Navigator.of(context).pushNamed(AppRoutes.scanTrap)
                           : _openTrap(focused),
                     ),
                     const SizedBox(height: 10),
                   ],
                   MapActionBar(
-                    onScan: () => Navigator.of(context).pushNamed(AppRoutes.scanTrap),
-                    onEnterCode: () => Navigator.of(context).pushNamed(AppRoutes.identifyTrap),
+                    onScan: () =>
+                        Navigator.of(context).pushNamed(AppRoutes.scanTrap),
+                    onEnterCode: () =>
+                        Navigator.of(context).pushNamed(AppRoutes.identifyTrap),
                   ),
                 ],
               ],
@@ -150,7 +162,8 @@ class _MapScreenState extends State<MapScreen> {
               const SizedBox(height: 14),
               SecondaryButton(
                 label: 'Ver lotes asignados',
-                onPressed: () => Navigator.of(context).pushNamed(AppRoutes.lots),
+                onPressed: () =>
+                    Navigator.of(context).pushNamed(AppRoutes.lots),
               ),
             ],
           ),
@@ -185,7 +198,8 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _openTrap(Trap trap) async {
-    final lookup = await AppServices.traps.findByCode(trap.icaCode, activeLotId: _visit.activeLot?.id);
+    final lookup = await AppServices.traps
+        .findByCode(trap.icaCode, activeLotId: _visit.activeLot?.id);
     if (!mounted || lookup == null) return;
     openTrapIdentified(context, lookup);
   }

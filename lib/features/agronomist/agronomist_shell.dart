@@ -33,7 +33,8 @@ class AgronomistShell extends StatelessWidget {
           ),
         ),
         AgronomistTab.revisiones: RoleTab(
-          item: AppNavItem('Revisiones', Icons.fact_check_outlined, Icons.fact_check),
+          item: AppNavItem(
+              'Revisiones', Icons.fact_check_outlined, Icons.fact_check),
           page: RecordsScreen(showBack: false),
         ),
         AgronomistTab.historial: RoleTab(

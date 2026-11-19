@@ -31,8 +31,11 @@ class TrapStatusTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (state) {
-      TrapVisitState.registrada =>
-        ChecklistTile(title: trap.label, subtitle: 'Lectura guardada', done: true, onTap: onTap),
+      TrapVisitState.registrada => ChecklistTile(
+          title: trap.label,
+          subtitle: 'Lectura guardada',
+          done: true,
+          onTap: onTap),
       TrapVisitState.justificada => ChecklistTile(
           title: trap.label,
           subtitle: 'No registrada: ${reason ?? 'con observación'}',
@@ -48,12 +51,15 @@ class TrapStatusTile extends StatelessWidget {
         ),
       TrapVisitState.pendiente => ChecklistTile(
           title: trap.label,
-          subtitle: selected ? 'Seleccionada · siguiente del recorrido' : 'Siguiente · toca para seleccionar',
+          subtitle: selected
+              ? 'Seleccionada · siguiente del recorrido'
+              : 'Siguiente · toca para seleccionar',
           done: false,
           selected: selected,
           onTap: onTap,
           trailing: isNext || selected
-              ? const StatusBadge('Siguiente', tone: StatusTone.warning, icon: Icons.directions_walk)
+              ? const StatusBadge('Siguiente',
+                  tone: StatusTone.warning, icon: Icons.directions_walk)
               : null,
         ),
     };

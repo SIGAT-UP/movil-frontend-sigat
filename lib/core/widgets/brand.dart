@@ -17,7 +17,10 @@ import 'status_chip.dart';
 /// Los PNG salen de `src/assets/brand/*.svg` del front web.
 /// Si el archivo falta, se dibuja [BrandIcon] para que la app no falle.
 class BrandLogo extends StatelessWidget {
-  const BrandLogo({super.key, this.size = 56, this.semanticLabel = 'Logo SIGAT · Vigilancia del durazno'});
+  const BrandLogo(
+      {super.key,
+      this.size = 56,
+      this.semanticLabel = 'Logo SIGAT · Vigilancia del durazno'});
 
   /// Alto del logo en píxeles lógicos. El ancho se ajusta solo.
   final double size;
@@ -77,7 +80,8 @@ class SoftIconCircle extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
+      decoration: const BoxDecoration(
+          color: AppColors.primaryLight, shape: BoxShape.circle),
       child: Icon(icon, size: size * .45, color: AppColors.primary),
     );
   }
@@ -121,7 +125,11 @@ class BrandHeroHeader extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: [0, .55, 1],
-                colors: [AppColors.heroVeilTop, AppColors.heroVeilMid, Colors.white],
+                colors: [
+                  AppColors.heroVeilTop,
+                  AppColors.heroVeilMid,
+                  Colors.white
+                ],
               ),
             ),
           ),
@@ -135,7 +143,8 @@ class BrandHeroHeader extends StatelessWidget {
                   BrandLogo(size: logoSize),
                   const SizedBox(height: 6),
                   Text(title, style: AppText.h1, textAlign: TextAlign.center),
-                  Text(subtitle, style: AppText.bodySm, textAlign: TextAlign.center),
+                  Text(subtitle,
+                      style: AppText.bodySm, textAlign: TextAlign.center),
                   const SizedBox(height: 8),
                   TagPill(tag),
                 ],
@@ -162,14 +171,17 @@ class ConnectionFooter extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(isOnline ? Icons.wifi : Icons.wifi_off, size: 13,
+            Icon(isOnline ? Icons.wifi : Icons.wifi_off,
+                size: 13,
                 color: isOnline ? AppColors.primary : AppColors.textSecondary),
             const SizedBox(width: 4),
             // Flexible: en pantallas angostas o con letra grande, el texto pasa
             // a una segunda línea en lugar de desbordarse.
             Flexible(
               child: Text(
-                isOnline ? 'Conectado · también funciona sin conexión' : 'Sin conexión · modo offline activo',
+                isOnline
+                    ? 'Conectado · también funciona sin conexión'
+                    : 'Sin conexión · modo offline activo',
                 style: AppText.micro,
                 textAlign: TextAlign.center,
               ),
@@ -205,9 +217,11 @@ class UserAvatar extends StatelessWidget {
   final bool isBusy;
 
   static String initials(String name) {
-    final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+    final parts =
+        name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
     if (parts.isEmpty) return '?';
-    return (parts.first[0] + (parts.length > 1 ? parts.last[0] : '')).toUpperCase();
+    return (parts.first[0] + (parts.length > 1 ? parts.last[0] : ''))
+        .toUpperCase();
   }
 
   @override
@@ -218,7 +232,9 @@ class UserAvatar extends StatelessWidget {
       foregroundImage: photoBytes == null ? null : MemoryImage(photoBytes!),
       child: photoBytes != null
           ? null
-          : Text(initials(name), style: AppText.h1.copyWith(color: Colors.white, fontSize: radius * .66)),
+          : Text(initials(name),
+              style: AppText.h1
+                  .copyWith(color: Colors.white, fontSize: radius * .66)),
     );
 
     if (onEdit == null && !isBusy) return avatar;
@@ -241,7 +257,8 @@ class UserAvatar extends StatelessWidget {
                   child: SizedBox(
                     width: 22,
                     height: 22,
-                    child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white),
+                    child: CircularProgressIndicator(
+                        strokeWidth: 2.4, color: Colors.white),
                   ),
                 ),
               ),
@@ -252,7 +269,8 @@ class UserAvatar extends StatelessWidget {
               bottom: -2,
               child: Material(
                 color: AppColors.primary,
-                shape: const CircleBorder(side: BorderSide(color: Colors.white, width: 2)),
+                shape: const CircleBorder(
+                    side: BorderSide(color: Colors.white, width: 2)),
                 child: InkWell(
                   customBorder: const CircleBorder(),
                   onTap: isBusy ? null : onEdit,
@@ -260,7 +278,8 @@ class UserAvatar extends StatelessWidget {
                     message: 'Cambiar fotografía',
                     child: Padding(
                       padding: EdgeInsets.all(radius * .18),
-                      child: Icon(Icons.photo_camera_outlined, size: radius * .4, color: Colors.white),
+                      child: Icon(Icons.photo_camera_outlined,
+                          size: radius * .4, color: Colors.white),
                     ),
                   ),
                 ),

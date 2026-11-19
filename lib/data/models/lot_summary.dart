@@ -8,7 +8,11 @@ class MtdPoint {
 /// Escenario de trampeo (Tabla 1 de la norma de vigilancia).
 /// Los rangos los define la norma: aquí solo se muestran.
 class TrappingScenario {
-  const TrappingScenario({required this.name, required this.rule, this.isCurrent = false, this.pending = false});
+  const TrappingScenario(
+      {required this.name,
+      required this.rule,
+      this.isCurrent = false,
+      this.pending = false});
   final String name;
   final String rule;
 

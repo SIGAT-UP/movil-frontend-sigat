@@ -8,7 +8,8 @@ import '../../data/repositories/auth_repository.dart';
 enum LoginStatus { idle, loading, error }
 
 class LoginController extends ChangeNotifier {
-  LoginController({AuthRepository? repository}) : _repo = repository ?? AppServices.auth;
+  LoginController({AuthRepository? repository})
+      : _repo = repository ?? AppServices.auth;
 
   final AuthRepository _repo;
 
@@ -39,7 +40,8 @@ class LoginController extends ChangeNotifier {
   }
 
   Future<UserSession?> login(String username, String password) =>
-      _run(() => _repo.login(username: username, password: password, remember: rememberUser));
+      _run(() => _repo.login(
+          username: username, password: password, remember: rememberUser));
 
   Future<UserSession?> _run(Future<UserSession> Function() action) async {
     status = LoginStatus.loading;
@@ -53,7 +55,8 @@ class LoginController extends ChangeNotifier {
     } on AuthException catch (e) {
       _setError(e.title, e.message);
     } catch (_) {
-      _setError('No pudimos iniciar sesión', 'Ocurrió un error inesperado. Intente de nuevo.');
+      _setError('No pudimos iniciar sesión',
+          'Ocurrió un error inesperado. Intente de nuevo.');
     }
     return null;
   }

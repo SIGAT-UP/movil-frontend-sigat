@@ -49,9 +49,14 @@ class BackendDePrueba {
   }
 
   /// Registra una cuenta (como haría el administrador desde la web) y devuelve su contraseña.
-  String crearCuenta({required String usuario, required String nombre, required String rol, int? id}) {
+  String crearCuenta(
+      {required String usuario,
+      required String nombre,
+      required String rol,
+      int? id}) {
     final clave = claveAleatoria();
-    _cuentas[usuario.toLowerCase()] = _Cuenta(id ?? _cuentas.length + 1, usuario, nombre, rol, clave);
+    _cuentas[usuario.toLowerCase()] =
+        _Cuenta(id ?? _cuentas.length + 1, usuario, nombre, rol, clave);
     return clave;
   }
 
@@ -79,7 +84,10 @@ class BackendDePrueba {
   PendingStore conectarApp() {
     final pendientes = InMemoryPendingStore();
     AppServices.connect(
-      client: ApiClient(client: client, store: MemorySecureStore(), baseUrl: 'http://backend.prueba/api/v1'),
+      client: ApiClient(
+          client: client,
+          store: MemorySecureStore(),
+          baseUrl: 'http://backend.prueba/api/v1'),
       store: pendientes,
     );
     return pendientes;
@@ -88,15 +96,22 @@ class BackendDePrueba {
   Future<http.Response> _responder(http.Request req) async {
     if (sinRed) throw http.ClientException('Sin red (prueba)');
     final ruta = req.url.path.replaceFirst('/api/v1', '');
-    final clave = '${req.method} $ruta${req.url.hasQuery ? '?${req.url.query}' : ''}';
+    final clave =
+        '${req.method} $ruta${req.url.hasQuery ? '?${req.url.query}' : ''}';
     peticiones.add(clave);
     if (req.body.isNotEmpty) cuerpos[clave] = jsonDecode(req.body);
 
     if (req.method == 'POST' && ruta == '/auth/login') return _login(req);
-    if (req.method == 'POST' && ruta == '/auth/recuperacion') return _json(202, null);
+    if (req.method == 'POST' && ruta == '/auth/recuperacion') {
+      return _json(202, null);
+    }
 
-    final cuenta = _tokens[req.headers['Authorization']?.replaceFirst('Bearer ', '')];
-    if (cuenta == null) return _problema(401, 'TOKEN_INVALIDO', 'Su sesión terminó. Inicie sesión de nuevo.');
+    final cuenta =
+        _tokens[req.headers['Authorization']?.replaceFirst('Bearer ', '')];
+    if (cuenta == null) {
+      return _problema(
+          401, 'TOKEN_INVALIDO', 'Su sesión terminó. Inicie sesión de nuevo.');
+    }
 
     final extra = respuestasExtra['${req.method} $ruta'];
     if (extra != null) return _json(200, extra);
@@ -112,7 +127,8 @@ class BackendDePrueba {
           'rol': cuenta.rol,
           'fecha': DateTime.now().toIso8601String().substring(0, 10),
           'datos_al': DateTime.now().toUtc().toIso8601String(),
-          'notificaciones_no_leidas': _de(cuenta).where((a) => a['leida'] == false).length,
+          'notificaciones_no_leidas':
+              _de(cuenta).where((a) => a['leida'] == false).length,
           'tecnico': null,
           'productor': null,
           'agronomo': null,
@@ -131,9 +147,12 @@ class BackendDePrueba {
           'actualizado_en': null,
         });
       case ('GET', '/yo/notificaciones'):
-        return _json(200, {'items': _de(cuenta).reversed.toList(), 'siguiente': null});
+        return _json(
+            200, {'items': _de(cuenta).reversed.toList(), 'siguiente': null});
       case ('GET', '/yo/notificaciones/conteo'):
-        return _json(200, {'no_leidas': _de(cuenta).where((a) => a['leida'] == false).length});
+        return _json(200, {
+          'no_leidas': _de(cuenta).where((a) => a['leida'] == false).length
+        });
       case ('POST', '/yo/notificaciones/leidas'):
         for (final a in _de(cuenta)) {
           a['leida'] = true;
@@ -142,22 +161,28 @@ class BackendDePrueba {
     }
     final leida = RegExp(r'^/yo/notificaciones/(\d+)/leida$').firstMatch(ruta);
     if (req.method == 'POST' && leida != null) {
-      final a = _de(cuenta).where((x) => '${x['noti_id']}' == leida[1]).firstOrNull;
-      if (a == null) return _problema(404, 'AVISO_NO_ENCONTRADO', 'El aviso no existe.');
+      final a =
+          _de(cuenta).where((x) => '${x['noti_id']}' == leida[1]).firstOrNull;
+      if (a == null) {
+        return _problema(404, 'AVISO_NO_ENCONTRADO', 'El aviso no existe.');
+      }
       a['leida'] = true;
       return _json(204, null);
     }
     // Todo lo demás existe en el contrato pero el backend aún no lo implementa.
-    return _problema(501, 'NO_IMPLEMENTADO', 'Funcionalidad pendiente de implementar.');
+    return _problema(
+        501, 'NO_IMPLEMENTADO', 'Funcionalidad pendiente de implementar.');
   }
 
-  List<Map<String, dynamic>> _de(_Cuenta c) => _avisos.where((a) => a['usua_id'] == c.id).toList();
+  List<Map<String, dynamic>> _de(_Cuenta c) =>
+      _avisos.where((a) => a['usua_id'] == c.id).toList();
 
   http.Response _login(http.Request req) {
     final b = jsonDecode(req.body) as Map<String, dynamic>;
     final c = _cuentas[(b['usuario'] as String).trim().toLowerCase()];
     if (c == null || c.clave != b['contrasena']) {
-      return _problema(401, 'CREDENCIALES_INVALIDAS', 'Usuario o contraseña incorrectos.');
+      return _problema(
+          401, 'CREDENCIALES_INVALIDAS', 'Usuario o contraseña incorrectos.');
     }
     final token = 'acceso-${_sigToken++}';
     _tokens[token] = c;
@@ -176,8 +201,14 @@ class BackendDePrueba {
         headers: {'content-type': 'application/json'},
       );
 
-  static http.Response _problema(int status, String codigo, String detalle) => http.Response.bytes(
-        utf8.encode(jsonEncode({'status': status, 'title': 'Error', 'detail': detalle, 'codigo': codigo})),
+  static http.Response _problema(int status, String codigo, String detalle) =>
+      http.Response.bytes(
+        utf8.encode(jsonEncode({
+          'status': status,
+          'title': 'Error',
+          'detail': detalle,
+          'codigo': codigo
+        })),
         status,
         headers: {'content-type': 'application/problem+json'},
       );

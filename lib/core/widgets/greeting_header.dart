@@ -40,7 +40,10 @@ class GreetingHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: titleStyle, maxLines: 2, overflow: TextOverflow.ellipsis),
+              Text(title,
+                  style: titleStyle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis),
               if (subtitle != null) ...[
                 const SizedBox(height: 2),
                 Text(subtitle!, style: AppText.secondary),

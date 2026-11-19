@@ -44,14 +44,15 @@ enum LotResult {
   /// Valor exacto que guarda la BD.
   final String dbValue;
 
-  static LotResult fromDb(String? v) =>
-      LotResult.values.firstWhere((r) => r.dbValue == v, orElse: () => LotResult.pendiente);
+  static LotResult fromDb(String? v) => LotResult.values
+      .firstWhere((r) => r.dbValue == v, orElse: () => LotResult.pendiente);
 }
 
 /// Tipo de archivo de instrucciones que puede adjuntar el agrónomo.
 enum DocKind {
   pdf('PDF', 'application/pdf'),
-  word('Word', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'),
+  word('Word',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'),
   imagen('Imagen', 'image/jpeg');
 
   const DocKind(this.label, this.defaultMime);
@@ -63,7 +64,10 @@ enum DocKind {
   static DocKind fromFileName(String name) {
     final n = name.toLowerCase();
     if (n.endsWith('.doc') || n.endsWith('.docx')) return word;
-    if (n.endsWith('.jpg') || n.endsWith('.jpeg') || n.endsWith('.png') || n.endsWith('.webp')) {
+    if (n.endsWith('.jpg') ||
+        n.endsWith('.jpeg') ||
+        n.endsWith('.png') ||
+        n.endsWith('.webp')) {
       return imagen;
     }
     return pdf;
@@ -215,13 +219,16 @@ class Planning {
   final Map<String, String> lotJustifications;
 
   /// Solo el PRODUCTOR acepta o rechaza, y solo mientras está pendiente.
-  bool get recipientCanRespond => target == PlanningTarget.productor && status.canRespond;
+  bool get recipientCanRespond =>
+      target == PlanningTarget.productor && status.canRespond;
 
-  LotResult resultOf(String lotName) => lotResults[lotName] ?? LotResult.pendiente;
+  LotResult resultOf(String lotName) =>
+      lotResults[lotName] ?? LotResult.pendiente;
 
   /// Todos los lotes de la actividad de técnico ya tienen resultado.
   bool get allLotsResolved =>
-      lotNames.isNotEmpty && lotNames.every((n) => resultOf(n) != LotResult.pendiente);
+      lotNames.isNotEmpty &&
+      lotNames.every((n) => resultOf(n) != LotResult.pendiente);
 
   /// Periodo legible: "15 nov - 22 dic · 7 días" o solo la fecha.
   int? get durationDays => endDate?.difference(startDate).inDays;
@@ -248,7 +255,8 @@ class Planning {
         observations: observations,
         doc: doc,
         status: status ?? this.status,
-        rejectionReason: clearRejection ? null : (rejectionReason ?? this.rejectionReason),
+        rejectionReason:
+            clearRejection ? null : (rejectionReason ?? this.rejectionReason),
         respondedAt: respondedAt ?? this.respondedAt,
         createdAt: createdAt,
         createdByName: createdByName,
@@ -265,22 +273,29 @@ class Planning {
         recipientName: j['recipient_name'] as String,
         activity: j['activity'] as String,
         startDate: DateTime.parse(j['start_date'] as String),
-        endDate: j['end_date'] == null ? null : DateTime.parse(j['end_date'] as String),
+        endDate: j['end_date'] == null
+            ? null
+            : DateTime.parse(j['end_date'] as String),
         scheduleFrom: j['schedule_from'] as String?,
         scheduleTo: j['schedule_to'] as String?,
         lotNames: (j['lot_names'] as List?)?.cast<String>() ?? const [],
         observations: j['observations'] as String?,
-        doc: j['doc'] == null ? null : PlanningDoc.fromJson(j['doc'] as Map<String, dynamic>),
+        doc: j['doc'] == null
+            ? null
+            : PlanningDoc.fromJson(j['doc'] as Map<String, dynamic>),
         status: PlanningStatus.values.firstWhere((s) => s.name == j['status'],
             orElse: () => PlanningStatus.pendiente),
         rejectionReason: j['rejection_reason'] as String?,
-        respondedAt: j['responded_at'] == null ? null : DateTime.parse(j['responded_at'] as String),
+        respondedAt: j['responded_at'] == null
+            ? null
+            : DateTime.parse(j['responded_at'] as String),
         createdAt: DateTime.parse(j['created_at'] as String),
         createdByName: j['created_by_name'] as String? ?? '',
         originId: j['origin_id']?.toString(),
-        lotResults: ((j['lot_results'] as Map?) ?? const {})
-            .map((k, v) => MapEntry(k as String, LotResult.fromDb(v as String?))),
-        lotJustifications: ((j['lot_justifications'] as Map?) ?? const {}).cast<String, String>(),
+        lotResults: ((j['lot_results'] as Map?) ?? const {}).map(
+            (k, v) => MapEntry(k as String, LotResult.fromDb(v as String?))),
+        lotJustifications: ((j['lot_justifications'] as Map?) ?? const {})
+            .cast<String, String>(),
       );
 
   /// Construye la planificación desde una fila de la vista `v_planificacion`
@@ -292,23 +307,34 @@ class Planning {
     final rol = (j['rol_destinatario'] as String? ?? '').toLowerCase();
     return Planning(
       id: j['plan_id'].toString(),
-      target: rol.startsWith('t') ? PlanningTarget.tecnico : PlanningTarget.productor,
+      target: rol.startsWith('t')
+          ? PlanningTarget.tecnico
+          : PlanningTarget.productor,
       recipientId: j['usua_id_destinatario'].toString(),
       recipientName: j['destinatario'] as String,
       activity: j['plan_actividad'] as String,
       startDate: DateTime.parse(j['plan_fecha_inicio'] as String),
-      endDate: j['plan_fecha_fin'] == null ? null : DateTime.parse(j['plan_fecha_fin'] as String),
+      endDate: j['plan_fecha_fin'] == null
+          ? null
+          : DateTime.parse(j['plan_fecha_fin'] as String),
       scheduleFrom: hhmm(j['plan_hora_desde']),
       scheduleTo: hhmm(j['plan_hora_hasta']),
-      lotNames: ((j['lotes'] as List?) ?? const []).map((e) => 'Lote $e').toList(),
+      lotNames:
+          ((j['lotes'] as List?) ?? const []).map((e) => 'Lote $e').toList(),
       observations: j['plan_observaciones'] as String?,
       doc: j['documento'] == null
           ? null
-          : PlanningDoc(id: '${j['plan_id']}-doc', fileName: j['documento'] as String, sizeBytes: 0),
-      status: PlanningStatus.values.firstWhere((x) => x.name == j['plan_estado'],
+          : PlanningDoc(
+              id: '${j['plan_id']}-doc',
+              fileName: j['documento'] as String,
+              sizeBytes: 0),
+      status: PlanningStatus.values.firstWhere(
+          (x) => x.name == j['plan_estado'],
           orElse: () => PlanningStatus.pendiente),
       rejectionReason: j['plan_observacion_respuesta'] as String?,
-      respondedAt: j['plan_respondida_en'] == null ? null : DateTime.parse(j['plan_respondida_en'] as String),
+      respondedAt: j['plan_respondida_en'] == null
+          ? null
+          : DateTime.parse(j['plan_respondida_en'] as String),
       createdAt: DateTime.parse(j['plan_creada_en'] as String),
       createdByName: j['creador'] as String? ?? '',
       originId: j['plan_id_origen']?.toString(),

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../app/routes.dart';
 import '../../app/shell_nav.dart';
@@ -61,7 +61,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return;
       }
 
-      final source = choice == PhotoSourceChoice.camara ? PhotoSource.camara : PhotoSource.galeria;
+      final source = choice == PhotoSourceChoice.camara
+          ? PhotoSource.camara
+          : PhotoSource.galeria;
       PhotoFile? photo;
       try {
         photo = await PhotoService.instance.pick(source);
@@ -72,7 +74,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
       if (photo == null || !mounted) return;
 
-      final result = await Navigator.of(context).pushNamed(AppRoutes.profilePhoto, arguments: photo);
+      final result = await Navigator.of(context)
+          .pushNamed(AppRoutes.profilePhoto, arguments: photo);
       if (!mounted) return;
       if (result is ProfilePhotoResult) {
         if (result.changeSource) continue;
@@ -91,7 +94,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _showMessages() {
     if (!mounted) return;
     if (_ctrl.error != null) {
-      AppMessenger.error('No se pudo actualizar la fotografía', message: _ctrl.error);
+      AppMessenger.error('No se pudo actualizar la fotografía',
+          message: _ctrl.error);
     } else if (_ctrl.notice != null) {
       final confirmada = _ctrl.profile?.photoStatus == UploadStatus.uploaded;
       final sinFoto = !(_ctrl.profile?.hasPhoto ?? false);
@@ -131,7 +135,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: AppSpacing.sm),
                 Center(
                   child: AppLinkButton(
-                    label: profile?.hasPhoto ?? false ? 'Cambiar foto' : 'Agregar foto',
+                    label: profile?.hasPhoto ?? false
+                        ? 'Cambiar foto'
+                        : 'Agregar foto',
                     fontSize: 13,
                     onPressed: _ctrl.savingPhoto ? null : _changePhoto,
                   ),
@@ -139,37 +145,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 if (profile?.photoPendingUpload ?? false) ...[
                   const SizedBox(height: AppSpacing.xs),
                   const Center(
-                    child: RecordStatusBadge(RecordStatus.local, label: 'Foto pendiente de enviar'),
+                    child: RecordStatusBadge(RecordStatus.local,
+                        label: 'Foto pendiente de enviar'),
                   ),
                 ],
                 const SizedBox(height: AppSpacing.sm),
                 Center(child: Text(s?.shortName ?? '', style: AppText.h2)),
-                Center(child: Text(_subtitulo(s?.role), style: AppText.secondary)),
+                Center(
+                    child: Text(_subtitulo(s?.role), style: AppText.secondary)),
                 const SizedBox(height: AppSpacing.xl),
-                MenuTile(icon: Icons.mail_outline, title: s?.username ?? '', iconColor: AppColors.info),
+                MenuTile(
+                    icon: Icons.mail_outline,
+                    title: s?.username ?? '',
+                    iconColor: AppColors.info),
                 const SizedBox(height: 8),
-                for (final tile in _accesosDelRol(context, s?.role, lots)) ...[tile, const SizedBox(height: 8)],
+                for (final tile in _accesosDelRol(context, s?.role, lots)) ...[
+                  tile,
+                  const SizedBox(height: 8)
+                ],
                 // Una sola entrada: abre la bandeja. Las preferencias están
                 // dentro de la bandeja (botón de ajustes en la barra superior).
                 ListenableBuilder(
-                  listenable: Listenable.merge([NotificationsController.instance, _ctrl]),
+                  listenable: Listenable.merge(
+                      [NotificationsController.instance, _ctrl]),
                   builder: (_, __) {
-                    final sinLeer = NotificationsController.instance.unreadCount;
+                    final sinLeer =
+                        NotificationsController.instance.unreadCount;
                     final activas = _ctrl.notifications.enabled;
                     return MenuTile(
-                      icon: activas ? Icons.notifications_none : Icons.notifications_off_outlined,
+                      icon: activas
+                          ? Icons.notifications_none
+                          : Icons.notifications_off_outlined,
                       title: 'Notificaciones',
                       subtitle: sinLeer > 0
                           ? '$sinLeer sin leer'
-                          : (activas ? 'Asignaciones y avisos del sistema' : 'Alertas emergentes desactivadas'),
+                          : (activas
+                              ? 'Asignaciones y avisos del sistema'
+                              : 'Alertas emergentes desactivadas'),
                       iconColor: AppColors.warningStrong,
-                      trailing: sinLeer == 0 ? null : StatusBadge('$sinLeer', tone: StatusTone.error),
-                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.notifications),
+                      trailing: sinLeer == 0
+                          ? null
+                          : StatusBadge('$sinLeer', tone: StatusTone.error),
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(AppRoutes.notifications),
                     );
                   },
                 ),
                 const SizedBox(height: 8),
-                const MenuTile(icon: Icons.language, title: 'Idioma', subtitle: 'Español', iconColor: AppColors.info),
+                const MenuTile(
+                    icon: Icons.language,
+                    title: 'Idioma',
+                    subtitle: 'Español',
+                    iconColor: AppColors.info),
                 const SizedBox(height: 8),
                 const MenuTile(
                   icon: Icons.info_outline,
@@ -183,12 +210,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   builder: (_, online, __) => MenuTile(
                     icon: online ? Icons.wifi : Icons.wifi_off,
                     title: 'Conexión',
-                    subtitle: online ? 'Conectado' : 'Sin conexión · los datos se guardan en el dispositivo',
-                    iconColor: online ? AppColors.primary : AppColors.textSecondary,
+                    subtitle: online
+                        ? 'Conectado'
+                        : 'Sin conexión · los datos se guardan en el dispositivo',
+                    iconColor:
+                        online ? AppColors.primary : AppColors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                DestructiveButton(label: 'Cerrar sesión', onPressed: () => confirmAndLogout(context)),
+                DestructiveButton(
+                    label: 'Cerrar sesión',
+                    onPressed: () => confirmAndLogout(context)),
               ],
             ),
           );
@@ -288,6 +320,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     };
   }
 }
-
-
-

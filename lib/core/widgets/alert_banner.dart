@@ -9,7 +9,11 @@ enum AlertType { error, info, success, warning }
 
 /// Caja de aviso con título y mensaje (error de login, "Verás solo lo de tu rol", etc.).
 class AlertBanner extends StatelessWidget {
-  const AlertBanner({super.key, required this.title, this.message, this.type = AlertType.error});
+  const AlertBanner(
+      {super.key,
+      required this.title,
+      this.message,
+      this.type = AlertType.error});
 
   final String title;
   final String? message;
@@ -18,10 +22,30 @@ class AlertBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (bg, border, fg, icon) = switch (type) {
-      AlertType.error => (AppColors.errorLight, AppColors.errorBorder, AppColors.error, Icons.warning_amber_rounded),
-      AlertType.info => (AppColors.infoLight, AppColors.infoBorder, AppColors.info, Icons.info_outline),
-      AlertType.success => (AppColors.primaryLight, AppColors.successBorder, AppColors.primaryDark, Icons.check_circle_outline),
-      AlertType.warning => (AppColors.warningLight, AppColors.warningBorder, AppColors.warningText, Icons.warning_amber_rounded),
+      AlertType.error => (
+          AppColors.errorLight,
+          AppColors.errorBorder,
+          AppColors.error,
+          Icons.warning_amber_rounded
+        ),
+      AlertType.info => (
+          AppColors.infoLight,
+          AppColors.infoBorder,
+          AppColors.info,
+          Icons.info_outline
+        ),
+      AlertType.success => (
+          AppColors.primaryLight,
+          AppColors.successBorder,
+          AppColors.primaryDark,
+          Icons.check_circle_outline
+        ),
+      AlertType.warning => (
+          AppColors.warningLight,
+          AppColors.warningBorder,
+          AppColors.warningText,
+          Icons.warning_amber_rounded
+        ),
     };
 
     return Container(
@@ -44,12 +68,17 @@ class AlertBanner extends StatelessWidget {
                 Text(
                   title,
                   style: AppText.bodySmStrong.copyWith(
-                    color: (type == AlertType.error || type == AlertType.warning) ? AppColors.textPrimary : fg,
+                    color:
+                        (type == AlertType.error || type == AlertType.warning)
+                            ? AppColors.textPrimary
+                            : fg,
                   ),
                 ),
                 if (message != null) ...[
                   const SizedBox(height: 2),
-                  Text(message!, style: AppText.caption.copyWith(color: fg.withValues(alpha: .85))),
+                  Text(message!,
+                      style: AppText.caption
+                          .copyWith(color: fg.withValues(alpha: .85))),
                 ],
               ],
             ),

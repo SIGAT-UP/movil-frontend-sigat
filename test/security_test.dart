@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:vigilancia_durazno/app/routes.dart';
 import 'package:vigilancia_durazno/data/models/user_session.dart';
 
@@ -30,12 +30,14 @@ void main() {
 
   group('Separación de roles en las rutas', () {
     test('el productor no puede abrir rutas del técnico', () {
-      expect(AppRoutes.canAccess(AppRoutes.registerReading, UserRole.productor), isFalse);
+      expect(AppRoutes.canAccess(AppRoutes.registerReading, UserRole.productor),
+          isFalse);
       expect(AppRoutes.canAccess(AppRoutes.lots, UserRole.productor), isFalse);
     });
 
     test('el técnico no puede abrir rutas del productor', () {
-      expect(AppRoutes.canAccess(AppRoutes.producerHarvest, UserRole.tecnico), isFalse);
+      expect(AppRoutes.canAccess(AppRoutes.producerHarvest, UserRole.tecnico),
+          isFalse);
     });
 
     test('sin sesión no se accede a rutas con dueño', () {
@@ -43,27 +45,37 @@ void main() {
     });
 
     test('los avisos son accesibles para cualquier rol autenticado', () {
-      expect(AppRoutes.canAccess(AppRoutes.notifications, UserRole.tecnico), isTrue);
-      expect(AppRoutes.canAccess(AppRoutes.notifications, UserRole.productor), isTrue);
+      expect(AppRoutes.canAccess(AppRoutes.notifications, UserRole.tecnico),
+          isTrue);
+      expect(AppRoutes.canAccess(AppRoutes.notifications, UserRole.productor),
+          isTrue);
     });
 
     test('nadie más entra a las rutas del agrónomo', () {
-      expect(AppRoutes.canAccess(AppRoutes.agroPlanningHub, UserRole.tecnico), isFalse);
-      expect(AppRoutes.canAccess(AppRoutes.agroRecords, UserRole.productor), isFalse);
+      expect(AppRoutes.canAccess(AppRoutes.agroPlanningHub, UserRole.tecnico),
+          isFalse);
+      expect(AppRoutes.canAccess(AppRoutes.agroRecords, UserRole.productor),
+          isFalse);
       expect(AppRoutes.canAccess(AppRoutes.agroLotSummary, null), isFalse);
-      expect(AppRoutes.canAccess(AppRoutes.agroLotSummary, UserRole.agronomo), isTrue);
+      expect(AppRoutes.canAccess(AppRoutes.agroLotSummary, UserRole.agronomo),
+          isTrue);
     });
 
     test('el agrónomo no entra a las rutas de campo', () {
-      expect(AppRoutes.canAccess(AppRoutes.registerReading, UserRole.agronomo), isFalse);
-      expect(AppRoutes.canAccess(AppRoutes.producerHarvest, UserRole.agronomo), isFalse);
+      expect(AppRoutes.canAccess(AppRoutes.registerReading, UserRole.agronomo),
+          isFalse);
+      expect(AppRoutes.canAccess(AppRoutes.producerHarvest, UserRole.agronomo),
+          isFalse);
     });
 
     test('las planificaciones exigen sesión con un rol reconocido', () {
-      expect(AppRoutes.canAccess(AppRoutes.planningList, UserRole.tecnico), isTrue);
-      expect(AppRoutes.canAccess(AppRoutes.planningList, UserRole.productor), isTrue);
+      expect(AppRoutes.canAccess(AppRoutes.planningList, UserRole.tecnico),
+          isTrue);
+      expect(AppRoutes.canAccess(AppRoutes.planningList, UserRole.productor),
+          isTrue);
       expect(AppRoutes.canAccess(AppRoutes.planningList, null), isFalse);
-      expect(AppRoutes.canAccess(AppRoutes.planningList, UserRole.desconocido), isFalse);
+      expect(AppRoutes.canAccess(AppRoutes.planningList, UserRole.desconocido),
+          isFalse);
     });
   });
 
@@ -93,4 +105,3 @@ void main() {
     });
   });
 }
-

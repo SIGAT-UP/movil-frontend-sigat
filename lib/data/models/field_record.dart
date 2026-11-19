@@ -63,9 +63,11 @@ class FieldRecord {
         receivedAt: DateTime.parse(j['received_at'] as String),
         lotsVisited: j['lots_visited'] as int,
         trapsTotal: j['traps_total'] as int,
-        lotIds: (j['lot_ids'] as List?)?.map((e) => e.toString()).toList() ?? const [],
+        lotIds: (j['lot_ids'] as List?)?.map((e) => e.toString()).toList() ??
+            const [],
         reviewReason: j['review_reason'] as String?,
-        status: RecordReviewStatus.values.firstWhere((s) => s.name == j['status'],
+        status: RecordReviewStatus.values.firstWhere(
+            (s) => s.name == j['status'],
             orElse: () => RecordReviewStatus.pendiente),
       );
 

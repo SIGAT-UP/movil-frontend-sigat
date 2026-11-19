@@ -7,7 +7,12 @@ import '../theme/app_typography.dart';
 
 /// Encabezado móvil: flecha atrás + título + acciones (ej. "Guardado local").
 class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const SimpleAppBar({super.key, required this.title, this.actions, this.showBack = true, this.onBack});
+  const SimpleAppBar(
+      {super.key,
+      required this.title,
+      this.actions,
+      this.showBack = true,
+      this.onBack});
 
   final String title;
   final List<Widget>? actions;
@@ -23,7 +28,8 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final canBack = showBack && (onBack != null || Navigator.of(context).canPop());
+    final canBack =
+        showBack && (onBack != null || Navigator.of(context).canPop());
     return AppBar(
       automaticallyImplyLeading: false,
       toolbarHeight: _height,
@@ -40,13 +46,15 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
                   backgroundColor: AppColors.surfaceRaised,
                   foregroundColor: AppColors.primaryDark,
                   fixedSize: const Size(42, 42),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd)),
                 ),
               ),
             )
           : null,
       titleSpacing: canBack ? 2 : AppSpacing.screenH,
-      title: Text(title, style: AppText.h2, maxLines: 1, overflow: TextOverflow.ellipsis),
+      title: Text(title,
+          style: AppText.h2, maxLines: 1, overflow: TextOverflow.ellipsis),
       actions: [...?actions, const SizedBox(width: AppSpacing.sm)],
       shape: const Border(bottom: BorderSide(color: AppColors.border)),
     );
@@ -59,13 +67,17 @@ class LocalStorageBadge extends StatelessWidget {
   final String label;
 
   @override
-  Widget build(BuildContext context) => Center(child: Text(label, style: AppText.overline));
+  Widget build(BuildContext context) =>
+      Center(child: Text(label, style: AppText.overline));
 }
 
 /// Limita el ancho del contenido en pantallas anchas (web) y lo centra.
 /// En móvil no cambia nada.
 class ResponsiveBody extends StatelessWidget {
-  const ResponsiveBody({super.key, required this.child, this.maxWidth = AppSpacing.maxContentWidth});
+  const ResponsiveBody(
+      {super.key,
+      required this.child,
+      this.maxWidth = AppSpacing.maxContentWidth});
   final Widget child;
   final double maxWidth;
 
@@ -74,7 +86,8 @@ class ResponsiveBody extends StatelessWidget {
         alignment: Alignment.topCenter,
         // heightFactor 1: alto = el del hijo (no se estira dentro de la barra inferior).
         heightFactor: 1,
-        child: ConstrainedBox(constraints: BoxConstraints(maxWidth: maxWidth), child: child),
+        child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxWidth), child: child),
       );
 }
 
@@ -89,12 +102,14 @@ class BottomActions extends StatelessWidget {
     // de navegación: las acciones se leen como "lo que sigue" y no se pierden
     // entre el contenido.
     return DecoratedBox(
-      decoration: const BoxDecoration(color: AppColors.background, boxShadow: AppShadows.nav),
+      decoration: const BoxDecoration(
+          color: AppColors.background, boxShadow: AppShadows.nav),
       child: SafeArea(
         top: false,
         child: ResponsiveBody(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, AppSpacing.md, AppSpacing.screenH, AppSpacing.md),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.screenH,
+                AppSpacing.md, AppSpacing.screenH, AppSpacing.md),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -113,7 +128,8 @@ class BottomActions extends StatelessWidget {
 
 /// Título de sección ("Tu jornada", "Actividad reciente", "Fecha esperada").
 class SectionTitle extends StatelessWidget {
-  const SectionTitle(this.text, {super.key, this.trailing, this.style = AppText.h3});
+  const SectionTitle(this.text,
+      {super.key, this.trailing, this.style = AppText.h3});
   final String text;
   final Widget? trailing;
   final TextStyle style;
@@ -129,7 +145,12 @@ class SectionTitle extends StatelessWidget {
 
 /// Estado vacío genérico (sin lotes, sin historial, sin visita activa...).
 class EmptyState extends StatelessWidget {
-  const EmptyState({super.key, required this.icon, required this.title, this.message, this.action});
+  const EmptyState(
+      {super.key,
+      required this.icon,
+      required this.title,
+      this.message,
+      this.action});
   final IconData icon;
   final String title;
   final String? message;
@@ -153,7 +174,8 @@ class EmptyState extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Container(
-                decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
+                decoration: const BoxDecoration(
+                    color: AppColors.primaryLight, shape: BoxShape.circle),
                 child: Icon(icon, size: 30, color: AppColors.primaryDark),
               ),
             ),
@@ -161,9 +183,13 @@ class EmptyState extends StatelessWidget {
             Text(title, textAlign: TextAlign.center, style: AppText.h3),
             if (message != null) ...[
               const SizedBox(height: AppSpacing.xs),
-              Text(message!, textAlign: TextAlign.center, style: AppText.secondary),
+              Text(message!,
+                  textAlign: TextAlign.center, style: AppText.secondary),
             ],
-            if (action != null) ...[const SizedBox(height: AppSpacing.lg), action!],
+            if (action != null) ...[
+              const SizedBox(height: AppSpacing.lg),
+              action!
+            ],
           ],
         ),
       ),

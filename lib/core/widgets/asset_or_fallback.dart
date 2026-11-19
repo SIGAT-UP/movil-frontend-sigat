@@ -38,7 +38,8 @@ class AssetOrFallback extends StatelessWidget {
           ),
         ),
         alignment: Alignment.center,
-        child: Icon(fallbackIcon, size: 40, color: AppColors.primary.withValues(alpha: .5)),
+        child: Icon(fallbackIcon,
+            size: 40, color: AppColors.primary.withValues(alpha: .5)),
       ),
     );
   }

@@ -79,7 +79,9 @@ void main() {
     expect(visita.readingsThisVisit, 0);
   });
 
-  test('La lectura queda en el teléfono como pendiente y se respeta al volver al lote', () async {
+  test(
+      'La lectura queda en el teléfono como pendiente y se respeta al volver al lote',
+      () async {
     final lote = await AppServices.lots.getLot('10');
     await visita.startLot(lote);
     final primera = visita.activeTraps.first;
@@ -109,7 +111,9 @@ void main() {
     expect(visita.readingsThisVisit, 1);
   });
 
-  test('Al cerrar sesión se olvida el avance de la visita (lo guardado sigue en el teléfono)', () async {
+  test(
+      'Al cerrar sesión se olvida el avance de la visita (lo guardado sigue en el teléfono)',
+      () async {
     final lote = await AppServices.lots.getLot('10');
     await visita.startLot(lote);
     final t = visita.activeTraps.first;

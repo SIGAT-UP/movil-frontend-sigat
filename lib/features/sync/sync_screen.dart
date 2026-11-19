@@ -53,11 +53,15 @@ class _SyncScreenState extends State<SyncScreen> {
                     ],
                     if (_sync.error != null) ...[
                       const SizedBox(height: 4),
-                      AlertBanner(type: AlertType.warning, title: 'No se completó', message: _sync.error),
+                      AlertBanner(
+                          type: AlertType.warning,
+                          title: 'No se completó',
+                          message: _sync.error),
                       const SizedBox(height: 10),
                     ],
                     if (_sync.isSyncing)
-                      const Text('Puedes seguir usando la aplicación mientras se sincroniza.',
+                      const Text(
+                          'Puedes seguir usando la aplicación mientras se sincroniza.',
                           style: AppText.caption),
                     if (_sync.lastSync != null)
                       Padding(
@@ -72,10 +76,14 @@ class _SyncScreenState extends State<SyncScreen> {
               ),
               BottomActions(children: [
                 if (_sync.phase == SyncPhase.done)
-                  SecondaryButton(label: 'Ir al inicio', onPressed: () => ShellNav.goTo(context, AppTab.inicio))
+                  SecondaryButton(
+                      label: 'Ir al inicio',
+                      onPressed: () => ShellNav.goTo(context, AppTab.inicio))
                 else
                   PrimaryButton(
-                    label: _sync.phase == SyncPhase.error ? 'Reintentar' : 'Sincronizar',
+                    label: _sync.phase == SyncPhase.error
+                        ? 'Reintentar'
+                        : 'Sincronizar',
                     loadingLabel: 'Sincronizando...',
                     isLoading: _sync.isSyncing,
                     color: AppColors.primaryDark,
@@ -95,7 +103,8 @@ class _SyncScreenState extends State<SyncScreen> {
         return [
           const Align(
             alignment: Alignment.centerLeft,
-            child: StatusBadge('Sincronizando...', tone: StatusTone.info, icon: Icons.sync),
+            child: StatusBadge('Sincronizando...',
+                tone: StatusTone.info, icon: Icons.sync),
           ),
           const SizedBox(height: 12),
           ProgressHeader(
@@ -107,21 +116,25 @@ class _SyncScreenState extends State<SyncScreen> {
         return const [
           Text('Todo está actualizado', style: AppText.h1),
           SizedBox(height: 6),
-          Align(alignment: Alignment.centerLeft, child: StatusBadge('Todo actualizado', icon: Icons.check)),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: StatusBadge('Todo actualizado', icon: Icons.check)),
         ];
       case SyncPhase.idle:
       case SyncPhase.error:
         return [
-          Text('${_sync.pendingCount} registros pendientes',
-              style: AppText.h1),
+          Text('${_sync.pendingCount} registros pendientes', style: AppText.h1),
           const SizedBox(height: 6),
-          Align(alignment: Alignment.centerLeft, child: ConnectionChip(isOnline: online)),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: ConnectionChip(isOnline: online)),
           if (!online) ...[
             const SizedBox(height: 12),
             const AlertBanner(
               type: AlertType.info,
               title: 'Sin conexión',
-              message: 'Los registros siguen guardados en el dispositivo. Sincroniza cuando tengas internet.',
+              message:
+                  'Los registros siguen guardados en el dispositivo. Sincroniza cuando tengas internet.',
             ),
           ],
         ];

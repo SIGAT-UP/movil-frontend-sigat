@@ -13,13 +13,15 @@ class AppLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: padding,
-        child: const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+        child: const Center(
+            child: CircularProgressIndicator(color: AppColors.primary)),
       );
 }
 
 /// Indicador de carga en línea con texto ("Validando credenciales...").
 class AppInlineLoader extends StatelessWidget {
-  const AppInlineLoader({super.key, this.label, this.color = AppColors.info, this.size = 12});
+  const AppInlineLoader(
+      {super.key, this.label, this.color = AppColors.info, this.size = 12});
   final String? label;
   final Color color;
   final double size;
@@ -28,8 +30,14 @@ class AppInlineLoader extends StatelessWidget {
   Widget build(BuildContext context) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(width: size, height: size, child: CircularProgressIndicator(strokeWidth: 1.8, color: color)),
-          if (label != null) ...[const SizedBox(width: 6), Text(label!, style: AppText.caption)],
+          SizedBox(
+              width: size,
+              height: size,
+              child: CircularProgressIndicator(strokeWidth: 1.8, color: color)),
+          if (label != null) ...[
+            const SizedBox(width: 6),
+            Text(label!, style: AppText.caption)
+          ],
         ],
       );
 }
@@ -57,7 +65,9 @@ class SuccessToastBar extends StatelessWidget {
             const Icon(Icons.check, color: Colors.white, size: 18),
             const SizedBox(width: AppSpacing.sm),
             Expanded(
-              child: Text(message, style: AppText.button.copyWith(color: Colors.white), overflow: TextOverflow.ellipsis),
+              child: Text(message,
+                  style: AppText.button.copyWith(color: Colors.white),
+                  overflow: TextOverflow.ellipsis),
             ),
           ],
         ),
@@ -69,7 +79,8 @@ class SuccessToastBar extends StatelessWidget {
 /// Encabezado de resultado exitoso con check grande
 /// ("Cosecha registrada", "Registros sincronizados").
 class SuccessHero extends StatelessWidget {
-  const SuccessHero({super.key, required this.title, this.message, this.icon = Icons.check});
+  const SuccessHero(
+      {super.key, required this.title, this.message, this.icon = Icons.check});
   final String title;
   final String? message;
   final IconData icon;

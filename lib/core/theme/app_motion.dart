@@ -40,13 +40,16 @@ class AppMotion {
   static const Duration splashExit = Duration(milliseconds: 600);
 
   static const Duration splashTotal = Duration(
-    milliseconds: 1200 + 300 + 700 + 1200 + 600, // logo + reposo + frase + pausa + salida
+    milliseconds:
+        1200 + 300 + 700 + 1200 + 600, // logo + reposo + frase + pausa + salida
   );
 
   // Inicio de cada fase dentro de la splash.
   static const Duration splashTaglineStart = Duration(milliseconds: 1200 + 300);
-  static const Duration splashHoldStart = Duration(milliseconds: 1200 + 300 + 700);
-  static const Duration splashExitStart = Duration(milliseconds: 1200 + 300 + 700 + 1200);
+  static const Duration splashHoldStart =
+      Duration(milliseconds: 1200 + 300 + 700);
+  static const Duration splashExitStart =
+      Duration(milliseconds: 1200 + 300 + 700 + 1200);
 
   /// Cuánto se desplaza la frase al subir, en fracciones de su propio alto.
   static const double taglineRise = 0.6;
@@ -78,7 +81,8 @@ class AppMotion {
 
   /// Fase [start, start + length] expresada como `Interval` dentro de `total`,
   /// para escalonar varias animaciones con UN solo AnimationController.
-  static Interval phase(Duration start, Duration length, Duration total, {Curve curve = Curves.linear}) {
+  static Interval phase(Duration start, Duration length, Duration total,
+      {Curve curve = Curves.linear}) {
     final t = total.inMicroseconds;
     final a = (start.inMicroseconds / t).clamp(0.0, 1.0);
     final b = ((start + length).inMicroseconds / t).clamp(0.0, 1.0);

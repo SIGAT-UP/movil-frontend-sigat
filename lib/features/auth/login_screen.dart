@@ -18,7 +18,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
 
   // ---------------- Entrada animada ----------------
@@ -28,22 +29,27 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   static const _items = 6;
   static final _total = AppMotion.loginTotal(_items);
 
-  late final AnimationController _entrance = AnimationController(vsync: this, duration: _total);
+  late final AnimationController _entrance =
+      AnimationController(vsync: this, duration: _total);
 
   late final Animation<Offset> _headerSlide = _entrance.drive(
     Tween(begin: const Offset(0, -1), end: Offset.zero).chain(CurveTween(
-      curve: AppMotion.phase(Duration.zero, AppMotion.loginHeader, _total, curve: AppMotion.enter),
+      curve: AppMotion.phase(Duration.zero, AppMotion.loginHeader, _total,
+          curve: AppMotion.enter),
     )),
   );
 
   late final Animation<Offset> _cardSlide = _entrance.drive(
     Tween(begin: const Offset(0, 1), end: Offset.zero).chain(CurveTween(
-      curve: AppMotion.phase(AppMotion.loginCardStart, AppMotion.loginCard, _total, curve: AppMotion.enter),
+      curve: AppMotion.phase(
+          AppMotion.loginCardStart, AppMotion.loginCard, _total,
+          curve: AppMotion.enter),
     )),
   );
 
   late final List<Animation<double>> _itemFade = [
-    for (var i = 0; i < _items; i++) _entrance.drive(CurveTween(curve: _itemPhase(i))),
+    for (var i = 0; i < _items; i++)
+      _entrance.drive(CurveTween(curve: _itemPhase(i))),
   ];
 
   late final List<Animation<Offset>> _itemRise = [
@@ -120,7 +126,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     // Tercio superior de la pantalla completa (no del área visible): así la
     // cabecera no salta cuando se abre el teclado.
-    final alturaCabecera = (MediaQuery.sizeOf(context).height / 3).clamp(220.0, 340.0);
+    final alturaCabecera =
+        (MediaQuery.sizeOf(context).height / 3).clamp(220.0, 340.0);
     const radioTarjeta = 28.0;
 
     return Scaffold(
@@ -160,14 +167,15 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       child: DecoratedBox(
                         decoration: const BoxDecoration(
                           color: AppColors.background,
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(radioTarjeta)),
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(radioTarjeta)),
                           boxShadow: AppShadows.nav,
                         ),
                         child: ResponsiveBody(
                           maxWidth: 460,
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                AppSpacing.xl, AppSpacing.xl + 4, AppSpacing.xl, 0),
+                            padding: const EdgeInsets.fromLTRB(AppSpacing.xl,
+                                AppSpacing.xl + 4, AppSpacing.xl, 0),
                             child: Form(
                               key: _formKey,
                               child: Column(
@@ -177,11 +185,15 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   _stagger(
                                     0,
                                     const Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text('Te damos la bienvenida', style: AppText.h1),
+                                        Text('Te damos la bienvenida',
+                                            style: AppText.h1),
                                         SizedBox(height: AppSpacing.xs),
-                                        Text('Ingresa con tu usuario y contraseña.', style: AppText.secondary),
+                                        Text(
+                                            'Ingresa con tu usuario y contraseña.',
+                                            style: AppText.secondary),
                                       ],
                                     ),
                                   ),
@@ -191,10 +203,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   _stagger(
                                     1,
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
                                       children: [
                                         if (c.hasError) ...[
-                                          AlertBanner(title: c.errorTitle ?? '', message: c.errorMessage),
+                                          AlertBanner(
+                                              title: c.errorTitle ?? '',
+                                              message: c.errorMessage),
                                           const SizedBox(height: AppSpacing.lg),
                                         ],
                                         AppTextField(
@@ -204,11 +219,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                           icon: Icons.person_outline,
                                           hasError: c.hasError,
                                           enabled: !c.isLoading,
-                                          keyboardType: TextInputType.emailAddress,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
                                           textInputAction: TextInputAction.next,
                                           onChanged: (_) => c.clearError(),
                                           validator: (v) =>
-                                              (v == null || v.trim().isEmpty) ? 'Ingrese su usuario' : null,
+                                              (v == null || v.trim().isEmpty)
+                                                  ? 'Ingrese su usuario'
+                                                  : null,
                                         ),
                                       ],
                                     ),
@@ -229,7 +247,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                       textInputAction: TextInputAction.done,
                                       onChanged: (_) => c.clearError(),
                                       onSubmitted: (_) => _submit(),
-                                      validator: (v) => (v == null || v.isEmpty) ? 'Ingrese su contraseña' : null,
+                                      validator: (v) => (v == null || v.isEmpty)
+                                          ? 'Ingrese su contraseña'
+                                          : null,
                                     ),
                                   ),
                                   const SizedBox(height: AppSpacing.sm),
@@ -240,19 +260,23 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                     3,
                                     Wrap(
                                       alignment: WrapAlignment.spaceBetween,
-                                      crossAxisAlignment: WrapCrossAlignment.center,
+                                      crossAxisAlignment:
+                                          WrapCrossAlignment.center,
                                       runSpacing: AppSpacing.xs,
                                       children: [
                                         AppCheckboxRow(
                                           label: 'Recordar usuario',
                                           value: c.rememberUser,
-                                          onChanged: c.isLoading ? null : c.toggleRemember,
+                                          onChanged: c.isLoading
+                                              ? null
+                                              : c.toggleRemember,
                                         ),
                                         AppLinkButton(
                                           label: '¿Olvidó su contraseña?',
                                           onPressed: c.isLoading
                                               ? null
-                                              : () => Navigator.of(context).pushNamed(AppRoutes.recover),
+                                              : () => Navigator.of(context)
+                                                  .pushNamed(AppRoutes.recover),
                                         ),
                                       ],
                                     ),
@@ -263,7 +287,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   _stagger(
                                     4,
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
                                       children: [
                                         PrimaryButton(
                                           label: 'Iniciar sesión',
@@ -274,7 +299,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                         ),
                                         if (c.isLoading) ...[
                                           const SizedBox(height: AppSpacing.sm),
-                                          const Center(child: AppInlineLoader(label: 'Validando credenciales...')),
+                                          const Center(
+                                              child: AppInlineLoader(
+                                                  label:
+                                                      'Validando credenciales...')),
                                         ],
                                       ],
                                     ),
@@ -297,12 +325,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           child: Align(
                             alignment: Alignment.bottomCenter,
                             child: Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  AppSpacing.xl, AppSpacing.xl, AppSpacing.xl, AppSpacing.md),
+                              padding: const EdgeInsets.fromLTRB(AppSpacing.xl,
+                                  AppSpacing.xl, AppSpacing.xl, AppSpacing.md),
                               // 5 · Pie: conexión real (el inicio de sesión ya va contra el backend)
                               child: _stagger(
                                 5,
-                                ConnectionFooter(isOnline: AppServices.isOnline.value),
+                                ConnectionFooter(
+                                    isOnline: AppServices.isOnline.value),
                               ),
                             ),
                           ),
@@ -334,7 +363,9 @@ class _LoginHeader extends StatelessWidget {
   /// Parte inferior que queda tapada por la tarjeta.
   final double bottomInset;
 
-  static const _sombraTexto = [Shadow(color: Color(0x99000000), blurRadius: 8, offset: Offset(0, 1))];
+  static const _sombraTexto = [
+    Shadow(color: Color(0x99000000), blurRadius: 8, offset: Offset(0, 1))
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -395,12 +426,14 @@ class _LoginHeader extends StatelessWidget {
                   ),
                   Text(
                     'Vigilancia Durazno',
-                    style: AppText.h2.copyWith(color: AppColors.navOnInk, shadows: _sombraTexto),
+                    style: AppText.h2.copyWith(
+                        color: AppColors.navOnInk, shadows: _sombraTexto),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     'Monitoreo fitosanitario',
-                    style: AppText.bodySm.copyWith(color: AppColors.navOnInkSoft, shadows: _sombraTexto),
+                    style: AppText.bodySm.copyWith(
+                        color: AppColors.navOnInkSoft, shadows: _sombraTexto),
                   ),
                 ],
               ),

@@ -1,4 +1,4 @@
-﻿import 'package:pdf/pdf.dart';
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
@@ -31,14 +31,20 @@ class PdfService {
           pw.SizedBox(height: 18),
           _bloque('Estado actual', [
             ['Escenario', s.scenario],
-            ['MTD (último periodo cerrado)', s.mtd == null ? 'Sin cálculo válido' : _dec(s.mtd!)],
+            [
+              'MTD (último periodo cerrado)',
+              s.mtd == null ? 'Sin cálculo válido' : _dec(s.mtd!)
+            ],
             ['Umbral de exportación', s.exportThreshold],
             ['Concepto de aptitud', s.aptitudeConcept],
           ]),
           pw.SizedBox(height: 14),
           _bloque('Vigilancia', [
             ['Trampas configuradas', '${s.trapsTotal}'],
-            ['Última visita', s.lastVisit == null ? 'Sin visitas' : _fecha(s.lastVisit!)],
+            [
+              'Última visita',
+              s.lastVisit == null ? 'Sin visitas' : _fecha(s.lastVisit!)
+            ],
             ['Inspecciones este mes', '${s.inspectionsThisMonth}'],
             ['Lecturas totales', '${s.readingsTotal}'],
             ['Especímenes detectados', '${s.specimensDetected}'],
@@ -49,17 +55,39 @@ class PdfService {
           _bloque('Cultivo', [
             ['Etapa fenológica', s.phenologicalStage],
             ['Aplicaciones registradas', '${s.applications}'],
-            ['Última aplicación', s.lastApplication == null ? 'Sin aplicaciones' : _fecha(s.lastApplication!)],
+            [
+              'Última aplicación',
+              s.lastApplication == null
+                  ? 'Sin aplicaciones'
+                  : _fecha(s.lastApplication!)
+            ],
             ['Buenas prácticas', s.goodPracticesLabel],
-            ['Producción estimada', s.estimatedYieldKg == null ? 'Sin registrar' : '${_dec(s.estimatedYieldKg!)} kg'],
-            ['Producción real', s.actualYieldKg == null ? 'Sin registrar' : '${_dec(s.actualYieldKg!)} kg'],
-            ['Cosecha esperada', s.expectedHarvest == null ? 'Sin registrar' : _fecha(s.expectedHarvest!)],
+            [
+              'Producción estimada',
+              s.estimatedYieldKg == null
+                  ? 'Sin registrar'
+                  : '${_dec(s.estimatedYieldKg!)} kg'
+            ],
+            [
+              'Producción real',
+              s.actualYieldKg == null
+                  ? 'Sin registrar'
+                  : '${_dec(s.actualYieldKg!)} kg'
+            ],
+            [
+              'Cosecha esperada',
+              s.expectedHarvest == null
+                  ? 'Sin registrar'
+                  : _fecha(s.expectedHarvest!)
+            ],
           ]),
           if (s.series.isNotEmpty) ...[
             pw.SizedBox(height: 14),
             _bloqueTexto(
               'Tendencia del MTD',
-              s.series.map((p) => '${_fechaCorta(p.date)}: ${_dec(p.value)}').join('   ·   '),
+              s.series
+                  .map((p) => '${_fechaCorta(p.date)}: ${_dec(p.value)}')
+                  .join('   ·   '),
             ),
           ],
           pw.SizedBox(height: 22),
@@ -89,8 +117,10 @@ class PdfService {
             ['Dirigida a', p.recipientName],
             ['Tipo', p.target.label],
             ['Fecha de inicio', _fecha(p.startDate)],
-            if (p.endDate != null) ['Fecha de finalización', _fecha(p.endDate!)],
-            if (p.scheduleFrom != null) ['Horario', '${p.scheduleFrom} – ${p.scheduleTo ?? ''}'],
+            if (p.endDate != null)
+              ['Fecha de finalización', _fecha(p.endDate!)],
+            if (p.scheduleFrom != null)
+              ['Horario', '${p.scheduleFrom} – ${p.scheduleTo ?? ''}'],
             if (p.lotNames.isNotEmpty) ['Lotes', p.lotNames.join(', ')],
             ['Creada por', p.createdByName],
             ['Estado', p.status.label],
@@ -138,13 +168,16 @@ class PdfService {
           pw.Page(
             pageFormat: PdfPageFormat.a4,
             margin: const pw.EdgeInsets.all(24),
-            build: (_) => pw.Center(child: pw.Image(imagen, fit: pw.BoxFit.contain)),
+            build: (_) =>
+                pw.Center(child: pw.Image(imagen, fit: pw.BoxFit.contain)),
           ),
         );
-        await Printing.sharePdf(bytes: await doc.save(), filename: _comoPdf(d.fileName));
+        await Printing.sharePdf(
+            bytes: await doc.save(), filename: _comoPdf(d.fileName));
         return;
       }
-      throw UnsupportedError('Los documentos Word no se pueden descargar desde la app.');
+      throw UnsupportedError(
+          'Los documentos Word no se pueden descargar desde la app.');
     }
     await exportInstructions(p);
   }
@@ -277,7 +310,20 @@ class PdfService {
 
   // ---------------- formatos ----------------
 
-  static const _meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  static const _meses = [
+    'ene',
+    'feb',
+    'mar',
+    'abr',
+    'may',
+    'jun',
+    'jul',
+    'ago',
+    'sep',
+    'oct',
+    'nov',
+    'dic'
+  ];
 
   String _fecha(DateTime d) =>
       '${d.day.toString().padLeft(2, '0')} ${_meses[d.month - 1]} ${d.year}';

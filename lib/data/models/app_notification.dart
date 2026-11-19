@@ -1,4 +1,3 @@
-
 import 'user_profile.dart';
 
 /// A dónde lleva un aviso al abrirlo.
@@ -49,9 +48,8 @@ class AppNotification {
     String? Function(String ruta)? routeFor,
   }) {
     final destino = j['destino'] as Map<String, dynamic>?;
-    final ruta = destino == null
-        ? null
-        : routeFor?.call(destino['ruta'] as String);
+    final ruta =
+        destino == null ? null : routeFor?.call(destino['ruta'] as String);
 
     return AppNotification(
       id: j['noti_id'].toString(),
@@ -85,8 +83,7 @@ class AppNotification {
         target: target,
       );
 
-  factory AppNotification.fromJson(Map<String, dynamic> j) =>
-      AppNotification(
+  factory AppNotification.fromJson(Map<String, dynamic> j) => AppNotification(
         id: j['id'].toString(),
         recipientUserId: j['recipient_user_id'].toString(),
         category: NotificationCategory.values.firstWhere(

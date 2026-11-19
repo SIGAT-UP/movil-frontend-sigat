@@ -40,13 +40,16 @@ void main() {
       );
 
   Future<void> entrar(String usuario, String clave) async {
-    AppServices.session.value = await AppServices.auth.login(username: usuario, password: clave, remember: false);
+    AppServices.session.value = await AppServices.auth
+        .login(username: usuario, password: clave, remember: false);
   }
 
   setUp(() {
     backend = BackendDePrueba();
-    claveA = backend.crearCuenta(usuario: 'tec.a', nombre: 'Técnico A', rol: 'TECNICO', id: 11);
-    claveB = backend.crearCuenta(usuario: 'tec.b', nombre: 'Técnico B', rol: 'TECNICO', id: 12);
+    claveA = backend.crearCuenta(
+        usuario: 'tec.a', nombre: 'Técnico A', rol: 'TECNICO', id: 11);
+    claveB = backend.crearCuenta(
+        usuario: 'tec.b', nombre: 'Técnico B', rol: 'TECNICO', id: 12);
     cola = backend.conectarApp();
     AppServices.session.value = null;
   });
@@ -60,31 +63,42 @@ void main() {
       }
     });
 
-    test('sin sesión: requerido() lanza y paraLectura() no coincide con ningún dueño', () {
+    test(
+        'sin sesión: requerido() lanza y paraLectura() no coincide con ningún dueño',
+        () {
       expect(RecordOwner.requerido, throwsA(isA<SinSesionException>()));
       expect(RecordOwner.paraLectura(), RecordOwner.ninguno);
       expect(RecordOwner.paraLectura(''), RecordOwner.ninguno);
-      expect(RecordOwner.paraLectura('11'), RecordOwner.ninguno); // un id válido sin sesión tampoco
+      expect(RecordOwner.paraLectura('11'),
+          RecordOwner.ninguno); // un id válido sin sesión tampoco
     });
 
-    test('con sesión: paraLectura() solo devuelve el usuario de la sesión', () async {
+    test('con sesión: paraLectura() solo devuelve el usuario de la sesión',
+        () async {
       await entrar('tec.a', claveA);
       expect(RecordOwner.paraLectura(), '11');
       expect(RecordOwner.paraLectura('11'), '11');
       for (final ajeno in ['12', '', ' 11', '11 ', 'abc', '-', '011']) {
-        expect(RecordOwner.paraLectura(ajeno), RecordOwner.ninguno, reason: '«$ajeno»');
+        expect(RecordOwner.paraLectura(ajeno), RecordOwner.ninguno,
+            reason: '«$ajeno»');
       }
     });
   });
 
   group('Guardar sin sesión', () {
-    test('lectura, justificación, aplicación y cosecha se rechazan y la cola queda igual', () async {
-      await expectLater(() => AppServices.readings.saveReading(lectura('l-1')), throwsA(isA<SinSesionException>()));
+    test(
+        'lectura, justificación, aplicación y cosecha se rechazan y la cola queda igual',
+        () async {
+      await expectLater(() => AppServices.readings.saveReading(lectura('l-1')),
+          throwsA(isA<SinSesionException>()));
       await expectLater(
-        () => AppServices.readings.justifyTrap(trapId: '3', lotId: '10', reason: 'No encontrada'),
+        () => AppServices.readings
+            .justifyTrap(trapId: '3', lotId: '10', reason: 'No encontrada'),
         throwsA(isA<SinSesionException>()),
       );
-      await expectLater(() => AppServices.producer.saveApplication(aplicacion('a-1')), throwsA(isA<SinSesionException>()));
+      await expectLater(
+          () => AppServices.producer.saveApplication(aplicacion('a-1')),
+          throwsA(isA<SinSesionException>()));
       expect(await cola.forOwner(''), isEmpty);
       expect(await cola.forOwner(RecordOwner.ninguno), isEmpty);
     });
@@ -93,13 +107,15 @@ void main() {
       await entrar('tec.a', claveA);
       await AppServices.readings.saveReading(lectura('l-1'));
       AppServices.session.value = null;
-      await expectLater(() => AppServices.readings.saveReading(lectura('l-2')), throwsA(isA<SinSesionException>()));
+      await expectLater(() => AppServices.readings.saveReading(lectura('l-2')),
+          throwsA(isA<SinSesionException>()));
       expect((await cola.forOwner('11')).map((r) => r.id), ['l-1']);
     });
   });
 
   group('Aislamiento entre cuentas', () {
-    test('lo que guarda A no lo ve B, y vuelve a estar cuando A entra de nuevo', () async {
+    test('lo que guarda A no lo ve B, y vuelve a estar cuando A entra de nuevo',
+        () async {
       await entrar('tec.a', claveA);
       await AppServices.readings.saveReading(lectura('l-a'));
       expect((await AppServices.sync.getPending()).single.ownerId, '11');
@@ -114,7 +130,8 @@ void main() {
       expect((await AppServices.sync.getPending()).single.id, 'l-a');
     });
 
-    test('markLotExecutedForUser solo acepta al usuario de la sesión', () async {
+    test('markLotExecutedForUser solo acepta al usuario de la sesión',
+        () async {
       await entrar('tec.a', claveA);
       await expectLater(
         () => AppServices.plannings.markLotExecutedForUser('12', 'Lote A'),
@@ -126,20 +143,26 @@ void main() {
       );
       expect(await cola.forOwner('12'), isEmpty);
       await AppServices.plannings.markLotExecutedForUser('11', 'Lote A');
-      expect((await cola.forOwner('11')).single.kind, PendingKind.resultadoLote);
+      expect(
+          (await cola.forOwner('11')).single.kind, PendingKind.resultadoLote);
     });
 
-    test('un registro de otra cuenta con el mismo id no se reemplaza', () async {
+    test('un registro de otra cuenta con el mismo id no se reemplaza',
+        () async {
       await entrar('tec.a', claveA);
       await AppServices.readings.saveReading(lectura('mismo-id'));
       clearSessionState();
       await entrar('tec.b', claveB);
-      await expectLater(() => AppServices.readings.saveReading(lectura('mismo-id')), throwsA(isA<StateError>()));
-      expect((await cola.forOwner('11')).single.id, 'mismo-id'); // el de A sigue intacto
+      await expectLater(
+          () => AppServices.readings.saveReading(lectura('mismo-id')),
+          throwsA(isA<StateError>()));
+      expect((await cola.forOwner('11')).single.id,
+          'mismo-id'); // el de A sigue intacto
       expect(await cola.forOwner('12'), isEmpty);
     });
 
-    test('registros antiguos sin dueño se conservan pero nadie los ve', () async {
+    test('registros antiguos sin dueño se conservan pero nadie los ve',
+        () async {
       await cola.put(PendingRecord(
         id: 'huerfano',
         ownerId: '',
@@ -159,19 +182,25 @@ void main() {
     late String claveProdA;
     late String claveProdB;
     setUp(() {
-      claveProdA = backend.crearCuenta(usuario: 'prod.a', nombre: 'Productor A', rol: 'PRODUCTOR', id: 21);
-      claveProdB = backend.crearCuenta(usuario: 'prod.b', nombre: 'Productor B', rol: 'PRODUCTOR', id: 22);
+      claveProdA = backend.crearCuenta(
+          usuario: 'prod.a', nombre: 'Productor A', rol: 'PRODUCTOR', id: 21);
+      claveProdB = backend.crearCuenta(
+          usuario: 'prod.b', nombre: 'Productor B', rol: 'PRODUCTOR', id: 22);
     });
 
     Future<List<String>> idsActividad(String userId) async {
       try {
-        return [for (final a in await AppServices.producer.getActivity(userId)) a.id];
+        return [
+          for (final a in await AppServices.producer.getActivity(userId)) a.id
+        ];
       } on DataException {
         return const []; // sin registros propios y el servidor responde 501: no hay nada que mostrar
       }
     }
 
-    test('getActivity con el id de otra cuenta no devuelve sus registros locales', () async {
+    test(
+        'getActivity con el id de otra cuenta no devuelve sus registros locales',
+        () async {
       await entrar('prod.b', claveProdB);
       await AppServices.producer.saveApplication(aplicacion('app-b'));
       clearSessionState();
@@ -186,7 +215,8 @@ void main() {
       expect((await cola.forOwner('22')).single.id, 'app-b');
     });
 
-    test('getSummary con el id de otra cuenta no cuenta sus pendientes', () async {
+    test('getSummary con el id de otra cuenta no cuenta sus pendientes',
+        () async {
       await entrar('tec.b', claveB);
       await AppServices.readings.saveReading(lectura('l-b1'));
       await AppServices.readings.saveReading(Reading(
@@ -210,7 +240,9 @@ void main() {
       expect((await cola.forOwner('12')).length, 2); // nada se borró
     });
 
-    test('la foto de perfil local solo se guarda y se lee para el usuario de la sesión', () async {
+    test(
+        'la foto de perfil local solo se guarda y se lee para el usuario de la sesión',
+        () async {
       await entrar('tec.a', claveA);
       final foto = PhotoFile(
         path: 'a.jpg',
@@ -225,8 +257,10 @@ void main() {
       );
       await AppServices.profile.saveProfilePhotoLocally('11', foto);
       expect((await AppServices.profile.getProfile('12')).photoBytes, isNull);
-      expect((await AppServices.profile.getProfile('11')).photoBytes, isNotNull);
-      await expectLater(() => AppServices.profile.removeProfilePhoto('12'), throwsA(isA<SinSesionException>()));
+      expect(
+          (await AppServices.profile.getProfile('11')).photoBytes, isNotNull);
+      await expectLater(() => AppServices.profile.removeProfilePhoto('12'),
+          throwsA(isA<SinSesionException>()));
     });
   });
 }

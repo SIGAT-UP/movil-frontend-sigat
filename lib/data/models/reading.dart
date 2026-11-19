@@ -72,7 +72,9 @@ class Evidence {
   final double? lng;
 
   /// Crea una evidencia a partir de una foto ya validada.
-  factory Evidence.fromPhoto(PhotoFile photo, {required String id, required String observation}) => Evidence(
+  factory Evidence.fromPhoto(PhotoFile photo,
+          {required String id, required String observation}) =>
+      Evidence(
         id: id,
         observation: observation,
         localPath: photo.path,
@@ -83,7 +85,11 @@ class Evidence {
       );
 
   /// Completa la relación con la lectura en el momento de guardar.
-  Evidence attachTo({required String readingId, required String trapId, required String lotId, String? userId}) =>
+  Evidence attachTo(
+          {required String readingId,
+          required String trapId,
+          required String lotId,
+          String? userId}) =>
       Evidence(
         id: id,
         observation: observation,
@@ -133,7 +139,8 @@ class Evidence {
         lotId: j['lot_id'] as String?,
         userId: j['user_id'] as String?,
         remoteRef: j['remote_ref'] as String?,
-        uploadStatus: UploadStatus.values.firstWhere((s) => s.name == j['upload_status'],
+        uploadStatus: UploadStatus.values.firstWhere(
+            (s) => s.name == j['upload_status'],
             orElse: () => UploadStatus.local),
         lat: (j['lat'] as num?)?.toDouble(),
         lng: (j['lng'] as num?)?.toDouble(),
@@ -183,8 +190,10 @@ class Reading {
         'lect_especimenes': condition.wasRead ? specimens : null,
         'lect_justificacion': condition.wasRead ? null : (observations ?? ''),
         'cond_id': condition.dbCondId,
-        'lect_fecha_cambio_cuerpo': bodyChangeDate?.toIso8601String().substring(0, 10),
-        'lect_fecha_cambio_atrayente': attractantChangeDate?.toIso8601String().substring(0, 10),
+        'lect_fecha_cambio_cuerpo':
+            bodyChangeDate?.toIso8601String().substring(0, 10),
+        'lect_fecha_cambio_atrayente':
+            attractantChangeDate?.toIso8601String().substring(0, 10),
         'lect_observaciones': observations,
         'lect_t_observacion': observedAt.toIso8601String(),
       };
@@ -206,7 +215,8 @@ class Reading {
   /// Lectura guardada en el teléfono (cola de pendientes). [synced] siempre es false:
   /// solo el servidor puede confirmar que la recibió.
   factory Reading.fromJson(Map<String, dynamic> j) {
-    DateTime? fecha(dynamic v) => v == null ? null : DateTime.parse(v as String);
+    DateTime? fecha(dynamic v) =>
+        v == null ? null : DateTime.parse(v as String);
     return Reading(
       id: j['id'] as String,
       trapId: j['trap_id'] as String,
@@ -214,7 +224,8 @@ class Reading {
       lotId: j['lot_id'] as String,
       observedAt: DateTime.parse(j['observed_at'] as String),
       specimens: (j['specimens'] as num?)?.toInt() ?? 0,
-      condition: TrapCondition.values.firstWhere((c) => c.name == j['condition'],
+      condition: TrapCondition.values.firstWhere(
+          (c) => c.name == j['condition'],
           orElse: () => TrapCondition.buenEstado),
       bodyChangeDate: fecha(j['body_change_date']),
       attractantChangeDate: fecha(j['attractant_change_date']),

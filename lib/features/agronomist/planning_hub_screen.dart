@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../app/routes.dart';
@@ -108,9 +107,7 @@ class PlanningTargetHubScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
             MenuTile(
               icon: Icons.fact_check_outlined,
-              title: _productor
-                  ? 'Mis planificaciones'
-                  : 'Mis asignaciones',
+              title: _productor ? 'Mis planificaciones' : 'Mis asignaciones',
               subtitle: 'Fechas, respuestas y motivos de rechazo',
               iconColor: AppColors.primaryDark,
               onTap: () => Navigator.of(context).pushNamed(

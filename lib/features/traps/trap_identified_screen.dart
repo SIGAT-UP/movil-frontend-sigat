@@ -17,7 +17,8 @@ class TrapIdentifiedScreen extends StatelessWidget {
     final trap = lookup.trap;
     final visit = VisitController.instance;
     final lotName = visit.activeLot?.name ?? 'lote';
-    final alreadyRegistered = visit.trapStates[trap.id] == TrapVisitState.registrada;
+    final alreadyRegistered =
+        visit.trapStates[trap.id] == TrapVisitState.registrada;
     final next = visit.nextTrap;
 
     // Reglas del recorrido: solo se registra la trampa que sigue, y solo del lote activo.
@@ -25,7 +26,8 @@ class TrapIdentifiedScreen extends StatelessWidget {
         ? 'Esta trampa no pertenece al $lotName. Revisa el código o el lote en curso.'
         : (!alreadyRegistered && next != null && next.id != trap.id)
             ? 'El recorrido va en orden. Primero registra ${next.label}.'
-            : (!alreadyRegistered && visit.stateOf(trap) == TrapVisitState.justificada)
+            : (!alreadyRegistered &&
+                    visit.stateOf(trap) == TrapVisitState.justificada)
                 ? 'Esta trampa ya quedó como no registrada con observación.'
                 : null;
 
@@ -35,25 +37,31 @@ class TrapIdentifiedScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.screenH),
         children: [
-          TrapHeaderCard(code: trap.icaCode, subtitle: '${trap.label} · ${trap.type}', badge: 'Identificada', large: true),
+          TrapHeaderCard(
+              code: trap.icaCode,
+              subtitle: '${trap.label} · ${trap.type}',
+              badge: 'Identificada',
+              large: true),
           const SizedBox(height: AppSpacing.lg),
           AppCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Validación',
-                    style: AppText.overline),
+                const Text('Validación', style: AppText.overline),
                 const SizedBox(height: 8),
                 ValidationRow(
                   ok: lookup.belongsToActiveLot,
-                  label: lookup.belongsToActiveLot ? 'Pertenece al $lotName' : 'No pertenece al $lotName',
+                  label: lookup.belongsToActiveLot
+                      ? 'Pertenece al $lotName'
+                      : 'No pertenece al $lotName',
                 ),
                 ValidationRow(
                   ok: lookup.insideLot,
                   label: 'Ubicación del dispositivo dentro del lote',
                   pendingHint: 'Se verifica con el GPS del mapa',
                 ),
-                ValidationRow(ok: lookup.inCatalog, label: 'Código ICA en el catálogo'),
+                ValidationRow(
+                    ok: lookup.inCatalog, label: 'Código ICA en el catálogo'),
                 const Divider(height: 24, color: AppColors.border),
                 Row(
                   children: [
@@ -63,7 +71,8 @@ class TrapIdentifiedScreen extends StatelessWidget {
                       trap.lastReadingDate == null
                           ? 'Sin lecturas'
                           : '${trap.lastCaptures ?? 0} capturas · ${Fmt.date(trap.lastReadingDate!)}',
-                      style: AppText.bodySmStrong.copyWith(color: AppColors.primaryDark),
+                      style: AppText.bodySmStrong
+                          .copyWith(color: AppColors.primaryDark),
                     ),
                   ],
                 ),
@@ -79,19 +88,24 @@ class TrapIdentifiedScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.lg),
           AlertBanner(
             type: AlertType.warning,
-            title: lookup.allValid ? 'Si la configuración no coincide' : 'Revisa la validación',
-            message: 'Verás un aviso y podrás continuar o revisar. No se bloquea el registro.',
+            title: lookup.allValid
+                ? 'Si la configuración no coincide'
+                : 'Revisa la validación',
+            message:
+                'Verás un aviso y podrás continuar o revisar. No se bloquea el registro.',
           ),
           if (blockReason != null) ...[
             const SizedBox(height: AppSpacing.md),
-            AlertBanner(title: 'No puedes registrar esta trampa', message: blockReason),
+            AlertBanner(
+                title: 'No puedes registrar esta trampa', message: blockReason),
           ],
           if (alreadyRegistered) ...[
             const SizedBox(height: AppSpacing.md),
             const AlertBanner(
               type: AlertType.success,
               title: 'Esta trampa ya tiene lectura en esta visita',
-              message: 'Si registras de nuevo, se reemplaza la lectura anterior.',
+              message:
+                  'Si registras de nuevo, se reemplaza la lectura anterior.',
             ),
           ],
         ],
@@ -102,14 +116,20 @@ class TrapIdentifiedScreen extends StatelessWidget {
           color: AppColors.primaryDark,
           onPressed: blockReason != null
               ? null
-              : () => Navigator.of(context).pushReplacementNamed(AppRoutes.registerReading, arguments: trap),
+              : () => Navigator.of(context).pushReplacementNamed(
+                  AppRoutes.registerReading,
+                  arguments: trap),
         ),
         SecondaryButton(
-          label: blockReason != null && next != null && lookup.belongsToActiveLot
-              ? 'Ir a ${next.label} en el mapa'
-              : 'Ver en el mapa',
+          label:
+              blockReason != null && next != null && lookup.belongsToActiveLot
+                  ? 'Ir a ${next.label} en el mapa'
+                  : 'Ver en el mapa',
           onPressed: () {
-            visit.focusTrap(blockReason != null && next != null && lookup.belongsToActiveLot ? next : trap);
+            visit.focusTrap(
+                blockReason != null && next != null && lookup.belongsToActiveLot
+                    ? next
+                    : trap);
             ShellNav.goTo(context, AppTab.mapa);
           },
         ),

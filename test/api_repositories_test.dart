@@ -21,10 +21,12 @@ void main() {
 
   setUp(() async {
     backend = BackendDePrueba();
-    final clave = backend.crearCuenta(usuario: 'tec.prueba', nombre: 'Técnico Prueba', rol: 'TECNICO', id: 5);
+    final clave = backend.crearCuenta(
+        usuario: 'tec.prueba', nombre: 'Técnico Prueba', rol: 'TECNICO', id: 5);
     pendientes = backend.conectarApp();
     AppServices.isOnline.value = true;
-    AppServices.session.value = await AppServices.auth.login(username: 'tec.prueba', password: clave, remember: false);
+    AppServices.session.value = await AppServices.auth
+        .login(username: 'tec.prueba', password: clave, remember: false);
     yo = AppServices.session.value!.userId;
   });
   tearDown(() {
@@ -33,14 +35,17 @@ void main() {
   });
 
   group('Configuración por entorno', () {
-    test('sin --dart-define la URL es la del backend local (/api/v1, sin barra final)', () {
+    test(
+        'sin --dart-define la URL es la del backend local (/api/v1, sin barra final)',
+        () {
       expect(ApiConfig.baseUrl, endsWith('/api/v1'));
       expect(ApiConfig.baseUrl.endsWith('/'), isFalse);
     });
   });
 
   group('Avisos (endpoint real)', () {
-    test('lista, cuenta y marca como leído con las rutas /yo/notificaciones', () async {
+    test('lista, cuenta y marca como leído con las rutas /yo/notificaciones',
+        () async {
       backend.agregarAviso(
         usuaId: 5,
         titulo: 'Nueva actividad',
@@ -60,7 +65,9 @@ void main() {
       expect(await AppServices.notifications.unreadCount(yo), 0);
     });
 
-    test('un destino que la app no tiene (pantalla de la web) se muestra sin abrir nada', () async {
+    test(
+        'un destino que la app no tiene (pantalla de la web) se muestra sin abrir nada',
+        () async {
       backend.agregarAviso(
         usuaId: 5,
         titulo: 'Solicitud de nueva contraseña',
@@ -89,22 +96,29 @@ void main() {
   });
 
   group('Endpoint que aún no existe (501) y servidor sin red', () {
-    test('lotes: 501 → «todavía no está disponible», nunca una lista inventada', () async {
+    test('lotes: 501 → «todavía no está disponible», nunca una lista inventada',
+        () async {
       await expectLater(
         AppServices.lots.getAssignedLots(yo),
-        throwsA(isA<NotAvailableYet>().having((e) => e.message, 'mensaje', contains('servidor'))),
+        throwsA(isA<NotAvailableYet>()
+            .having((e) => e.message, 'mensaje', contains('servidor'))),
       );
     });
 
     test('sin red → OfflineException con mensaje para la persona', () async {
       backend.sinRed = true;
-      await expectLater(AppServices.notifications.getForUser(yo), throwsA(isA<OfflineException>()));
-      await expectLater(AppServices.lots.getAssignedLots(yo), throwsA(isA<OfflineException>()));
+      await expectLater(AppServices.notifications.getForUser(yo),
+          throwsA(isA<OfflineException>()));
+      await expectLater(AppServices.lots.getAssignedLots(yo),
+          throwsA(isA<OfflineException>()));
     });
 
-    test('foto de perfil y preferencias: el servidor aún no las recibe y se dice', () async {
+    test(
+        'foto de perfil y preferencias: el servidor aún no las recibe y se dice',
+        () async {
       await expectLater(
-        AppServices.profile.updateNotifications(yo, const NotificationPreferences(enabled: false)),
+        AppServices.profile.updateNotifications(
+            yo, const NotificationPreferences(enabled: false)),
         throwsA(isA<BackendNotAvailable>()),
       );
     });
@@ -121,7 +135,8 @@ void main() {
           condition: TrapCondition.buenEstado,
         );
 
-    test('la lectura se guarda local y queda pendiente (synced = false)', () async {
+    test('la lectura se guarda local y queda pendiente (synced = false)',
+        () async {
       await AppServices.readings.saveReading(lectura());
       final local = await AppServices.readings.readingsForLot('10');
       expect(local.single.specimens, 4);
@@ -131,22 +146,28 @@ void main() {
       expect(cola.single.label, contains('ICA-003'));
     });
 
-    test('sincronizar NO marca como enviado mientras el servidor no lo confirme', () async {
+    test(
+        'sincronizar NO marca como enviado mientras el servidor no lo confirme',
+        () async {
       await AppServices.readings.saveReading(lectura());
       final item = (await AppServices.sync.getPending()).single;
 
-      await expectLater(AppServices.sync.syncItem(item), throwsA(isA<NotAvailableYet>()));
+      await expectLater(
+          AppServices.sync.syncItem(item), throwsA(isA<NotAvailableYet>()));
       final sigue = (await AppServices.sync.getPending()).single;
       expect(sigue.synced, isFalse);
       expect(sigue.lastError, contains('servidor'));
       expect(await AppServices.sync.lastSync(), isNull);
 
       AppServices.isOnline.value = false;
-      await expectLater(AppServices.sync.syncItem(item), throwsA(isA<OfflineException>()));
+      await expectLater(
+          AppServices.sync.syncItem(item), throwsA(isA<OfflineException>()));
       expect(await AppServices.sync.getPending(), hasLength(1));
     });
 
-    test('autorreportes del productor: si el historial del servidor no está, se ven los locales como pendientes', () async {
+    test(
+        'autorreportes del productor: si el historial del servidor no está, se ven los locales como pendientes',
+        () async {
       await AppServices.producer.saveApplication(PhytoApplication(
         id: 'apli-1',
         date: DateTime(2026, 10, 28),
@@ -160,10 +181,18 @@ void main() {
       expect(backend.peticiones, contains('GET /actividad'));
     });
 
-    test('sin nada local y sin servidor, el historial muestra el error (no una lista vacía engañosa)', () async {
-      await expectLater(AppServices.history.getVisits(), throwsA(isA<NotAvailableYet>()));
+    test(
+        'sin nada local y sin servidor, el historial muestra el error (no una lista vacía engañosa)',
+        () async {
+      await expectLater(
+          AppServices.history.getVisits(), throwsA(isA<NotAvailableYet>()));
       await AppServices.history.saveVisit(
-        VisitRecord(id: 'v1', date: DateTime(2026, 10, 29), lotsDone: 1, lotsTotal: 2, status: VisitStatus.completada),
+        VisitRecord(
+            id: 'v1',
+            date: DateTime(2026, 10, 29),
+            lotsDone: 1,
+            lotsTotal: 2,
+            status: VisitStatus.completada),
       );
       final visitas = await AppServices.history.getVisits();
       expect(visitas.single.status.label, contains('pendiente de enviar'));

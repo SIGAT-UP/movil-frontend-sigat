@@ -45,7 +45,10 @@ class AppCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final (Color bg, Color bd) = switch (tone) {
       AppCardTone.normal => (AppColors.background, AppColors.border),
-      AppCardTone.highlighted => (AppColors.surfaceTint, AppColors.successBorder),
+      AppCardTone.highlighted => (
+          AppColors.surfaceTint,
+          AppColors.successBorder
+        ),
       AppCardTone.outlined => (AppColors.background, AppColors.primary),
     };
     final br = BorderRadius.circular(radius);
@@ -79,7 +82,8 @@ class InfoRowData {
 
 /// Fila de información "Etiqueta ........ Valor". Se usa sola o dentro de [InfoTableCard].
 class InfoRow extends StatelessWidget {
-  const InfoRow(this.data, {super.key, this.padding = const EdgeInsets.symmetric(vertical: 12)});
+  const InfoRow(this.data,
+      {super.key, this.padding = const EdgeInsets.symmetric(vertical: 12)});
   final InfoRowData data;
   final EdgeInsetsGeometry padding;
 
@@ -95,7 +99,8 @@ class InfoRow extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: data.trailing ??
-                  Text(data.value ?? '-', textAlign: TextAlign.right, style: AppText.bodySmStrong),
+                  Text(data.value ?? '-',
+                      textAlign: TextAlign.right, style: AppText.bodySmStrong),
             ),
           ),
         ],
@@ -131,18 +136,24 @@ class InfoTableCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppCard(
       tone: highlighted ? AppCardTone.highlighted : AppCardTone.normal,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 4),
+      padding:
+          const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (title != null)
-            Padding(padding: const EdgeInsets.only(top: 12, bottom: 2), child: Text(title!, style: AppText.overline)),
+            Padding(
+                padding: const EdgeInsets.only(top: 12, bottom: 2),
+                child: Text(title!, style: AppText.overline)),
           for (var i = 0; i < rows.length; i++) ...[
             InfoRow(rows[i]),
-            if (showDividers && i < rows.length - 1) const Divider(height: 1, color: AppColors.divider),
+            if (showDividers && i < rows.length - 1)
+              const Divider(height: 1, color: AppColors.divider),
           ],
           if (footer != null)
-            Padding(padding: const EdgeInsets.only(bottom: 10), child: Text(footer!, style: AppText.micro)),
+            Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Text(footer!, style: AppText.micro)),
         ],
       ),
     );
@@ -151,7 +162,12 @@ class InfoTableCard extends StatelessWidget {
 
 /// Tarjeta de acción con ícono grande, título, descripción y flecha ("Mis Lotes Asignados").
 class NavActionCard extends StatelessWidget {
-  const NavActionCard({super.key, required this.icon, required this.title, required this.subtitle, required this.onTap});
+  const NavActionCard(
+      {super.key,
+      required this.icon,
+      required this.title,
+      required this.subtitle,
+      required this.onTap});
 
   final IconData icon;
   final String title;
@@ -163,7 +179,8 @@ class NavActionCard extends StatelessWidget {
     return AppCard(
       onTap: onTap,
       borderColor: AppColors.primaryDark,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 14),
+      padding:
+          const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 14),
       child: Row(
         children: [
           Icon(icon, size: AppIconSize.hero, color: AppColors.primaryDark),
@@ -214,11 +231,16 @@ class StatCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
             child: AssetOrFallback(imagePath,
-                height: 64, width: double.infinity, fit: BoxFit.contain, fallbackIcon: fallbackIcon),
+                height: 64,
+                width: double.infinity,
+                fit: BoxFit.contain,
+                fallbackIcon: fallbackIcon),
           ),
           const SizedBox(height: 6),
           Text(value, style: AppText.display),
-          Text(label, textAlign: TextAlign.center, style: AppText.label.copyWith(fontWeight: FontWeight.w600)),
+          Text(label,
+              textAlign: TextAlign.center,
+              style: AppText.label.copyWith(fontWeight: FontWeight.w600)),
           if (caption != null) Text(caption!, style: AppText.bodySmStrong),
         ],
       ),
@@ -248,11 +270,13 @@ class SyncStatusCard extends StatelessWidget {
       radius: AppSpacing.radiusPill,
       color: AppColors.primaryLight,
       borderColor: AppColors.successBorder,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg, vertical: AppSpacing.md),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.cloud_upload_outlined, size: AppIconSize.xl, color: AppColors.primaryDark),
+          const Icon(Icons.cloud_upload_outlined,
+              size: AppIconSize.xl, color: AppColors.primaryDark),
           const SizedBox(width: 10),
           Flexible(
             child: Column(
