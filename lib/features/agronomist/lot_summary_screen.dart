@@ -35,7 +35,8 @@ class _LotSummaryScreenState extends State<LotSummaryScreen> {
       await PdfService.instance.exportLotSummary(resumen);
     } catch (e) {
       if (mounted) {
-        AppMessenger.error('No se pudo generar el PDF', message: 'Intenta de nuevo.');
+        AppMessenger.error('No se pudo generar el PDF',
+            message: 'Intenta de nuevo.');
       }
     } finally {
       if (mounted) setState(() => _exporting = false);
@@ -52,7 +53,10 @@ class _LotSummaryScreenState extends State<LotSummaryScreen> {
         builder: (context, _) {
           final s = _ctrl.summary;
           if (s == null && _ctrl.loadError != null && !_ctrl.loading) {
-            return ErrorState(error: _ctrl.loadError, what: 'el resumen del lote', onRetry: _ctrl.load);
+            return ErrorState(
+                error: _ctrl.loadError,
+                what: 'el resumen del lote',
+                onRetry: _ctrl.load);
           }
           if (s == null) return const AppLoader();
           return ResponsiveBody(
@@ -74,7 +78,8 @@ class _LotSummaryScreenState extends State<LotSummaryScreen> {
                       ),
                       const SizedBox(height: AppSpacing.md),
                       Text('Escenario: ${s.scenario.toLowerCase()}',
-                          style: AppText.h3.copyWith(color: AppColors.primaryDark)),
+                          style: AppText.h3
+                              .copyWith(color: AppColors.primaryDark)),
                       Text(
                         'MTD ${s.mtd == null ? 'sin cálculo' : Fmt.fixed(s.mtd!, 2)} · '
                         'Umbral de exportación: ${s.exportThreshold.toLowerCase()} · '
@@ -98,30 +103,46 @@ class _LotSummaryScreenState extends State<LotSummaryScreen> {
                 const SectionTitle('Vigilancia'),
                 const SizedBox(height: AppSpacing.sm),
                 _grid([
-                  KpiTile(label: 'Visitas realizadas', value: '${s.inspectionsThisMonth}', hint: 'Este mes'),
-                  KpiTile(label: 'Lecturas totales', value: '${s.readingsTotal}'),
-                  KpiTile(label: 'Especímenes detectados', value: '${s.specimensDetected}'),
-                  KpiTile(label: 'Trampas con hallazgos', value: '${s.trapsWithFindings} de ${s.trapsTotal}'),
+                  KpiTile(
+                      label: 'Visitas realizadas',
+                      value: '${s.inspectionsThisMonth}',
+                      hint: 'Este mes'),
+                  KpiTile(
+                      label: 'Lecturas totales', value: '${s.readingsTotal}'),
+                  KpiTile(
+                      label: 'Especímenes detectados',
+                      value: '${s.specimensDetected}'),
+                  KpiTile(
+                      label: 'Trampas con hallazgos',
+                      value: '${s.trapsWithFindings} de ${s.trapsTotal}'),
                 ]),
                 const SizedBox(height: AppSpacing.lg),
 
                 const SectionTitle('Cultivo'),
                 const SizedBox(height: AppSpacing.sm),
                 _grid([
-                  KpiTile(label: 'Etapa fenológica', value: s.phenologicalStage),
+                  KpiTile(
+                      label: 'Etapa fenológica', value: s.phenologicalStage),
                   KpiTile(
                     label: 'Última aplicación',
-                    value: s.lastApplication == null ? null : Fmt.date(s.lastApplication!),
+                    value: s.lastApplication == null
+                        ? null
+                        : Fmt.date(s.lastApplication!),
                     hint: '${s.applications} registradas',
                   ),
                   KpiTile(
                     label: 'Producción estimada',
-                    value: s.estimatedYieldKg == null ? null : '${Fmt.decimal(s.estimatedYieldKg!)} kg',
+                    value: s.estimatedYieldKg == null
+                        ? null
+                        : '${Fmt.decimal(s.estimatedYieldKg!)} kg',
                   ),
                   KpiTile(
                     label: 'Producción real',
-                    value: s.actualYieldKg == null ? null : '${Fmt.decimal(s.actualYieldKg!)} kg',
-                    hint: s.actualYieldKg == null ? 'Pendiente de cosecha' : null,
+                    value: s.actualYieldKg == null
+                        ? null
+                        : '${Fmt.decimal(s.actualYieldKg!)} kg',
+                    hint:
+                        s.actualYieldKg == null ? 'Pendiente de cosecha' : null,
                   ),
                 ]),
                 const SizedBox(height: AppSpacing.lg),
@@ -130,13 +151,18 @@ class _LotSummaryScreenState extends State<LotSummaryScreen> {
                 InfoTableCard(rows: [
                   InfoRowData(
                     'Buenas prácticas (BPA)',
-                    trailing: StatusBadge(s.goodPracticesLabel, icon: Icons.check),
+                    trailing:
+                        StatusBadge(s.goodPracticesLabel, icon: Icons.check),
                   ),
                   InfoRowData(
                     'Hallazgos vigentes',
                     trailing: StatusBadge(
-                      s.activeFindings == 0 ? 'Ninguno' : '${s.activeFindings} sin resolver',
-                      tone: s.activeFindings == 0 ? StatusTone.success : StatusTone.warning,
+                      s.activeFindings == 0
+                          ? 'Ninguno'
+                          : '${s.activeFindings} sin resolver',
+                      tone: s.activeFindings == 0
+                          ? StatusTone.success
+                          : StatusTone.warning,
                     ),
                   ),
                 ]),
@@ -151,8 +177,10 @@ class _LotSummaryScreenState extends State<LotSummaryScreen> {
                 ],
 
                 const SizedBox(height: AppSpacing.lg),
-                const Text('Indicadores calculados por el servidor (la app no los deduce).',
-                    style: AppText.micro, textAlign: TextAlign.center),
+                const Text(
+                    'Indicadores calculados por el servidor (la app no los deduce).',
+                    style: AppText.micro,
+                    textAlign: TextAlign.center),
               ],
             ),
           );
@@ -174,7 +202,8 @@ class _LotSummaryScreenState extends State<LotSummaryScreen> {
   Widget _grid(List<Widget> items) => LayoutBuilder(
         builder: (context, c) {
           final columnas = c.maxWidth > 520 ? 4 : 2;
-          final ancho = (c.maxWidth - (columnas - 1) * AppSpacing.md) / columnas;
+          final ancho =
+              (c.maxWidth - (columnas - 1) * AppSpacing.md) / columnas;
           return Wrap(
             spacing: AppSpacing.md,
             runSpacing: AppSpacing.md,

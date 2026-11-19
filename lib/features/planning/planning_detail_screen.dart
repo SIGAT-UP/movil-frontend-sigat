@@ -27,7 +27,10 @@ class _PlanningDetailScreenState extends State<PlanningDetailScreen> {
     try {
       await PdfService.instance.downloadInstructions(p);
     } catch (_) {
-      if (mounted) AppMessenger.error('No se pudo preparar el documento', message: 'Intenta de nuevo.');
+      if (mounted) {
+        AppMessenger.error('No se pudo preparar el documento',
+            message: 'Intenta de nuevo.');
+      }
     } finally {
       _downloading = false;
     }
@@ -39,14 +42,16 @@ class _PlanningDetailScreenState extends State<PlanningDetailScreen> {
     final ok = await showAppConfirmDialog(
       context,
       title: 'Aceptar planificación',
-      message: '¿Confirmas que aceptas "${p.activity}" para el ${Fmt.date(p.startDate)}?',
+      message:
+          '¿Confirmas que aceptas "${p.activity}" para el ${Fmt.date(p.startDate)}?',
       confirmLabel: 'Aceptar',
     );
     if (!ok || !mounted) return;
     final hecho = await _ctrl.accept(p.id);
     if (!mounted) return;
     if (hecho) {
-      AppMessenger.success('Planificación aceptada', message: 'Ya aparece como aceptada en tu lista.');
+      AppMessenger.success('Planificación aceptada',
+          message: 'Ya aparece como aceptada en tu lista.');
     } else {
       AppMessenger.error('No se pudo aceptar', message: _ctrl.error);
     }
@@ -66,7 +71,9 @@ class _PlanningDetailScreenState extends State<PlanningDetailScreen> {
               icon: Icons.help_outline,
               title: 'Planificación no encontrada',
               message: 'Es posible que ya no esté disponible.',
-              action: SecondaryButton(label: 'Volver', onPressed: () => Navigator.of(context).pop()),
+              action: SecondaryButton(
+                  label: 'Volver',
+                  onPressed: () => Navigator.of(context).pop()),
             );
           }
 
@@ -82,8 +89,11 @@ class _PlanningDetailScreenState extends State<PlanningDetailScreen> {
                       Container(
                         width: 40,
                         height: 40,
-                        decoration: const BoxDecoration(color: AppColors.primaryDark, shape: BoxShape.circle),
-                        child: const Icon(Icons.eco_outlined, color: Colors.white, size: 20),
+                        decoration: const BoxDecoration(
+                            color: AppColors.primaryDark,
+                            shape: BoxShape.circle),
+                        child: const Icon(Icons.eco_outlined,
+                            color: Colors.white, size: 20),
                       ),
                       const SizedBox(width: AppSpacing.md),
                       Expanded(
@@ -104,20 +114,26 @@ class _PlanningDetailScreenState extends State<PlanningDetailScreen> {
                 // --- Datos ---
                 InfoTableCard(rows: [
                   InfoRowData('Fecha', value: Fmt.date(p.startDate)),
-                  if (p.endDate != null) InfoRowData('Finaliza', value: Fmt.date(p.endDate!)),
-                  if (p.durationDays != null) InfoRowData('Duración', value: '${p.durationDays} días'),
+                  if (p.endDate != null)
+                    InfoRowData('Finaliza', value: Fmt.date(p.endDate!)),
+                  if (p.durationDays != null)
+                    InfoRowData('Duración', value: '${p.durationDays} días'),
                   if (p.scheduleFrom != null)
-                    InfoRowData('Horario', value: '${p.scheduleFrom} – ${p.scheduleTo ?? ''}'),
-                  if (p.lotNames.isNotEmpty) InfoRowData('Lotes', value: p.lotNames.join(', ')),
+                    InfoRowData('Horario',
+                        value: '${p.scheduleFrom} – ${p.scheduleTo ?? ''}'),
+                  if (p.lotNames.isNotEmpty)
+                    InfoRowData('Lotes', value: p.lotNames.join(', ')),
                   if (p.target == PlanningTarget.tecnico)
-                    for (final n in p.lotNames) InfoRowData(n, value: p.resultOf(n).label),
+                    for (final n in p.lotNames)
+                      InfoRowData(n, value: p.resultOf(n).label),
                   InfoRowData('Enviada por', value: p.createdByName),
                   if (p.respondedAt != null)
                     InfoRowData('Respondida', value: Fmt.date(p.respondedAt!)),
                 ]),
 
                 // --- Motivo del rechazo, si aplica ---
-                if (p.status == PlanningStatus.rechazada && p.rejectionReason != null) ...[
+                if (p.status == PlanningStatus.rechazada &&
+                    p.rejectionReason != null) ...[
                   const SizedBox(height: AppSpacing.lg),
                   AlertBanner(
                     title: 'Rechazaste esta planificación',
@@ -135,7 +151,8 @@ class _PlanningDetailScreenState extends State<PlanningDetailScreen> {
                       ? null
                       : () => Navigator.of(context)
                           .pushNamed(AppRoutes.documentViewer, arguments: p),
-                  onDownload: p.doc == null || !PdfService.instance.canDownloadInstructions(p)
+                  onDownload: p.doc == null ||
+                          !PdfService.instance.canDownloadInstructions(p)
                       ? null
                       : () => _download(p),
                 ),
@@ -170,14 +187,17 @@ class _PlanningDetailScreenState extends State<PlanningDetailScreen> {
                   for (final n in p.lotNames)
                     if (p.lotJustifications[n] != null) ...[
                       const SizedBox(height: AppSpacing.sm),
-                      AlertBanner(title: '$n no se ejecutó', message: p.lotJustifications[n]),
+                      AlertBanner(
+                          title: '$n no se ejecutó',
+                          message: p.lotJustifications[n]),
                     ],
                 ] else if (!p.status.canRespond) ...[
                   const SizedBox(height: AppSpacing.lg),
                   AlertBanner(
                     type: AlertType.info,
                     title: 'Ya respondiste esta planificación',
-                    message: 'Su estado es "${p.status.label}" y no se puede cambiar desde la app.',
+                    message:
+                        'Su estado es "${p.status.label}" y no se puede cambiar desde la app.',
                   ),
                 ],
               ],
@@ -189,7 +209,9 @@ class _PlanningDetailScreenState extends State<PlanningDetailScreen> {
         listenable: _ctrl,
         builder: (context, _) {
           final p = _ctrl.byId(widget.planningId);
-          if (p == null || !p.recipientCanRespond) return const SizedBox.shrink();
+          if (p == null || !p.recipientCanRespond) {
+            return const SizedBox.shrink();
+          }
           return BottomActions(children: [
             Row(
               children: [
@@ -198,7 +220,9 @@ class _PlanningDetailScreenState extends State<PlanningDetailScreen> {
                     label: 'Rechazar',
                     onPressed: _ctrl.responding
                         ? null
-                        : () => Navigator.of(context).pushNamed(AppRoutes.planningReject, arguments: p.id),
+                        : () => Navigator.of(context).pushNamed(
+                            AppRoutes.planningReject,
+                            arguments: p.id),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),

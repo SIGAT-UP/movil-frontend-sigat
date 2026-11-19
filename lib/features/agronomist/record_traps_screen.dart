@@ -30,8 +30,8 @@ class RecordTrapsScreen extends StatefulWidget {
 class _RecordTrapsScreenState extends State<RecordTrapsScreen> {
   late Future<List<Trap>> _future = _load();
 
-  Future<List<Trap>> _load() async =>
-      AppServices.lots.getTraps(widget.lotId ?? await AgronomistController.instance.ensureLot());
+  Future<List<Trap>> _load() async => AppServices.lots.getTraps(
+      widget.lotId ?? await AgronomistController.instance.ensureLot());
 
   void _reload() => setState(() => _future = _load());
 
@@ -65,8 +65,9 @@ class _RecordTrapsScreenState extends State<RecordTrapsScreen> {
                     subtitle: t.lastReadingDate == null
                         ? 'Sin lecturas'
                         : 'Última lectura ${Fmt.date(t.lastReadingDate!)}',
-                    onTap: () =>
-                        Navigator.of(context).pushNamed(AppRoutes.agroRecordReading, arguments: t.id),
+                    onTap: () => Navigator.of(context).pushNamed(
+                        AppRoutes.agroRecordReading,
+                        arguments: t.id),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                 ],

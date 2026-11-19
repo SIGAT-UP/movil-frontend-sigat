@@ -9,7 +9,8 @@ import 'planning_inbox_controller.dart';
 /// Planificaciones recibidas. La usan el Técnico ("Asignaciones") y el
 /// Productor ("Planificaciones"): solo cambian los textos del encabezado.
 class PlanningListScreen extends StatefulWidget {
-  const PlanningListScreen({super.key, this.title = 'Asignaciones', this.subtitle});
+  const PlanningListScreen(
+      {super.key, this.title = 'Asignaciones', this.subtitle});
 
   final String title;
   final String? subtitle;
@@ -51,7 +52,8 @@ class _PlanningListScreenState extends State<PlanningListScreen> {
               icon: Icons.cloud_off,
               title: 'No se pudieron cargar',
               message: _ctrl.error,
-              action: SecondaryButton(label: 'Reintentar', onPressed: _ctrl.load),
+              action:
+                  SecondaryButton(label: 'Reintentar', onPressed: _ctrl.load),
             );
           }
 
@@ -61,8 +63,8 @@ class _PlanningListScreenState extends State<PlanningListScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.screenH, AppSpacing.md, AppSpacing.screenH, AppSpacing.sm),
+                  padding: const EdgeInsets.fromLTRB(AppSpacing.screenH,
+                      AppSpacing.md, AppSpacing.screenH, AppSpacing.sm),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -92,13 +94,18 @@ class _PlanningListScreenState extends State<PlanningListScreen> {
                           onRefresh: _ctrl.load,
                           child: ListView.separated(
                             padding: const EdgeInsets.fromLTRB(
-                                AppSpacing.screenH, AppSpacing.sm, AppSpacing.screenH, AppSpacing.xl),
+                                AppSpacing.screenH,
+                                AppSpacing.sm,
+                                AppSpacing.screenH,
+                                AppSpacing.xl),
                             itemCount: lista.length,
-                            separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: AppSpacing.md),
                             itemBuilder: (_, i) => PlanningCard(
                               planning: lista[i],
-                              onTap: () => Navigator.of(context)
-                                  .pushNamed(AppRoutes.planningDetail, arguments: lista[i].id),
+                              onTap: () => Navigator.of(context).pushNamed(
+                                  AppRoutes.planningDetail,
+                                  arguments: lista[i].id),
                             ),
                           ),
                         ),

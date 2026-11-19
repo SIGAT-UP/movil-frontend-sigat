@@ -20,7 +20,8 @@ class PlanningInboxController extends ChangeNotifier {
 
   String? get _userId => AppServices.session.value?.userId;
 
-  int get pendingCount => items.where((p) => p.status == PlanningStatus.pendiente).length;
+  int get pendingCount =>
+      items.where((p) => p.status == PlanningStatus.pendiente).length;
 
   Planning? byId(String id) {
     for (final p in items) {
@@ -41,7 +42,9 @@ class PlanningInboxController extends ChangeNotifier {
     try {
       items = await AppServices.plannings.getReceived(id);
     } catch (e) {
-      error = e is DataException ? e.message : 'No se pudieron cargar tus planificaciones.';
+      error = e is DataException
+          ? e.message
+          : 'No se pudieron cargar tus planificaciones.';
       AppLog.error('PlanningInbox.load', e);
     } finally {
       loading = false;
@@ -49,7 +52,8 @@ class PlanningInboxController extends ChangeNotifier {
     }
   }
 
-  Future<bool> accept(String id) => _respond(() => AppServices.plannings.accept(id));
+  Future<bool> accept(String id) =>
+      _respond(() => AppServices.plannings.accept(id));
 
   Future<bool> reject(String id, String reason) =>
       _respond(() => AppServices.plannings.reject(id, reason));

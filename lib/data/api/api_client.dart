@@ -48,24 +48,32 @@ class ApiClient {
       for (final e in (query ?? const <String, Object?>{}).entries)
         if (e.value != null) e.key: e.value.toString(),
     };
-    return q.isEmpty ? u : u.replace(queryParameters: {...u.queryParameters, ...q});
+    return q.isEmpty
+        ? u
+        : u.replace(queryParameters: {...u.queryParameters, ...q});
   }
 
   /// Respuesta que es un objeto JSON.
-  Future<Map<String, dynamic>?> get(String path, {Map<String, Object?>? query}) async {
+  Future<Map<String, dynamic>?> get(String path,
+      {Map<String, Object?>? query}) async {
     final r = await _send('GET', path, query: query);
     return r is Map<String, dynamic> ? r : null;
   }
 
   /// Respuesta que es una lista JSON (p. ej. `GET /yo/predios`).
-  Future<List<Map<String, dynamic>>> getList(String path, {Map<String, Object?>? query}) async {
+  Future<List<Map<String, dynamic>>> getList(String path,
+      {Map<String, Object?>? query}) async {
     final r = await _send('GET', path, query: query);
     if (r is! List) return const [];
-    return [for (final x in r) if (x is Map<String, dynamic>) x];
+    return [
+      for (final x in r)
+        if (x is Map<String, dynamic>) x
+    ];
   }
 
   /// [auth] = false para las rutas públicas (login, recuperación).
-  Future<Map<String, dynamic>?> post(String path, {Object? body, bool auth = true}) async {
+  Future<Map<String, dynamic>?> post(String path,
+      {Object? body, bool auth = true}) async {
     final r = await _send('POST', path, body: body, auth: auth);
     return r is Map<String, dynamic> ? r : null;
   }
@@ -100,7 +108,8 @@ class ApiClient {
 
     final http.Response res;
     try {
-      res = await http.Response.fromStream(await _http.send(request).timeout(ApiConfig.timeout));
+      res = await http.Response.fromStream(
+          await _http.send(request).timeout(ApiConfig.timeout));
     } on TimeoutException {
       throw const ApiException(
         0,
@@ -115,8 +124,12 @@ class ApiClient {
       );
     }
 
-    if (res.statusCode == 401 && token != null && !reintento && await _renovar()) {
-      return _send(method, path, body: body, query: query, auth: auth, reintento: true);
+    if (res.statusCode == 401 &&
+        token != null &&
+        !reintento &&
+        await _renovar()) {
+      return _send(method, path,
+          body: body, query: query, auth: auth, reintento: true);
     }
     final data = _decode(res);
     if (res.statusCode >= 200 && res.statusCode < 300) return data;
@@ -139,15 +152,19 @@ class ApiClient {
       if (refresco == null) return false;
       final peticion = http.Request('POST', uri('/auth/refresco'))
         ..followRedirects = false
-        ..headers.addAll({'Content-Type': 'application/json', 'Accept': 'application/json'})
+        ..headers.addAll(
+            {'Content-Type': 'application/json', 'Accept': 'application/json'})
         ..body = jsonEncode({'token_refresco': refresco});
-      final res = await http.Response.fromStream(await _http.send(peticion).timeout(ApiConfig.timeout));
+      final res = await http.Response.fromStream(
+          await _http.send(peticion).timeout(ApiConfig.timeout));
       final data = _json(res);
       if (res.statusCode != 200 || data == null || data['token'] is! String) {
         await store.clearTokens();
         return false;
       }
-      await store.saveTokens(access: data['token'] as String, refresh: data['token_refresco'] as String?);
+      await store.saveTokens(
+          access: data['token'] as String,
+          refresh: data['token_refresco'] as String?);
       return true;
     } catch (_) {
       return false;
@@ -185,9 +202,15 @@ class ApiClient {
     if (status == 401) return 'Su sesión terminó. Inicie sesión de nuevo.';
     if (status == 403) return 'No tiene permiso para realizar esta acción.';
     if (status == 404) return 'No se encontró la información solicitada.';
-    if (status == 429) return 'Demasiados intentos. Espere unos minutos e intente de nuevo.';
-    if (status == 501) return 'Esta función todavía no está disponible en el servidor.';
-    if (status >= 500) return 'El servidor tuvo un problema. Intente de nuevo en unos minutos.';
+    if (status == 429) {
+      return 'Demasiados intentos. Espere unos minutos e intente de nuevo.';
+    }
+    if (status == 501) {
+      return 'Esta función todavía no está disponible en el servidor.';
+    }
+    if (status >= 500) {
+      return 'El servidor tuvo un problema. Intente de nuevo en unos minutos.';
+    }
     return 'No se pudo completar la solicitud.';
   }
 }

@@ -42,8 +42,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 12, AppSpacing.screenH, 8),
-            child: PillTabs(labels: _tabs, selected: _tab, onChanged: (i) => setState(() => _tab = i)),
+            padding: const EdgeInsets.fromLTRB(
+                AppSpacing.screenH, 12, AppSpacing.screenH, 8),
+            child: PillTabs(
+                labels: _tabs,
+                selected: _tab,
+                onChanged: (i) => setState(() => _tab = i)),
           ),
           Expanded(
             child: FutureBuilder<List<VisitRecord>>(
@@ -53,7 +57,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   return ErrorState(
                     error: snap.error,
                     what: 'el historial',
-                    onRetry: () => setState(() => _future = AppServices.history.getVisits()),
+                    onRetry: () => setState(
+                        () => _future = AppServices.history.getVisits()),
                   );
                 }
                 if (!snap.hasData) {
@@ -61,7 +66,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 }
                 final list = _filter(snap.data!);
                 if (list.isEmpty) {
-                  return const EmptyState(icon: Icons.history, title: 'Sin visitas', message: 'No hay visitas con este filtro.');
+                  return const EmptyState(
+                      icon: Icons.history,
+                      title: 'Sin visitas',
+                      message: 'No hay visitas con este filtro.');
                 }
                 return RefreshIndicator(
                   color: AppColors.primary,
@@ -70,11 +78,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     await _future;
                   },
                   child: ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 4, AppSpacing.screenH, 20),
+                    padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.screenH, 4, AppSpacing.screenH, 20),
                     itemCount: list.length,
                     itemBuilder: (_, i) {
                       final v = list[i];
-                      final showDate = i == 0 || Fmt.date(list[i - 1].date) != Fmt.date(v.date);
+                      final showDate = i == 0 ||
+                          Fmt.date(list[i - 1].date) != Fmt.date(v.date);
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -93,7 +103,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 Text('${v.lotsDone}/${v.lotsTotal} lotes',
                                     style: AppText.caption),
                                 const SizedBox(height: 8),
-                                StatusBadge(v.status.label, tone: _tone(v.status)),
+                                StatusBadge(v.status.label,
+                                    tone: _tone(v.status)),
                               ],
                             ),
                           ),

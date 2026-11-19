@@ -5,7 +5,8 @@ import '../models/user_profile.dart';
 /// La UI la usa para decir la verdad: "guardado en el dispositivo, pendiente
 /// de enviar", en vez de dar por hecho que el servidor recibió el dato.
 class BackendNotAvailable implements Exception {
-  const BackendNotAvailable([this.message = 'Todavía no hay conexión con el servidor.']);
+  const BackendNotAvailable(
+      [this.message = 'Todavía no hay conexión con el servidor.']);
   final String message;
   @override
   String toString() => message;
@@ -35,5 +36,6 @@ abstract class ProfileRepository {
   Future<String> uploadProfilePhoto(String userId, PhotoFile photo);
 
   /// Guarda la preferencia de notificaciones del usuario.
-  Future<NotificationPreferences> updateNotifications(String userId, NotificationPreferences prefs);
+  Future<NotificationPreferences> updateNotifications(
+      String userId, NotificationPreferences prefs);
 }

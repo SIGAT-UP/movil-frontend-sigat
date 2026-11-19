@@ -45,12 +45,14 @@ class ProfilePhotoScreen extends StatelessWidget {
         PrimaryButton(
           label: 'Usar esta fotografía',
           color: AppColors.primaryDark,
-          onPressed: () => Navigator.of(context).pop(ProfilePhotoResult(photo: photo)),
+          onPressed: () =>
+              Navigator.of(context).pop(ProfilePhotoResult(photo: photo)),
         ),
         SecondaryButton(
           label: 'Tomar o elegir otra',
           icon: Icons.refresh,
-          onPressed: () => Navigator.of(context).pop(const ProfilePhotoResult(changeSource: true)),
+          onPressed: () => Navigator.of(context)
+              .pop(const ProfilePhotoResult(changeSource: true)),
         ),
       ]),
     );

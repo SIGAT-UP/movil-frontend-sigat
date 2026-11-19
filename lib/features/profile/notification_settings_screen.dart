@@ -12,10 +12,12 @@ class NotificationSettingsScreen extends StatefulWidget {
   const NotificationSettingsScreen({super.key});
 
   @override
-  State<NotificationSettingsScreen> createState() => _NotificationSettingsScreenState();
+  State<NotificationSettingsScreen> createState() =>
+      _NotificationSettingsScreenState();
 }
 
-class _NotificationSettingsScreenState extends State<NotificationSettingsScreen> {
+class _NotificationSettingsScreenState
+    extends State<NotificationSettingsScreen> {
   final _ctrl = ProfileController.instance;
 
   @override
@@ -30,7 +32,8 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
   Future<void> _toggle(bool value) async {
     final ok = await _ctrl.setNotificationsEnabled(value);
     if (!mounted || ok) return;
-    AppMessenger.error('No se pudo guardar la preferencia', message: _ctrl.error ?? 'Intenta de nuevo.');
+    AppMessenger.error('No se pudo guardar la preferencia',
+        message: _ctrl.error ?? 'Intenta de nuevo.');
   }
 
   @override
@@ -54,17 +57,20 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                       Row(
                         children: [
                           const Expanded(
-                            child: Text('Recibir notificaciones', style: AppText.title),
+                            child: Text('Recibir notificaciones',
+                                style: AppText.title),
                           ),
                           if (_ctrl.savingNotifications)
                             const Padding(
                               padding: EdgeInsets.only(right: AppSpacing.sm),
-                              child: AppInlineLoader(size: 16, color: AppColors.primary),
+                              child: AppInlineLoader(
+                                  size: 16, color: AppColors.primary),
                             ),
                           Switch(
                             value: prefs.enabled,
                             activeThumbColor: AppColors.primary,
-                            onChanged: _ctrl.savingNotifications ? null : _toggle,
+                            onChanged:
+                                _ctrl.savingNotifications ? null : _toggle,
                           ),
                         ],
                       ),
@@ -74,15 +80,20 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                         'sincronización.',
                         style: AppText.secondary,
                       ),
-                      const Divider(height: AppSpacing.xl, color: AppColors.divider),
+                      const Divider(
+                          height: AppSpacing.xl, color: AppColors.divider),
                       Row(
                         children: [
                           const Text('Estado actual', style: AppText.secondary),
                           const Spacer(),
                           StatusBadge(
                             prefs.label,
-                            tone: prefs.enabled ? StatusTone.success : StatusTone.neutral,
-                            icon: prefs.enabled ? Icons.notifications_active_outlined : Icons.notifications_off_outlined,
+                            tone: prefs.enabled
+                                ? StatusTone.success
+                                : StatusTone.neutral,
+                            icon: prefs.enabled
+                                ? Icons.notifications_active_outlined
+                                : Icons.notifications_off_outlined,
                           ),
                         ],
                       ),
@@ -91,13 +102,15 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
                 ),
                 if (_ctrl.error != null) ...[
                   const SizedBox(height: AppSpacing.lg),
-                  AlertBanner(title: 'No se pudo guardar', message: _ctrl.error),
+                  AlertBanner(
+                      title: 'No se pudo guardar', message: _ctrl.error),
                 ],
                 const SizedBox(height: AppSpacing.lg),
                 const AlertBanner(
                   type: AlertType.info,
                   title: 'Esta es tu preferencia dentro de la app',
-                  message: 'El permiso para mostrar notificaciones lo concede el sistema del dispositivo '
+                  message:
+                      'El permiso para mostrar notificaciones lo concede el sistema del dispositivo '
                       'y se gestiona aparte. El envío de notificaciones todavía no está implementado.',
                 ),
               ],

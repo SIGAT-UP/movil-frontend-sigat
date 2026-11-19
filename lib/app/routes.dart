@@ -64,16 +64,19 @@ class AppRoutes {
   static const home = '/home';
   static const lots = '/lots'; // arguments: LotsFilter? (filtro inicial)
   static const lotDetail = '/lots/detail'; // arguments: String lotId
-  static const identifyTrap = '/trap/identify'; // arguments: String? código inicial
+  static const identifyTrap =
+      '/trap/identify'; // arguments: String? código inicial
   static const scanTrap = '/trap/scan';
   static const trapIdentified = '/trap/identified'; // arguments: TrapLookup
   static const registerReading = '/reading'; // arguments: Trap
-  static const evidence = '/reading/evidence'; // arguments: PhotoFile → devuelve EvidenceResult
+  static const evidence =
+      '/reading/evidence'; // arguments: PhotoFile → devuelve EvidenceResult
   static const finishLot = '/visit/finish-lot';
   static const finishVisit = '/visit/finish';
   static const sync = '/sync';
   static const history = '/history';
-  static const profilePhoto = '/profile/photo'; // arguments: PhotoFile → devuelve ProfilePhotoResult
+  static const profilePhoto =
+      '/profile/photo'; // arguments: PhotoFile → devuelve ProfilePhotoResult
   static const profileNotifications = '/profile/notifications';
   static const notifications = '/notifications';
 
@@ -81,31 +84,41 @@ class AppRoutes {
   static const producerHome = '/producer';
   static const producerApplication = '/producer/application';
   static const producerHarvest = '/producer/harvest';
-  static const producerHarvestDone = '/producer/harvest/done'; // arguments: HarvestReport
+  static const producerHarvestDone =
+      '/producer/harvest/done'; // arguments: HarvestReport
   static const producerSync = '/producer/sync';
 
   // ---------- Planificaciones (las recibe el técnico o el productor) ----------
   static const planningList = '/plannings';
-  static const planningDetail = '/plannings/detail'; // arguments: String planningId
-  static const planningReject = '/plannings/reject'; // arguments: String planningId
+  static const planningDetail =
+      '/plannings/detail'; // arguments: String planningId
+  static const planningReject =
+      '/plannings/reject'; // arguments: String planningId
   static const documentViewer = '/plannings/document'; // arguments: Planning
 
   // ---------- Agrónomo ----------
   static const agronomistHome = '/agronomist';
   static const agroRecords = '/agronomist/records';
-  static const agroRecordReview = '/agronomist/records/review'; // arguments: String recordId
-  static const agroRecordLots = '/agronomist/records/lots'; // arguments: String recordId
-  static const agroRecordTraps = '/agronomist/records/traps'; // arguments: String lotId
-  static const agroRecordReading = '/agronomist/records/reading'; // arguments: String trapId
+  static const agroRecordReview =
+      '/agronomist/records/review'; // arguments: String recordId
+  static const agroRecordLots =
+      '/agronomist/records/lots'; // arguments: String recordId
+  static const agroRecordTraps =
+      '/agronomist/records/traps'; // arguments: String lotId
+  static const agroRecordReading =
+      '/agronomist/records/reading'; // arguments: String trapId
   static const agroLotInfo = '/agronomist/lot';
   static const agroLotSummary = '/agronomist/lot/summary';
   static const agroConfig = '/agronomist/config';
   static const agroPlanningHub = '/agronomist/planning';
-  static const agroPlanningTarget = '/agronomist/planning/target'; // arguments: PlanningTarget
+  static const agroPlanningTarget =
+      '/agronomist/planning/target'; // arguments: PlanningTarget
   /// arguments: PlanningTarget (nueva desde cero) o Planning (nueva a partir de una rechazada)
   static const agroNewPlanning = '/agronomist/planning/new';
-  static const agroMyPlannings = '/agronomist/planning/mine'; // arguments: PlanningTarget? (filtro)
-  static const agroPlanningDetail = '/agronomist/planning/detail'; // arguments: String planningId
+  static const agroMyPlannings =
+      '/agronomist/planning/mine'; // arguments: PlanningTarget? (filtro)
+  static const agroPlanningDetail =
+      '/agronomist/planning/detail'; // arguments: String planningId
 
   /// Inicio de cada rol. null = el rol aún no tiene vistas en esta app.
   static String? homeFor(UserRole role) => switch (role) {
@@ -133,8 +146,18 @@ class AppRoutes {
   }
 
   static const _tecnicoRoutes = {
-    home, lots, lotDetail, identifyTrap, scanTrap, trapIdentified, registerReading,
-    evidence, finishLot, finishVisit, sync, history,
+    home,
+    lots,
+    lotDetail,
+    identifyTrap,
+    scanTrap,
+    trapIdentified,
+    registerReading,
+    evidence,
+    finishLot,
+    finishVisit,
+    sync,
+    history,
   };
 
   /// Rutas de más de un rol: hay que tener sesión con un rol conocido.
@@ -166,18 +189,25 @@ class AppRoutes {
       // Técnico
       home => const MainShell(),
       lots => LotsScreen(
-          initialFilter: s.arguments is LotsFilter ? s.arguments! as LotsFilter : LotsFilter.todos),
-      lotDetail when s.arguments is String => LotDetailScreen(lotId: s.arguments! as String),
+          initialFilter: s.arguments is LotsFilter
+              ? s.arguments! as LotsFilter
+              : LotsFilter.todos),
+      lotDetail when s.arguments is String =>
+        LotDetailScreen(lotId: s.arguments! as String),
       identifyTrap => IdentifyTrapScreen(initialCode: s.arguments as String?),
       scanTrap => const ScanTrapScreen(),
-      trapIdentified when s.arguments is TrapLookup => TrapIdentifiedScreen(lookup: s.arguments! as TrapLookup),
-      registerReading when s.arguments is Trap => RegisterReadingScreen(trap: s.arguments! as Trap),
-      evidence when s.arguments is PhotoFile => EvidenceScreen(photo: s.arguments! as PhotoFile),
+      trapIdentified when s.arguments is TrapLookup =>
+        TrapIdentifiedScreen(lookup: s.arguments! as TrapLookup),
+      registerReading when s.arguments is Trap =>
+        RegisterReadingScreen(trap: s.arguments! as Trap),
+      evidence when s.arguments is PhotoFile =>
+        EvidenceScreen(photo: s.arguments! as PhotoFile),
       finishLot => const FinishLotScreen(),
       finishVisit => const FinishVisitScreen(),
       sync => const SyncScreen(),
       history => const HistoryScreen(),
-      profilePhoto when s.arguments is PhotoFile => ProfilePhotoScreen(photo: s.arguments! as PhotoFile),
+      profilePhoto when s.arguments is PhotoFile =>
+        ProfilePhotoScreen(photo: s.arguments! as PhotoFile),
       profileNotifications => const NotificationSettingsScreen(),
       notifications => const NotificationsScreen(),
       // Productor
@@ -189,7 +219,8 @@ class AppRoutes {
       producerSync => const ProducerSyncScreen(),
       // Planificaciones recibidas (técnico y productor)
       planningList => PlanningListScreen(
-          title: role == UserRole.productor ? 'Planificaciones' : 'Asignaciones',
+          title:
+              role == UserRole.productor ? 'Planificaciones' : 'Asignaciones',
           subtitle: role == UserRole.productor
               ? 'Planeaciones que te envió el agrónomo'
               : 'Lotes y fechas que te asignó el agrónomo',
@@ -223,7 +254,8 @@ class AppRoutes {
         ),
       agroNewPlanning when s.arguments is PlanningTarget =>
         NewPlanningWizardScreen(target: s.arguments! as PlanningTarget),
-      agroMyPlannings => MyPlanningsScreen(target: s.arguments as PlanningTarget?),
+      agroMyPlannings =>
+        MyPlanningsScreen(target: s.arguments as PlanningTarget?),
       agroPlanningDetail when s.arguments is String =>
         CreatedPlanningDetailScreen(planningId: s.arguments! as String),
       _ => null,

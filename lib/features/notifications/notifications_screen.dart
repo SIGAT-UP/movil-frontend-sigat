@@ -45,8 +45,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     Navigator.of(context).pushNamed(target.route, arguments: target.argument);
   }
 
-  bool get _puedeConfigurar =>
-      AppRoutes.canAccess(AppRoutes.profileNotifications, AppServices.session.value?.role);
+  bool get _puedeConfigurar => AppRoutes.canAccess(
+      AppRoutes.profileNotifications, AppServices.session.value?.role);
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             AppIconButton(
               icon: Icons.tune,
               tooltip: 'Preferencias de notificaciones',
-              onPressed: () => Navigator.of(context).pushNamed(AppRoutes.profileNotifications),
+              onPressed: () => Navigator.of(context)
+                  .pushNamed(AppRoutes.profileNotifications),
             ),
           ListenableBuilder(
             listenable: _ctrl,
@@ -81,7 +82,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               icon: Icons.cloud_off,
               title: 'No se pudieron cargar tus notificaciones',
               message: _ctrl.error,
-              action: SecondaryButton(label: 'Reintentar', onPressed: _ctrl.load),
+              action:
+                  SecondaryButton(label: 'Reintentar', onPressed: _ctrl.load),
             );
           }
 
@@ -89,7 +91,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             return const EmptyState(
               icon: Icons.notifications_none,
               title: 'No tienes notificaciones',
-              message: 'Aquí verás las asignaciones y los avisos que te envíe el sistema.',
+              message:
+                  'Aquí verás las asignaciones y los avisos que te envíe el sistema.',
             );
           }
 
@@ -106,7 +109,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     const AlertBanner(
                       type: AlertType.warning,
                       title: 'Tienes las notificaciones desactivadas',
-                      message: 'Siguen llegando aquí, pero no verás alertas emergentes. '
+                      message:
+                          'Siguen llegando aquí, pero no verás alertas emergentes. '
                           'Puedes cambiarlo con el botón de preferencias, arriba a la derecha.',
                     ),
                     const SizedBox(height: AppSpacing.lg),
@@ -132,7 +136,6 @@ class _NotificationCard extends StatelessWidget {
   final VoidCallback onTap;
 
   StatusTone get _tone => switch (notification.category) {
-
         NotificationCategory.asignacion => StatusTone.success,
         NotificationCategory.alertasFitosanitarias => StatusTone.error,
         NotificationCategory.recordatoriosInspeccion => StatusTone.warning,
@@ -177,7 +180,9 @@ class _NotificationCard extends StatelessWidget {
                 const SizedBox(height: AppSpacing.sm),
                 Text(
                   notification.title,
-                  style: noLeido ? AppText.title : AppText.title.copyWith(fontWeight: FontWeight.w600),
+                  style: noLeido
+                      ? AppText.title
+                      : AppText.title.copyWith(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 2),
                 Text(notification.body, style: AppText.secondary),
@@ -207,7 +212,8 @@ class _NotificationBellState extends State<NotificationBell> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => NotificationsController.instance.load());
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => NotificationsController.instance.load());
   }
 
   @override
@@ -220,16 +226,22 @@ class _NotificationBellState extends State<NotificationBell> {
           clipBehavior: Clip.none,
           children: [
             AppIconButton(
-              icon: count > 0 ? Icons.notifications_active_outlined : Icons.notifications_none,
-              tooltip: count > 0 ? '$count notificaciones sin leer' : 'Notificaciones',
-              onPressed: () => Navigator.of(context).pushNamed(AppRoutes.notifications),
+              icon: count > 0
+                  ? Icons.notifications_active_outlined
+                  : Icons.notifications_none,
+              tooltip: count > 0
+                  ? '$count notificaciones sin leer'
+                  : 'Notificaciones',
+              onPressed: () =>
+                  Navigator.of(context).pushNamed(AppRoutes.notifications),
             ),
             if (count > 0)
               Positioned(
                 right: 4,
                 top: 4,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                   decoration: BoxDecoration(
                     color: AppColors.error,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusPill),

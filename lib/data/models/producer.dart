@@ -73,7 +73,11 @@ class PhytoApplication {
 
 /// Autorreporte: cosecha (P04).
 class HarvestReport {
-  const HarvestReport({required this.id, required this.expectedDate, required this.volumeKg, this.actualDate});
+  const HarvestReport(
+      {required this.id,
+      required this.expectedDate,
+      required this.volumeKg,
+      this.actualDate});
 
   final String id;
   final DateTime expectedDate;
@@ -90,7 +94,9 @@ class HarvestReport {
   factory HarvestReport.fromJson(Map<String, dynamic> j) => HarvestReport(
         id: j['id'] as String,
         expectedDate: DateTime.parse(j['expected_date'] as String),
-        actualDate: j['actual_date'] == null ? null : DateTime.parse(j['actual_date'] as String),
+        actualDate: j['actual_date'] == null
+            ? null
+            : DateTime.parse(j['actual_date'] as String),
         volumeKg: (j['volume_kg'] as num).toDouble(),
       );
 }
@@ -106,7 +112,12 @@ enum ActivityType {
 
 /// Evento del historial del productor (visitas del técnico + sus autorreportes).
 class ActivityRecord {
-  const ActivityRecord({required this.id, required this.type, required this.date, required this.title, this.subtitle});
+  const ActivityRecord(
+      {required this.id,
+      required this.type,
+      required this.date,
+      required this.title,
+      this.subtitle});
 
   final String id;
   final ActivityType type;
@@ -116,7 +127,8 @@ class ActivityRecord {
 
   factory ActivityRecord.fromJson(Map<String, dynamic> j) => ActivityRecord(
         id: j['id'].toString(),
-        type: ActivityType.values.firstWhere((t) => t.name == j['type'], orElse: () => ActivityType.vigilancia),
+        type: ActivityType.values.firstWhere((t) => t.name == j['type'],
+            orElse: () => ActivityType.vigilancia),
         date: DateTime.parse(j['date'] as String),
         title: j['title'] as String,
         subtitle: j['subtitle'] as String?,

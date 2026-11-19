@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../../app/shell_nav.dart';
 import '../../core/widgets/widgets.dart';
 import '../../data/app_services.dart';
+import '../../data/models/sync_models.dart';
 import 'sync_controller.dart';
 
-/// M09-T — Sincronización: pendiente → sincronizando → todo actualizado.
 class SyncScreen extends StatefulWidget {
   const SyncScreen({super.key});
 
@@ -19,7 +19,6 @@ class _SyncScreenState extends State<SyncScreen> {
   @override
   void initState() {
     super.initState();
-    // Se carga después del primer frame: avisar a otros widgets durante el build no está permitido.
     WidgetsBinding.instance.addPostFrameCallback((_) => _sync.load());
   }
 
@@ -40,25 +39,69 @@ class _SyncScreenState extends State<SyncScreen> {
                   padding: const EdgeInsets.all(AppSpacing.screenH),
                   children: [
                     ..._header(online, total),
-                    const SizedBox(height: AppSpacing.lg),
-                    for (final item in _sync.items) ...[
-                      ChecklistTile(
-                        title: item.label,
-                        subtitle: item.synced
-                            ? 'Sincronizado'
-                            : 'Pendiente · observación ${Fmt.dayMonth(item.observedAt)}, ${Fmt.time24(item.observedAt)}',
-                        done: item.synced,
-                      ),
-                      const SizedBox(height: 10),
+                    if (_sync.summary != null) ...[
+                      const SizedBox(height: AppSpacing.lg),
+                      _resumen(_sync.summary!),
                     ],
                     if (_sync.error != null) ...[
-                      const SizedBox(height: 4),
-                      AlertBanner(type: AlertType.warning, title: 'No se completó', message: _sync.error),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: AppSpacing.md),
+                      AlertBanner(
+                          type: AlertType.warning,
+                          title: 'No se completó',
+                          message: _sync.error),
                     ],
                     if (_sync.isSyncing)
-                      const Text('Puedes seguir usando la aplicación mientras se sincroniza.',
-                          style: AppText.caption),
+                      const Padding(
+                        padding: EdgeInsets.only(top: AppSpacing.sm),
+                        child: Text(
+                            'Puedes seguir usando la aplicación mientras se sincroniza.',
+                            style: AppText.caption),
+                      ),
+                    if (_sync.items.isNotEmpty) ...[
+                      const SizedBox(height: AppSpacing.lg),
+                      const FieldLabel('Pendientes en este teléfono'),
+                      const SizedBox(height: 6),
+                      for (final item in _sync.items) ...[
+                        ChecklistTile(
+                          title: item.label,
+                          subtitle: item.lastError != null
+                              ? 'Pendiente · ${item.lastError}'
+                              : 'Pendiente · observación ${Fmt.dayMonth(item.observedAt)}, ${Fmt.time24(item.observedAt)}',
+                          done: item.synced,
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ],
+                    if (_sync.inbox.isNotEmpty) ...[
+                      const SizedBox(height: AppSpacing.lg),
+                      Row(
+                        children: [
+                          const Expanded(
+                              child: FieldLabel('Operaciones por revisar')),
+                          StatusBadge('${_sync.inbox.length}',
+                              tone: StatusTone.warning,
+                              icon: Icons.rule_outlined),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'El servidor no aplicó estos registros. El motivo queda registrado para '
+                        'que puedas corregirlos desde el lote.',
+                        style: AppText.caption,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      for (final op in _sync.inbox) ...[
+                        _OperacionTile(operacion: op),
+                        const SizedBox(height: 10),
+                      ],
+                    ],
+                    if (_sync.inboxError != null) ...[
+                      const SizedBox(height: AppSpacing.md),
+                      AlertBanner(
+                          type: AlertType.info,
+                          title: 'Bandeja del servidor',
+                          message: _sync.inboxError),
+                    ],
                     if (_sync.lastSync != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 6),
@@ -71,11 +114,15 @@ class _SyncScreenState extends State<SyncScreen> {
                 ),
               ),
               BottomActions(children: [
-                if (_sync.phase == SyncPhase.done)
-                  SecondaryButton(label: 'Ir al inicio', onPressed: () => ShellNav.goTo(context, AppTab.inicio))
+                if (_sync.phase == SyncPhase.done && _sync.inbox.isEmpty)
+                  SecondaryButton(
+                      label: 'Ir al inicio',
+                      onPressed: () => ShellNav.goTo(context, AppTab.inicio))
                 else
                   PrimaryButton(
-                    label: _sync.phase == SyncPhase.error ? 'Reintentar' : 'Sincronizar',
+                    label: _sync.phase == SyncPhase.error
+                        ? 'Reintentar'
+                        : 'Sincronizar',
                     loadingLabel: 'Sincronizando...',
                     isLoading: _sync.isSyncing,
                     color: AppColors.primaryDark,
@@ -95,7 +142,8 @@ class _SyncScreenState extends State<SyncScreen> {
         return [
           const Align(
             alignment: Alignment.centerLeft,
-            child: StatusBadge('Sincronizando...', tone: StatusTone.info, icon: Icons.sync),
+            child: StatusBadge('Sincronizando...',
+                tone: StatusTone.info, icon: Icons.sync),
           ),
           const SizedBox(height: 12),
           ProgressHeader(
@@ -107,24 +155,87 @@ class _SyncScreenState extends State<SyncScreen> {
         return const [
           Text('Todo está actualizado', style: AppText.h1),
           SizedBox(height: 6),
-          Align(alignment: Alignment.centerLeft, child: StatusBadge('Todo actualizado', icon: Icons.check)),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: StatusBadge('Todo actualizado', icon: Icons.check)),
         ];
       case SyncPhase.idle:
       case SyncPhase.error:
         return [
-          Text('${_sync.pendingCount} registros pendientes',
-              style: AppText.h1),
+          Text('${_sync.pendingCount} registros pendientes', style: AppText.h1),
           const SizedBox(height: 6),
-          Align(alignment: Alignment.centerLeft, child: ConnectionChip(isOnline: online)),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: ConnectionChip(isOnline: online)),
           if (!online) ...[
             const SizedBox(height: 12),
             const AlertBanner(
               type: AlertType.info,
               title: 'Sin conexión',
-              message: 'Los registros siguen guardados en el dispositivo. Sincroniza cuando tengas internet.',
+              message:
+                  'Los registros siguen guardados en el dispositivo. Sincroniza cuando tengas internet.',
             ),
           ],
         ];
     }
+  }
+
+  Widget _resumen(SyncPushSummary s) {
+    final partes = <String>[
+      if (s.confirmadas > 0) '${s.confirmadas} confirmadas',
+      if (s.enRevision > 0) '${s.enRevision} por revisar',
+      if (s.rechazadas > 0) '${s.rechazadas} rechazadas',
+      if (s.diferidas > 0) '${s.diferidas} sin visita',
+    ];
+    return AppCard(
+      tone: AppCardTone.highlighted,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Resultado del último envío', style: AppText.bodySmStrong),
+          const SizedBox(height: 4),
+          Text(partes.isEmpty ? 'Nada que enviar.' : partes.join(' · '),
+              style: AppText.caption),
+        ],
+      ),
+    );
+  }
+}
+
+class _OperacionTile extends StatelessWidget {
+  const _OperacionTile({required this.operacion});
+
+  final ServerOperation operacion;
+
+  @override
+  Widget build(BuildContext context) {
+    final rechazada = !operacion.enRevision;
+    return AppCard(
+      tone: rechazada ? AppCardTone.outlined : AppCardTone.normal,
+      borderColor: rechazada ? AppColors.error : null,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                  child: Text(operacion.titulo, style: AppText.bodySmStrong)),
+              StatusBadge(operacion.estado,
+                  tone: rechazada ? StatusTone.error : StatusTone.warning),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${operacion.entidad} · versión ${operacion.version} · '
+            '${Fmt.date(operacion.capturadaEn)}, ${Fmt.time(operacion.capturadaEn)}',
+            style: AppText.caption,
+          ),
+          if (operacion.motivo != null && operacion.motivo!.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(operacion.motivo!, style: AppText.caption),
+          ],
+        ],
+      ),
+    );
   }
 }

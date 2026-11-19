@@ -40,7 +40,8 @@ class SelectableTile extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.md),
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md, vertical: AppSpacing.md),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               border: Border.all(
@@ -59,14 +60,17 @@ class SelectableTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(title, style: AppText.title),
-                      if (subtitle != null) Text(subtitle!, style: AppText.caption),
+                      if (subtitle != null)
+                        Text(subtitle!, style: AppText.caption),
                     ],
                   ),
                 ),
                 Icon(
                   selected
                       ? Icons.check_circle
-                      : (multiple ? Icons.circle_outlined : Icons.radio_button_unchecked),
+                      : (multiple
+                          ? Icons.circle_outlined
+                          : Icons.radio_button_unchecked),
                   color: selected ? AppColors.primary : AppColors.border,
                   size: 22,
                 ),

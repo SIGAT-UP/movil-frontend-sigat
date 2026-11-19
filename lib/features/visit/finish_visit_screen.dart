@@ -48,10 +48,18 @@ class _FinishVisitScreenState extends State<FinishVisitScreen> {
               builder: (_, online, __) => InfoTableCard(
                 title: 'Resumen de la visita',
                 rows: [
-                  InfoRowData('Lotes registrados', value: '${_visit.lotsDone}/${_visit.lotsTotal}'),
-                  InfoRowData('Lecturas guardadas', value: snap.hasData ? '${snap.data!.$1}' : (snap.hasError ? 'No disponible' : '…')),
-                  InfoRowData('Pendientes de sincronización', value: snap.hasData ? '${snap.data!.$2}' : (snap.hasError ? 'No disponible' : '…')),
-                  InfoRowData('Conexión', trailing: ConnectionChip(isOnline: online)),
+                  InfoRowData('Lotes registrados',
+                      value: '${_visit.lotsDone}/${_visit.lotsTotal}'),
+                  InfoRowData('Lecturas guardadas',
+                      value: snap.hasData
+                          ? '${snap.data!.$1}'
+                          : (snap.hasError ? 'No disponible' : '…')),
+                  InfoRowData('Pendientes de sincronización',
+                      value: snap.hasData
+                          ? '${snap.data!.$2}'
+                          : (snap.hasError ? 'No disponible' : '…')),
+                  InfoRowData('Conexión',
+                      trailing: ConnectionChip(isOnline: online)),
                 ],
               ),
             ),
@@ -61,7 +69,8 @@ class _FinishVisitScreenState extends State<FinishVisitScreen> {
             const AlertBanner(
               type: AlertType.info,
               title: 'Puedes finalizar la visita',
-              message: 'Los datos permanecerán guardados hasta que exista conexión.',
+              message:
+                  'Los datos permanecerán guardados hasta que exista conexión.',
             )
           else
             AlertBanner(
@@ -78,7 +87,9 @@ class _FinishVisitScreenState extends State<FinishVisitScreen> {
           color: AppColors.primaryDark,
           onPressed: can ? _finish : null,
         ),
-        SecondaryButton(label: 'Volver al menú', onPressed: () => ShellNav.goTo(context, AppTab.inicio)),
+        SecondaryButton(
+            label: 'Volver al menú',
+            onPressed: () => ShellNav.goTo(context, AppTab.inicio)),
       ]),
     );
   }

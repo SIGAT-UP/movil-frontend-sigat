@@ -35,7 +35,9 @@ class Trap {
         lat: (j['lat'] as num).toDouble(),
         lng: (j['lng'] as num).toDouble(),
         gridCell: j['grid_cell'] as String?,
-        lastReadingDate: j['last_reading_date'] == null ? null : DateTime.parse(j['last_reading_date'] as String),
+        lastReadingDate: j['last_reading_date'] == null
+            ? null
+            : DateTime.parse(j['last_reading_date'] as String),
         lastCaptures: j['last_captures'] as int?,
         active: j['active'] as bool? ?? true,
       );
@@ -56,7 +58,9 @@ Trap trapFromApi(Map<String, dynamic> j) {
     lat: (j['latitud'] as num).toDouble(),
     lng: (j['longitud'] as num).toDouble(),
     gridCell: j['celda'] as String?,
-    lastReadingDate: j['ultima_lectura'] == null ? null : DateTime.parse(j['ultima_lectura'] as String),
+    lastReadingDate: j['ultima_lectura'] == null
+        ? null
+        : DateTime.parse(j['ultima_lectura'] as String),
     lastCaptures: (j['ultima_lectura_especimenes'] as num?)?.toInt(),
     active: (j['estado'] as String? ?? 'activo') == 'activo',
   );

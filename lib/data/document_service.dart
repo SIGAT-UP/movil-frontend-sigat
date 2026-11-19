@@ -35,18 +35,22 @@ class DocumentRules {
     final name = fileName.toLowerCase();
 
     // PDF: empieza por "%PDF-".
-    if (_startsWith(b, const [0x25, 0x50, 0x44, 0x46, 0x2D])) return DocKind.pdf;
+    if (_startsWith(b, const [0x25, 0x50, 0x44, 0x46, 0x2D])) {
+      return DocKind.pdf;
+    }
 
     // Word 97-2003 (.doc): contenedor OLE2. El mismo contenedor usan .xls y
     // .ppt, así que además se exige la extensión .doc.
-    if (_startsWith(b, const [0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1]) &&
+    if (_startsWith(
+            b, const [0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1]) &&
         name.endsWith('.doc')) {
       return DocKind.word;
     }
 
     // Word moderno (.docx): un ZIP que contiene la carpeta "word/".
     // Un .xlsx o un .zip cualquiera no la tienen.
-    if (_startsWith(b, const [0x50, 0x4B, 0x03, 0x04]) && _contains(b, _wordFolder)) {
+    if (_startsWith(b, const [0x50, 0x4B, 0x03, 0x04]) &&
+        _contains(b, _wordFolder)) {
       return DocKind.word;
     }
     return null;
@@ -118,9 +122,11 @@ class DocumentService {
   Future<PlanningDoc?> pickDocument() async {
     XFile? archivo;
     try {
-      archivo = await openFile(acceptedTypeGroups: const <XTypeGroup>[_documentos]);
+      archivo =
+          await openFile(acceptedTypeGroups: const <XTypeGroup>[_documentos]);
     } catch (_) {
-      throw const DocumentException('No se pudo abrir el selector de archivos del dispositivo.');
+      throw const DocumentException(
+          'No se pudo abrir el selector de archivos del dispositivo.');
     }
     if (archivo == null) return null; // canceló
 
@@ -168,7 +174,8 @@ class DocumentService {
     if (foto == null) return null; // canceló
     return PlanningDoc(
       id: 'doc-${DateTime.now().microsecondsSinceEpoch}',
-      fileName: foto.originalName ?? 'instrucciones.${foto.mimeType.split('/').last}',
+      fileName:
+          foto.originalName ?? 'instrucciones.${foto.mimeType.split('/').last}',
       sizeBytes: foto.sizeBytes,
       pages: 1,
       kind: DocKind.imagen,

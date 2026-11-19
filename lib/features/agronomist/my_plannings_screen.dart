@@ -27,7 +27,13 @@ class _MyPlanningsScreenState extends State<MyPlanningsScreen> {
   int _tab = 0;
   String _query = '';
 
-  static const _etiquetas = ['Todo', 'En revisión', 'Aceptadas', 'Rechazadas', 'Completadas'];
+  static const _etiquetas = [
+    'Todo',
+    'En revisión',
+    'Aceptadas',
+    'Rechazadas',
+    'Completadas'
+  ];
   static const _estados = <PlanningStatus?>[
     null,
     PlanningStatus.pendiente,
@@ -39,7 +45,8 @@ class _MyPlanningsScreenState extends State<MyPlanningsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _ctrl.loadCreatedPlannings());
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _ctrl.loadCreatedPlannings());
   }
 
   List<Planning> _visibles() {
@@ -59,7 +66,9 @@ class _MyPlanningsScreenState extends State<MyPlanningsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final titulo = widget.target == PlanningTarget.tecnico ? 'Mis asignaciones' : 'Mis planificaciones';
+    final titulo = widget.target == PlanningTarget.tecnico
+        ? 'Mis asignaciones'
+        : 'Mis planificaciones';
     return Scaffold(
       backgroundColor: AppColors.surface,
       appBar: SimpleAppBar(title: titulo, showBack: widget.showBack),
@@ -71,15 +80,16 @@ class _MyPlanningsScreenState extends State<MyPlanningsScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.screenH, AppSpacing.md, AppSpacing.screenH, AppSpacing.sm),
+                  padding: const EdgeInsets.fromLTRB(AppSpacing.screenH,
+                      AppSpacing.md, AppSpacing.screenH, AppSpacing.sm),
                   child: AppSearchField(
                     hint: 'Buscar planificaciones...',
                     onChanged: (v) => setState(() => _query = v),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.sm),
+                  padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.sm),
                   child: PillTabs(
                     labels: _etiquetas,
                     selected: _tab,
@@ -90,44 +100,60 @@ class _MyPlanningsScreenState extends State<MyPlanningsScreen> {
                   child: RefreshIndicator(
                     color: AppColors.primary,
                     onRefresh: _ctrl.loadCreatedPlannings,
-                    child: _ctrl.loadingPlannings && _ctrl.createdPlannings.isEmpty
-                        ? ListView(children: const [AppLoader(padding: EdgeInsets.all(AppSpacing.xl))])
-                        : _ctrl.planningsError != null && _ctrl.createdPlannings.isEmpty
+                    child: _ctrl.loadingPlannings &&
+                            _ctrl.createdPlannings.isEmpty
+                        ? ListView(children: const [
+                            AppLoader(padding: EdgeInsets.all(AppSpacing.xl))
+                          ])
+                        : _ctrl.planningsError != null &&
+                                _ctrl.createdPlannings.isEmpty
                             ? ListView(
-                                padding: const EdgeInsets.all(AppSpacing.screenH),
+                                padding:
+                                    const EdgeInsets.all(AppSpacing.screenH),
                                 children: [
                                   AlertBanner(
                                     title: _ctrl.planningsError!,
-                                    message: 'Desliza hacia abajo para reintentar.',
+                                    message:
+                                        'Desliza hacia abajo para reintentar.',
                                   ),
                                 ],
                               )
-                        : lista.isEmpty
-                            ? ListView(
-                                children: [
-                                  const SizedBox(height: AppSpacing.xl),
-                                  EmptyState(
-                                    icon: _query.isEmpty ? Icons.event_busy_outlined : Icons.search_off,
-                                    title: _query.isEmpty ? 'Sin planificaciones' : 'Sin resultados',
-                                    message: _query.isEmpty
-                                        ? 'Aquí verás las que crees desde Planeación.'
-                                        : 'Prueba con otra fecha, nombre o estado.',
+                            : lista.isEmpty
+                                ? ListView(
+                                    children: [
+                                      const SizedBox(height: AppSpacing.xl),
+                                      EmptyState(
+                                        icon: _query.isEmpty
+                                            ? Icons.event_busy_outlined
+                                            : Icons.search_off,
+                                        title: _query.isEmpty
+                                            ? 'Sin planificaciones'
+                                            : 'Sin resultados',
+                                        message: _query.isEmpty
+                                            ? 'Aquí verás las que crees desde Planeación.'
+                                            : 'Prueba con otra fecha, nombre o estado.',
+                                      ),
+                                    ],
+                                  )
+                                : ListView.separated(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        AppSpacing.screenH,
+                                        AppSpacing.sm,
+                                        AppSpacing.screenH,
+                                        AppSpacing.xl),
+                                    itemCount: lista.length,
+                                    separatorBuilder: (_, __) =>
+                                        const SizedBox(height: AppSpacing.sm),
+                                    itemBuilder: (context, i) =>
+                                        _FilaPlanificacion(
+                                      planning: lista[i],
+                                      onTap: () =>
+                                          Navigator.of(context).pushNamed(
+                                        AppRoutes.agroPlanningDetail,
+                                        arguments: lista[i].id,
+                                      ),
+                                    ),
                                   ),
-                                ],
-                              )
-                            : ListView.separated(
-                                padding: const EdgeInsets.fromLTRB(
-                                    AppSpacing.screenH, AppSpacing.sm, AppSpacing.screenH, AppSpacing.xl),
-                                itemCount: lista.length,
-                                separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
-                                itemBuilder: (context, i) => _FilaPlanificacion(
-                                  planning: lista[i],
-                                  onTap: () => Navigator.of(context).pushNamed(
-                                    AppRoutes.agroPlanningDetail,
-                                    arguments: lista[i].id,
-                                  ),
-                                ),
-                              ),
                   ),
                 ),
               ],
@@ -150,19 +176,22 @@ class _FilaPlanificacion extends StatelessWidget {
     final rechazada = planning.status == PlanningStatus.rechazada;
     return Semantics(
       button: true,
-      label: '${Fmt.weekdayDate(planning.startDate)}, ${creatorStatusLabel(planning.status)}',
+      label:
+          '${Fmt.weekdayDate(planning.startDate)}, ${creatorStatusLabel(planning.status)}',
       child: AppCard(
         onTap: onTap,
         color: rechazada ? AppColors.errorLight : null,
         borderColor: rechazada ? AppColors.errorBorder : AppColors.border,
-        padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.sm, AppSpacing.md),
+        padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md, AppSpacing.md, AppSpacing.sm, AppSpacing.md),
         child: Row(
           children: [
             Container(
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: rechazada ? AppColors.background : AppColors.primaryLight,
+                color:
+                    rechazada ? AppColors.background : AppColors.primaryLight,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
               ),
               child: Icon(

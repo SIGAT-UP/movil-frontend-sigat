@@ -1,4 +1,4 @@
-﻿// Sistema de diseño global (componentes genéricos de interfaz).
+// Sistema de diseño global (componentes genéricos de interfaz).
 // Importar solo este archivo:  import '.../core/widgets/widgets.dart';
 // Componentes propios del dominio fitosanitario (lote, trampa, MTD, sincronización): shared/shared.dart
 
@@ -32,4 +32,3 @@ export 'status_badge.dart';
 export 'status_chip.dart';
 export 'timeline.dart';
 export 'wizard_steps.dart';
-

@@ -22,7 +22,8 @@ class AppSpacing {
   static const double radiusSm = 10; // campos, botones
   static const double radiusMd = 14; // tarjetas
   static const double radiusLg = 20; // hojas y paneles
-  static const double radiusXl = 24; // panel inferior de la cámara, hojas inferiores
+  static const double radiusXl =
+      24; // panel inferior de la cámara, hojas inferiores
   static const double radiusPill = 100; // chips, badges
 
   // Alturas táctiles (mínimo 48 en móvil)

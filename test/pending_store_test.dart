@@ -16,7 +16,8 @@ void main() {
 
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  test('lo guardado se lee desde otra instancia (como al reabrir la app)', () async {
+  test('lo guardado se lee desde otra instancia (como al reabrir la app)',
+      () async {
     await SharedPrefsPendingStore().put(registro('a'));
     final leidos = await SharedPrefsPendingStore().forOwner('5');
     expect(leidos.single.id, 'a');
@@ -34,9 +35,12 @@ void main() {
   });
 
   test('un valor dañado no bloquea la app y se conserva aparte', () async {
-    SharedPreferences.setMockInitialValues({'sigat.pendientes.v1': '{no es json'});
+    SharedPreferences.setMockInitialValues(
+        {'sigat.pendientes.v1': '{no es json'});
     expect(await SharedPrefsPendingStore().forOwner('5'), isEmpty);
     final prefs = await SharedPreferences.getInstance();
-    expect(prefs.getKeys().any((k) => k.startsWith('sigat.pendientes.v1.danado.')), isTrue);
+    expect(
+        prefs.getKeys().any((k) => k.startsWith('sigat.pendientes.v1.danado.')),
+        isTrue);
   });
 }

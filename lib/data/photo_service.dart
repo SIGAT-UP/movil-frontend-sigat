@@ -27,7 +27,9 @@ class PhotoService {
     XFile? file;
     try {
       file = await _picker.pickImage(
-        source: source == PhotoSource.camara ? ImageSource.camera : ImageSource.gallery,
+        source: source == PhotoSource.camara
+            ? ImageSource.camera
+            : ImageSource.gallery,
         imageQuality: PhotoRules.quality,
         maxWidth: PhotoRules.maxDimension,
         maxHeight: PhotoRules.maxDimension,
@@ -52,7 +54,8 @@ class PhotoService {
     }
 
     if (bytes.isEmpty) {
-      throw const PhotoException('El archivo está vacío.', rejection: PhotoRejection.vacio);
+      throw const PhotoException('El archivo está vacío.',
+          rejection: PhotoRejection.vacio);
     }
 
     // El tipo se deduce del contenido, no de la extensión del nombre.
@@ -96,7 +99,9 @@ class PhotoService {
 
   String _sourceError(PhotoSource source, Object e) {
     final texto = e.toString().toLowerCase();
-    final esPermiso = texto.contains('permission') || texto.contains('denied') || texto.contains('access');
+    final esPermiso = texto.contains('permission') ||
+        texto.contains('denied') ||
+        texto.contains('access');
     if (source == PhotoSource.camara) {
       return esPermiso
           ? 'La app no tiene permiso para usar la cámara. Actívalo en los ajustes del dispositivo.'

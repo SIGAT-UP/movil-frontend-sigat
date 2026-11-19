@@ -39,7 +39,9 @@ class ChecklistTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = locked ? StatusTone.neutral : (tone ?? (done ? StatusTone.success : StatusTone.warning));
+    final t = locked
+        ? StatusTone.neutral
+        : (tone ?? (done ? StatusTone.success : StatusTone.warning));
     final tile = Material(
       color: t.bg,
       borderRadius: BorderRadius.circular(10),
@@ -65,18 +67,24 @@ class ChecklistTile extends StatelessWidget {
                   color: done ? t.fg : Colors.white,
                   border: done
                       ? null
-                      : Border.all(color: selected ? AppColors.primary : AppColors.textHint, width: selected ? 2 : 1.5),
+                      : Border.all(
+                          color:
+                              selected ? AppColors.primary : AppColors.textHint,
+                          width: selected ? 2 : 1.5),
                 ),
                 child: done
                     ? const Icon(Icons.check, size: 16, color: Colors.white)
                     : locked
-                        ? const Icon(Icons.lock_outline, size: 14, color: AppColors.textHint)
+                        ? const Icon(Icons.lock_outline,
+                            size: 14, color: AppColors.textHint)
                         : selected
                             ? Center(
                                 child: Container(
                                   width: 12,
                                   height: 12,
-                                  decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                                  decoration: const BoxDecoration(
+                                      color: AppColors.primary,
+                                      shape: BoxShape.circle),
                                 ),
                               )
                             : null,
@@ -103,7 +111,8 @@ class ChecklistTile extends StatelessWidget {
 
 /// Texto de avance + barra ("3 de 4 trampas registradas del lote A").
 class ProgressHeader extends StatelessWidget {
-  const ProgressHeader({super.key, required this.label, required this.value, this.trailing});
+  const ProgressHeader(
+      {super.key, required this.label, required this.value, this.trailing});
 
   final String label;
 
@@ -119,8 +128,7 @@ class ProgressHeader extends StatelessWidget {
         Row(
           children: [
             Expanded(child: Text(label, style: AppText.label)),
-            if (trailing != null)
-              Text(trailing!, style: AppText.caption),
+            if (trailing != null) Text(trailing!, style: AppText.caption),
           ],
         ),
         const SizedBox(height: 8),
@@ -205,8 +213,11 @@ class MenuTile extends StatelessWidget {
                         ? Container(
                             width: 28,
                             height: 28,
-                            decoration: const BoxDecoration(color: AppColors.surfaceRaised, shape: BoxShape.circle),
-                            child: const Icon(Icons.chevron_right_rounded, size: 20, color: AppColors.primaryDark),
+                            decoration: const BoxDecoration(
+                                color: AppColors.surfaceRaised,
+                                shape: BoxShape.circle),
+                            child: const Icon(Icons.chevron_right_rounded,
+                                size: 20, color: AppColors.primaryDark),
                           )
                         : const SizedBox()),
               ],

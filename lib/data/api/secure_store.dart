@@ -10,7 +10,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 ///   y lo usará la sincronización.
 /// * Usuario recordado: solo si la persona marcó «Recordar usuario».
 class SecureStore {
-  SecureStore({FlutterSecureStorage? storage}) : _s = storage ?? const FlutterSecureStorage();
+  SecureStore({FlutterSecureStorage? storage})
+      : _s = storage ?? const FlutterSecureStorage();
 
   final FlutterSecureStorage _s;
 
@@ -36,8 +37,9 @@ class SecureStore {
 
   Future<void> saveDeviceId(String id) => _escribir(_kDispositivo, id);
 
-  Future<void> saveRememberedUser(String? usuario) =>
-      usuario == null ? _borrar(_kUsuarioRecordado) : _escribir(_kUsuarioRecordado, usuario);
+  Future<void> saveRememberedUser(String? usuario) => usuario == null
+      ? _borrar(_kUsuarioRecordado)
+      : _escribir(_kUsuarioRecordado, usuario);
 
   /// Cierre de sesión: borra los tokens y la sesión guardada. El dispositivo y el usuario
   /// recordado se conservan.

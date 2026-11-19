@@ -19,7 +19,8 @@ Future<void> confirmAndLogout(BuildContext context) async {
   final ok = await showAppConfirmDialog(
     context,
     title: 'Cerrar sesión',
-    message: 'Los datos sin sincronizar permanecen guardados en el dispositivo.',
+    message:
+        'Los datos sin sincronizar permanecen guardados en el dispositivo.',
     confirmLabel: 'Cerrar sesión',
     destructive: true,
   );
@@ -41,7 +42,10 @@ Future<void> logoutNow(BuildContext context) async {
     // La cola de pendientes NO se toca: cada registro conserva su dueño.
     clearSessionState();
   }
-  if (context.mounted) Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
+  if (context.mounted) {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
+  }
 }
 
 /// Olvida la sesión y el estado en memoria de todos los roles, sin navegar.

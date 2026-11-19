@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vigilancia_durazno/app/app.dart';
 import 'package:vigilancia_durazno/features/auth/logout.dart';
@@ -52,14 +52,18 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('Login con credenciales incorrectas muestra el mensaje del servidor', (tester) async {
+  testWidgets(
+      'Login con credenciales incorrectas muestra el mensaje del servidor',
+      (tester) async {
     await entrar(tester, 'tecnico.demo', 'no-es-la-clave');
     expect(find.text('No pudimos iniciar sesión'), findsOneWidget);
     expect(find.text('Usuario o contraseña incorrectos.'), findsOneWidget);
     expect(backend.peticiones, contains('POST /auth/login'));
   });
 
-  testWidgets('Login correcto (usuario creado en la BD) lleva a Contexto de acceso e Inicio', (tester) async {
+  testWidgets(
+      'Login correcto (usuario creado en la BD) lleva a Contexto de acceso e Inicio',
+      (tester) async {
     await entrar(tester, 'tecnico.demo', claveTecnico);
     expect(find.text('Hola, Tecnico'), findsOneWidget);
 
@@ -72,7 +76,8 @@ void main() {
     expect(find.text('—'), findsWidgets);
   });
 
-  testWidgets('El productor entra a SU inicio y no ve las pestañas del técnico', (tester) async {
+  testWidgets('El productor entra a SU inicio y no ve las pestañas del técnico',
+      (tester) async {
     await entrar(tester, 'carlos.prod', claveProductor);
     expect(find.text('Productor'), findsOneWidget);
 
@@ -84,10 +89,12 @@ void main() {
     expect(find.text('Trampas'), findsNothing);
     // /productor/cultivo aún no existe en el servidor (501): se dice, no se inventa el cultivo.
     expect(find.text('No se pudo cargar tu cultivo'), findsOneWidget);
-    expect(find.textContaining('todavía no está disponible en el servidor'), findsWidgets);
+    expect(find.textContaining('todavía no está disponible en el servidor'),
+        findsWidgets);
   });
 
-  testWidgets('Sin conexión el login lo dice (no da por buena la sesión)', (tester) async {
+  testWidgets('Sin conexión el login lo dice (no da por buena la sesión)',
+      (tester) async {
     backend.sinRed = true;
     await entrar(tester, 'tecnico.demo', claveTecnico);
     expect(find.text('Sin conexión'), findsOneWidget);
@@ -100,7 +107,9 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('Técnico: cerrar sesión arriba y «Pendiente de visita» abre los lotes pendientes', (tester) async {
+  testWidgets(
+      'Técnico: cerrar sesión arriba y «Pendiente de visita» abre los lotes pendientes',
+      (tester) async {
     await entrar(tester, 'tecnico.demo', claveTecnico);
     await continuar(tester);
 
@@ -136,12 +145,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text('Los datos sin sincronizar permanecen guardados en el dispositivo.'),
+      find.text(
+          'Los datos sin sincronizar permanecen guardados en el dispositivo.'),
       findsOneWidget,
     );
   });
 
-  testWidgets('Productor: pestaña Perfil con sus propias opciones', (tester) async {
+  testWidgets('Productor: pestaña Perfil con sus propias opciones',
+      (tester) async {
     await entrar(tester, 'carlos.prod', claveProductor);
     await continuar(tester);
 
@@ -154,15 +165,18 @@ void main() {
     expect(backend.peticiones, contains('GET /yo/perfil'));
   });
 
-  testWidgets('Agrónomo: pestaña Perfil con sus propias opciones', (tester) async {
+  testWidgets('Agrónomo: pestaña Perfil con sus propias opciones',
+      (tester) async {
     await entrar(tester, 'sara.agro', claveAgronomo);
     await continuar(tester);
 
     await tester.tap(find.text('Perfil'));
     await tester.pumpAndSettle();
     expect(find.text('Mi perfil'), findsOneWidget);
-    expect(find.text('Agrónomo / Supervisor · Vigilancia Fitosanitaria'), findsOneWidget);
+    expect(find.text('Agrónomo / Supervisor · Vigilancia Fitosanitaria'),
+        findsOneWidget);
     expect(find.text('Resumen del lote'), findsOneWidget);
-    expect(find.text('Historial de visitas'), findsNothing); // eso es del técnico
+    expect(
+        find.text('Historial de visitas'), findsNothing); // eso es del técnico
   });
 }

@@ -21,8 +21,13 @@ void main() {
     return false;
   }
 
-  List<int> segmento(int marcador, List<int> datos) =>
-      [0xFF, marcador, (datos.length + 2) >> 8, (datos.length + 2) & 0xFF, ...datos];
+  List<int> segmento(int marcador, List<int> datos) => [
+        0xFF,
+        marcador,
+        (datos.length + 2) >> 8,
+        (datos.length + 2) & 0xFF,
+        ...datos
+      ];
 
   // EXIF little endian con Orientation=6 y el texto «GPS-SECRETO» en un valor ASCII.
   List<int> exif() {
@@ -33,26 +38,61 @@ void main() {
       ..add([0x49, 0x49, 42, 0, 8, 0, 0, 0]) // II, 42, IFD0 en 8
       ..add([2, 0]) // 2 entradas
       ..add([0x12, 0x01, 3, 0, 1, 0, 0, 0, 6, 0, 0, 0]) // Orientation = 6
-      ..add([0x0F, 0x01, 2, 0, secreto.length, 0, 0, 0, 38, 0, 0, 0]) // Make -> offset 38
+      ..add([
+        0x0F,
+        0x01,
+        2,
+        0,
+        secreto.length,
+        0,
+        0,
+        0,
+        38,
+        0,
+        0,
+        0
+      ]) // Make -> offset 38
       ..add([0, 0, 0, 0])
       ..add(secreto);
     return b.takeBytes();
   }
 
-  final escaneo = [0xFF, 0xDA, 0x00, 0x08, 1, 1, 0, 0, 0x3F, 0, 0x12, 0x34, 0x56, 0xFF, 0xD9];
+  final escaneo = [
+    0xFF,
+    0xDA,
+    0x00,
+    0x08,
+    1,
+    1,
+    0,
+    0,
+    0x3F,
+    0,
+    0x12,
+    0x34,
+    0x56,
+    0xFF,
+    0xD9
+  ];
 
   Uint8List jpeg({bool conExif = true}) => Uint8List.fromList([
-        0xFF, 0xD8,
+        0xFF,
+        0xD8,
         ...segmento(0xE0, ascii.encode('JFIF\u0000')),
         if (conExif) ...segmento(0xE1, exif()),
-        ...segmento(0xE1, ascii.encode('http://ns.adobe.com/xap/1.0/\u0000<x:xmpmeta>XMP-SECRETO</x:xmpmeta>')),
+        ...segmento(
+            0xE1,
+            ascii.encode(
+                'http://ns.adobe.com/xap/1.0/\u0000<x:xmpmeta>XMP-SECRETO</x:xmpmeta>')),
         ...segmento(0xFE, ascii.encode('COMENTARIO-SECRETO')),
         ...segmento(0xDB, List.filled(65, 1)),
         ...escaneo,
       ]);
 
   group('JPEG', () {
-    test('quita EXIF, XMP y comentarios; conserva JFIF, tablas y datos de la imagen', () {
+    test(
+        'quita EXIF, XMP y comentarios; conserva JFIF, tablas y datos de la imagen',
+        () {
       final limpio = ImageMetadata.strip(jpeg(), 'image/jpeg')!;
       expect(contiene(limpio, ascii.encode('GPS-SECRETO')), isFalse);
       expect(contiene(limpio, ascii.encode('XMP-SECRETO')), isFalse);
@@ -62,7 +102,9 @@ void main() {
       expect(limpio.sublist(0, 2), [0xFF, 0xD8]);
     });
 
-    test('vuelve a escribir solo la orientación para que la foto no aparezca girada', () {
+    test(
+        'vuelve a escribir solo la orientación para que la foto no aparezca girada',
+        () {
       final limpio = ImageMetadata.strip(jpeg(), 'image/jpeg')!;
       // Entrada IFD: tag 0x0112, tipo SHORT, cantidad 1, valor 6 (little endian).
       expect(contiene(limpio, [0x12, 0x01, 3, 0, 1, 0, 0, 0, 6, 0]), isTrue);
@@ -75,14 +117,25 @@ void main() {
 
     test('un JPEG truncado o manipulado se rechaza (null)', () {
       final original = jpeg();
-      expect(ImageMetadata.strip(Uint8List.sublistView(original, 0, 30), 'image/jpeg'), isNull);
-      expect(ImageMetadata.strip(Uint8List.fromList([0xFF, 0xD8, 0, 0, 0, 0]), 'image/jpeg'), isNull);
+      expect(
+          ImageMetadata.strip(
+              Uint8List.sublistView(original, 0, 30), 'image/jpeg'),
+          isNull);
+      expect(
+          ImageMetadata.strip(
+              Uint8List.fromList([0xFF, 0xD8, 0, 0, 0, 0]), 'image/jpeg'),
+          isNull);
     });
   });
 
   group('PNG', () {
     List<int> trozo(String tipo, List<int> datos) => [
-          ...[datos.length >> 24, (datos.length >> 16) & 0xFF, (datos.length >> 8) & 0xFF, datos.length & 0xFF],
+          ...[
+            datos.length >> 24,
+            (datos.length >> 16) & 0xFF,
+            (datos.length >> 8) & 0xFF,
+            datos.length & 0xFF
+          ],
           ...ascii.encode(tipo),
           ...datos,
           0, 0, 0, 0, // CRC (no se valida aquí)
@@ -106,7 +159,8 @@ void main() {
     });
 
     test('un PNG sin IEND se rechaza', () {
-      final png = Uint8List.fromList([...firma, ...trozo('IHDR', List.filled(13, 0))]);
+      final png =
+          Uint8List.fromList([...firma, ...trozo('IHDR', List.filled(13, 0))]);
       expect(ImageMetadata.strip(png, 'image/png'), isNull);
     });
   });
@@ -114,12 +168,17 @@ void main() {
   group('WebP', () {
     List<int> trozo(String tipo, List<int> datos) => [
           ...ascii.encode(tipo),
-          datos.length & 0xFF, (datos.length >> 8) & 0xFF, 0, 0,
+          datos.length & 0xFF,
+          (datos.length >> 8) & 0xFF,
+          0,
+          0,
           ...datos,
           if (datos.length.isOdd) 0,
         ];
 
-    test('quita EXIF y XMP, apaga sus banderas en VP8X y corrige el tamaño RIFF', () {
+    test(
+        'quita EXIF y XMP, apaga sus banderas en VP8X y corrige el tamaño RIFF',
+        () {
       final cuerpo = [
         ...ascii.encode('WEBP'),
         ...trozo('VP8X', [0x0C, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
@@ -129,7 +188,10 @@ void main() {
       ];
       final webp = Uint8List.fromList([
         ...ascii.encode('RIFF'),
-        cuerpo.length & 0xFF, (cuerpo.length >> 8) & 0xFF, 0, 0,
+        cuerpo.length & 0xFF,
+        (cuerpo.length >> 8) & 0xFF,
+        0,
+        0,
         ...cuerpo,
       ]);
       final limpio = ImageMetadata.strip(webp, 'image/webp')!;
@@ -138,7 +200,8 @@ void main() {
       expect(contiene(limpio, ascii.encode('VP8L')), isTrue);
       final d = ByteData.sublistView(limpio);
       expect(d.getUint32(4, Endian.little) + 8, limpio.length);
-      expect(limpio[20] & 0x0C, 0); // banderas EXIF/XMP apagadas (VP8X empieza en el byte 12)
+      expect(limpio[20] & 0x0C,
+          0); // banderas EXIF/XMP apagadas (VP8X empieza en el byte 12)
     });
   });
 }

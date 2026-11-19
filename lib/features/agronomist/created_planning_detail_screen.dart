@@ -18,10 +18,12 @@ class CreatedPlanningDetailScreen extends StatefulWidget {
   final String planningId;
 
   @override
-  State<CreatedPlanningDetailScreen> createState() => _CreatedPlanningDetailScreenState();
+  State<CreatedPlanningDetailScreen> createState() =>
+      _CreatedPlanningDetailScreenState();
 }
 
-class _CreatedPlanningDetailScreenState extends State<CreatedPlanningDetailScreen> {
+class _CreatedPlanningDetailScreenState
+    extends State<CreatedPlanningDetailScreen> {
   final _ctrl = AgronomistController.instance;
   bool _downloading = false;
 
@@ -31,7 +33,10 @@ class _CreatedPlanningDetailScreenState extends State<CreatedPlanningDetailScree
     try {
       await PdfService.instance.downloadInstructions(p);
     } catch (_) {
-      if (mounted) AppMessenger.error('No se pudo preparar el documento', message: 'Intenta de nuevo.');
+      if (mounted) {
+        AppMessenger.error('No se pudo preparar el documento',
+            message: 'Intenta de nuevo.');
+      }
     } finally {
       if (mounted) setState(() => _downloading = false);
     }
@@ -79,12 +84,17 @@ class _CreatedPlanningDetailScreenState extends State<CreatedPlanningDetailScree
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          p.rejectionReason == null ? 'No se registró un motivo.' : '“${p.rejectionReason}”',
-                          style: AppText.body.copyWith(fontStyle: FontStyle.italic, color: AppColors.error),
+                          p.rejectionReason == null
+                              ? 'No se registró un motivo.'
+                              : '“${p.rejectionReason}”',
+                          style: AppText.body.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: AppColors.error),
                         ),
                         if (p.respondedAt != null) ...[
                           const SizedBox(height: AppSpacing.sm),
-                          Text(Fmt.dateTime24(p.respondedAt!), style: AppText.caption),
+                          Text(Fmt.dateTime24(p.respondedAt!),
+                              style: AppText.caption),
                         ],
                       ],
                     ),
@@ -98,15 +108,24 @@ class _CreatedPlanningDetailScreenState extends State<CreatedPlanningDetailScree
                 AppCard(
                   child: Column(
                     children: [
-                      _Dato(Icons.calendar_month_outlined, 'Fecha propuesta', Fmt.weekdayDate(p.startDate)),
+                      _Dato(Icons.calendar_month_outlined, 'Fecha propuesta',
+                          Fmt.weekdayDate(p.startDate)),
                       if (p.endDate != null)
-                        _Dato(Icons.event_available_outlined, 'Hasta', Fmt.weekdayDate(p.endDate!)),
+                        _Dato(Icons.event_available_outlined, 'Hasta',
+                            Fmt.weekdayDate(p.endDate!)),
                       if (p.scheduleFrom != null)
-                        _Dato(Icons.schedule, 'Horario',
-                            p.scheduleTo == null ? p.scheduleFrom! : '${p.scheduleFrom} - ${p.scheduleTo}'),
-                      _Dato(Icons.person_outline, esTecnico ? 'Técnico' : 'Productor', p.recipientName),
+                        _Dato(
+                            Icons.schedule,
+                            'Horario',
+                            p.scheduleTo == null
+                                ? p.scheduleFrom!
+                                : '${p.scheduleFrom} - ${p.scheduleTo}'),
+                      _Dato(Icons.person_outline,
+                          esTecnico ? 'Técnico' : 'Productor', p.recipientName),
                       _Dato(Icons.task_alt, 'Actividad', p.activity),
-                      if (p.lotNames.isNotEmpty) _Dato(Icons.eco_outlined, 'Lotes', p.lotNames.join(', ')),
+                      if (p.lotNames.isNotEmpty)
+                        _Dato(
+                            Icons.eco_outlined, 'Lotes', p.lotNames.join(', ')),
                     ],
                   ),
                 ),
@@ -119,8 +138,11 @@ class _CreatedPlanningDetailScreenState extends State<CreatedPlanningDetailScree
                   doc: p.doc,
                   onTap: p.doc == null
                       ? null
-                      : () => Navigator.of(context).pushNamed(AppRoutes.documentViewer, arguments: p),
-                  onDownload: p.doc == null || !PdfService.instance.canDownloadInstructions(p) || _downloading
+                      : () => Navigator.of(context)
+                          .pushNamed(AppRoutes.documentViewer, arguments: p),
+                  onDownload: p.doc == null ||
+                          !PdfService.instance.canDownloadInstructions(p) ||
+                          _downloading
                       ? null
                       : () => _download(p),
                 ),
@@ -134,8 +156,12 @@ class _CreatedPlanningDetailScreenState extends State<CreatedPlanningDetailScree
                   child: SizedBox(
                     width: double.infinity,
                     child: Text(
-                      p.observations?.isNotEmpty == true ? p.observations! : 'Sin observaciones.',
-                      style: p.observations?.isNotEmpty == true ? AppText.body : AppText.secondary,
+                      p.observations?.isNotEmpty == true
+                          ? p.observations!
+                          : 'Sin observaciones.',
+                      style: p.observations?.isNotEmpty == true
+                          ? AppText.body
+                          : AppText.secondary,
                     ),
                   ),
                 ),
@@ -155,7 +181,9 @@ class _CreatedPlanningDetailScreenState extends State<CreatedPlanningDetailScree
         listenable: _ctrl,
         builder: (context, _) {
           final p = _ctrl.planningById(widget.planningId);
-          if (p == null || p.status != PlanningStatus.rechazada) return const SizedBox.shrink();
+          if (p == null || p.status != PlanningStatus.rechazada) {
+            return const SizedBox.shrink();
+          }
           return BottomActions(children: [
             PrimaryButton(
               label: 'Crear nueva planificación',
@@ -187,9 +215,16 @@ class _EstadoBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = planning;
-    final nombre = p.target == PlanningTarget.tecnico ? 'Asignación' : 'Planificación';
-    final (IconData icono, Color fondo, Color borde, Color color, String titulo, String texto) =
-        switch (p.status) {
+    final nombre =
+        p.target == PlanningTarget.tecnico ? 'Asignación' : 'Planificación';
+    final (
+      IconData icono,
+      Color fondo,
+      Color borde,
+      Color color,
+      String titulo,
+      String texto
+    ) = switch (p.status) {
       PlanningStatus.rechazada => (
           Icons.close_rounded,
           AppColors.errorLight,
@@ -270,8 +305,11 @@ class _Dato extends StatelessWidget {
           children: [
             Icon(icono, size: AppIconSize.md, color: AppColors.primaryDark),
             const SizedBox(width: AppSpacing.md),
-            SizedBox(width: 120, child: Text(etiqueta, style: AppText.secondary)),
-            Expanded(child: Text(valor, style: AppText.bodySmStrong, textAlign: TextAlign.right)),
+            SizedBox(
+                width: 120, child: Text(etiqueta, style: AppText.secondary)),
+            Expanded(
+                child: Text(valor,
+                    style: AppText.bodySmStrong, textAlign: TextAlign.right)),
           ],
         ),
       );

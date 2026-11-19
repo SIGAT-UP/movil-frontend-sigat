@@ -27,7 +27,8 @@ class ProfileController extends ChangeNotifier {
   /// Aviso informativo verdadero (ej. "guardada en el dispositivo").
   String? notice;
 
-  NotificationPreferences get notifications => profile?.notifications ?? const NotificationPreferences();
+  NotificationPreferences get notifications =>
+      profile?.notifications ?? const NotificationPreferences();
 
   String? get _userId => AppServices.session.value?.userId;
 
@@ -72,14 +73,16 @@ class ProfileController extends ChangeNotifier {
     // Envío al servidor: hoy no existe, así que queda pendiente.
     try {
       final ref = await AppServices.profile.uploadProfilePhoto(id, photo);
-      profile = profile?.copyWith(photoRemoteRef: ref, photoStatus: UploadStatus.uploaded);
+      profile = profile?.copyWith(
+          photoRemoteRef: ref, photoStatus: UploadStatus.uploaded);
       notice = 'Fotografía actualizada.';
     } on BackendNotAvailable catch (e) {
       profile = profile?.copyWith(photoStatus: UploadStatus.local);
       notice = e.message;
     } catch (e) {
       profile = profile?.copyWith(photoStatus: UploadStatus.failed);
-      notice = 'La foto quedó guardada en el dispositivo. No se pudo enviar al servidor.';
+      notice =
+          'La foto quedó guardada en el dispositivo. No se pudo enviar al servidor.';
       AppLog.error('ProfileController.upload', e);
     } finally {
       savingPhoto = false;
@@ -115,18 +118,22 @@ class ProfileController extends ChangeNotifier {
     final id = _userId;
     if (id == null) return false;
     final previous = notifications;
-    profile = (profile ?? UserProfile(userId: id)).copyWith(notifications: previous.copyWith(enabled: value));
+    profile = (profile ?? UserProfile(userId: id))
+        .copyWith(notifications: previous.copyWith(enabled: value));
     savingNotifications = true;
     error = null;
     notifyListeners();
     try {
-      final saved = await AppServices.profile.updateNotifications(id, previous.copyWith(enabled: value));
+      final saved = await AppServices.profile
+          .updateNotifications(id, previous.copyWith(enabled: value));
       profile = profile?.copyWith(notifications: saved);
       return true;
     } catch (e) {
       profile = profile?.copyWith(notifications: previous); // se revierte
       // Se dice el motivo real (p. ej. el servidor aún no guarda preferencias): nunca se finge guardado.
-      error = e is BackendNotAvailable ? e.message : 'No se pudo guardar la preferencia. Intenta de nuevo.';
+      error = e is BackendNotAvailable
+          ? e.message
+          : 'No se pudo guardar la preferencia. Intenta de nuevo.';
       AppLog.error('ProfileController.setNotificationsEnabled', e);
       return false;
     } finally {

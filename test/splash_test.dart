@@ -26,7 +26,11 @@ void main() {
     // Cuando el logo acaba de llegar, la frase todavía no se ve: va DESPUÉS.
     await tester.pump(const Duration(milliseconds: 1300));
     final frase = tester.widget<FadeTransition>(
-      find.ancestor(of: find.text(SplashScreen.tagline), matching: find.byType(FadeTransition)).first,
+      find
+          .ancestor(
+              of: find.text(SplashScreen.tagline),
+              matching: find.byType(FadeTransition))
+          .first,
     );
     expect(frase.opacity.value, 0);
 
@@ -43,7 +47,9 @@ void main() {
     expect(find.text('Iniciar sesión'), findsOneWidget);
   });
 
-  testWidgets('Con "reducir movimiento" arranca quieta y también llega al login', (tester) async {
+  testWidgets(
+      'Con "reducir movimiento" arranca quieta y también llega al login',
+      (tester) async {
     tester.platformDispatcher.accessibilityFeaturesTestValue =
         const FakeAccessibilityFeatures(disableAnimations: true);
     addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
@@ -57,7 +63,8 @@ void main() {
     expect(find.text('Iniciar sesión'), findsOneWidget);
   });
 
-  testWidgets('Con una sesión abierta salta directo al inicio del rol', (tester) async {
+  testWidgets('Con una sesión abierta salta directo al inicio del rol',
+      (tester) async {
     AppServices.session.value = const UserSession(
       userId: '1',
       username: 'tecnico.demo@example.com',
@@ -77,11 +84,16 @@ void main() {
     expect(find.text('Mis Lotes Asignados'), findsOneWidget);
   });
 
-  testWidgets('Al reabrir la app restaura la sesión guardada con GET /auth/sesion', (tester) async {
-    final clave = backend.crearCuenta(usuario: 'tecnico.demo', nombre: 'Tecnico Demo', rol: 'TECNICO');
+  testWidgets(
+      'Al reabrir la app restaura la sesión guardada con GET /auth/sesion',
+      (tester) async {
+    final clave = backend.crearCuenta(
+        usuario: 'tecnico.demo', nombre: 'Tecnico Demo', rol: 'TECNICO');
     // Un inicio de sesión anterior dejó los tokens en el almacenamiento seguro.
-    await AppServices.auth.login(username: 'tecnico.demo', password: clave, remember: false);
-    expect(AppServices.session.value, isNull); // la app recién abierta no tiene sesión en memoria
+    await AppServices.auth
+        .login(username: 'tecnico.demo', password: clave, remember: false);
+    expect(AppServices.session.value,
+        isNull); // la app recién abierta no tiene sesión en memoria
 
     await tester.pumpWidget(const VigilanciaDuraznoApp());
     await tester.pumpAndSettle();
@@ -92,7 +104,8 @@ void main() {
     expect(find.text('Mis Lotes Asignados'), findsOneWidget);
   });
 
-  testWidgets('Sin tokens guardados la bienvenida termina en el login', (tester) async {
+  testWidgets('Sin tokens guardados la bienvenida termina en el login',
+      (tester) async {
     await tester.pumpWidget(const VigilanciaDuraznoApp());
     await tester.pumpAndSettle();
     expect(backend.peticiones, isNot(contains('GET /auth/sesion')));

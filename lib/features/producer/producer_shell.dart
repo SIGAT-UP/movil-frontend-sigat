@@ -20,10 +20,18 @@ class ProducerShell extends StatelessWidget {
       sideHeader: const RoleSideHeader(),
       sideFooter: const RoleSideFooter(),
       tabs: const {
-        ProducerTab.inicio: RoleTab(item: AppNavItem('Inicio', Icons.home_outlined, Icons.home), page: ProducerHomeScreen()),
-        ProducerTab.cultivo: RoleTab(item: AppNavItem('Mi cultivo', Icons.eco_outlined, Icons.eco), page: CropStatusScreen()),
-        ProducerTab.historial: RoleTab(item: AppNavItem('Historial', Icons.history), page: ProducerHistoryScreen()),
-        ProducerTab.perfil: RoleTab(item: AppNavItem('Perfil', Icons.person_outline, Icons.person), page: ProfileScreen()),
+        ProducerTab.inicio: RoleTab(
+            item: AppNavItem('Inicio', Icons.home_outlined, Icons.home),
+            page: ProducerHomeScreen()),
+        ProducerTab.cultivo: RoleTab(
+            item: AppNavItem('Mi cultivo', Icons.eco_outlined, Icons.eco),
+            page: CropStatusScreen()),
+        ProducerTab.historial: RoleTab(
+            item: AppNavItem('Historial', Icons.history),
+            page: ProducerHistoryScreen()),
+        ProducerTab.perfil: RoleTab(
+            item: AppNavItem('Perfil', Icons.person_outline, Icons.person),
+            page: ProfileScreen()),
       },
     );
   }

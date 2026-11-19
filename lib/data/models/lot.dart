@@ -7,8 +7,8 @@ enum LotStatus {
   const LotStatus(this.label);
   final String label;
 
-  static LotStatus fromString(String v) =>
-      LotStatus.values.firstWhere((s) => s.name == v, orElse: () => LotStatus.pendiente);
+  static LotStatus fromString(String v) => LotStatus.values
+      .firstWhere((s) => s.name == v, orElse: () => LotStatus.pendiente);
 }
 
 /// Lote asignado al técnico. Incluye lo necesario para lista y detalle.
@@ -87,8 +87,12 @@ class Lot {
         trapCount: j['trap_count'] as int,
         lastInspection: _date(j['last_inspection']),
         lastVisit: _date(j['last_visit']),
-        control: j['control'] == null ? null : LotControl.fromJson(j['control'] as Map<String, dynamic>),
-        program: j['program'] == null ? null : InspectionProgram.fromJson(j['program'] as Map<String, dynamic>),
+        control: j['control'] == null
+            ? null
+            : LotControl.fromJson(j['control'] as Map<String, dynamic>),
+        program: j['program'] == null
+            ? null
+            : InspectionProgram.fromJson(j['program'] as Map<String, dynamic>),
       );
 }
 
@@ -99,7 +103,8 @@ class Lot {
 ///  * El estado del lote en la jornada (pendiente / en curso / visitado) NO se guarda:
 ///    se deriva de las visitas. El llamador lo calcula y lo pasa en [status].
 ///  * `control` y `program` llegan de `GET /lots/:id/control` y `GET /program`.
-Lot lotFromApi(Map<String, dynamic> j, {LotStatus status = LotStatus.pendiente}) {
+Lot lotFromApi(Map<String, dynamic> j,
+    {LotStatus status = LotStatus.pendiente}) {
   final cod = j['lote_codigo'].toString();
   final productor = j['productor'] as String? ?? '';
   return Lot(
@@ -121,7 +126,11 @@ Lot lotFromApi(Map<String, dynamic> j, {LotStatus status = LotStatus.pendiente})
 
 /// Bloque "Control vigente" del detalle del lote.
 class LotControl {
-  const LotControl({required this.mtd, required this.exportThreshold, required this.aptitude, this.note});
+  const LotControl(
+      {required this.mtd,
+      required this.exportThreshold,
+      required this.aptitude,
+      this.note});
   final double mtd; // moscas / trampa / día
   final String exportThreshold;
   final String aptitude;
@@ -137,12 +146,16 @@ class LotControl {
 
 /// Bloque "Programa de inspección vigente".
 class InspectionProgram {
-  const InspectionProgram({required this.readingPeriod, required this.goodPractices, required this.scenario});
+  const InspectionProgram(
+      {required this.readingPeriod,
+      required this.goodPractices,
+      required this.scenario});
   final String readingPeriod; // 7–14 días
   final String goodPractices; // Checklist vigente
   final String scenario; // Supresión
 
-  factory InspectionProgram.fromJson(Map<String, dynamic> j) => InspectionProgram(
+  factory InspectionProgram.fromJson(Map<String, dynamic> j) =>
+      InspectionProgram(
         readingPeriod: j['reading_period'] as String,
         goodPractices: j['good_practices'] as String,
         scenario: j['scenario'] as String,

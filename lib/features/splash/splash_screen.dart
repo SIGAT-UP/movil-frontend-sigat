@@ -28,32 +28,39 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(vsync: this, duration: AppMotion.splashTotal);
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c =
+      AnimationController(vsync: this, duration: AppMotion.splashTotal);
 
   // Fases, todas derivadas del mismo controlador.
   late final Animation<Offset> _logoSlide = _c.drive(
     Tween(begin: const Offset(-1, 0), end: Offset.zero).chain(CurveTween(
-      curve: AppMotion.phase(Duration.zero, AppMotion.splashLogoIn, AppMotion.splashTotal,
+      curve: AppMotion.phase(
+          Duration.zero, AppMotion.splashLogoIn, AppMotion.splashTotal,
           curve: AppMotion.logoIn),
     )),
   );
 
   late final Animation<double> _taglineFade = _c.drive(CurveTween(
-    curve: AppMotion.phase(AppMotion.splashTaglineStart, AppMotion.splashTaglineIn, AppMotion.splashTotal,
+    curve: AppMotion.phase(AppMotion.splashTaglineStart,
+        AppMotion.splashTaglineIn, AppMotion.splashTotal,
         curve: AppMotion.enter),
   ));
 
   late final Animation<Offset> _taglineRise = _c.drive(
-    Tween(begin: const Offset(0, AppMotion.taglineRise), end: Offset.zero).chain(CurveTween(
-      curve: AppMotion.phase(AppMotion.splashTaglineStart, AppMotion.splashTaglineIn, AppMotion.splashTotal,
+    Tween(begin: const Offset(0, AppMotion.taglineRise), end: Offset.zero)
+        .chain(CurveTween(
+      curve: AppMotion.phase(AppMotion.splashTaglineStart,
+          AppMotion.splashTaglineIn, AppMotion.splashTotal,
           curve: AppMotion.enter),
     )),
   );
 
   late final Animation<double> _exitFade = _c.drive(
     Tween(begin: 1.0, end: 0.0).chain(CurveTween(
-      curve: AppMotion.phase(AppMotion.splashExitStart, AppMotion.splashExit, AppMotion.splashTotal,
+      curve: AppMotion.phase(AppMotion.splashExitStart, AppMotion.splashExit,
+          AppMotion.splashTotal,
           curve: AppMotion.exit),
     )),
   );
@@ -62,9 +69,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   bool _left = false;
 
   /// Se intenta restaurar la sesión guardada MIENTRAS corre la animación.
-  late final Future<UserSession?> _restaurada = AppServices.session.value != null
-      ? Future.value(AppServices.session.value)
-      : AppServices.auth.restoreSession().catchError((Object _) => null);
+  late final Future<UserSession?> _restaurada =
+      AppServices.session.value != null
+          ? Future.value(AppServices.session.value)
+          : AppServices.auth.restoreSession().catchError((Object _) => null);
 
   @override
   void initState() {
@@ -84,7 +92,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     // con el logo y la frase ya en su sitio, y solo se ve el fundido de salida.
     final reducir = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     if (reducir) {
-      _c.value = AppMotion.splashHoldStart.inMicroseconds / AppMotion.splashTotal.inMicroseconds;
+      _c.value = AppMotion.splashHoldStart.inMicroseconds /
+          AppMotion.splashTotal.inMicroseconds;
     }
     _c.forward();
   }
@@ -150,11 +159,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   child: SlideTransition(
                     position: _taglineRise,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
                       child: Text(
                         SplashScreen.tagline,
                         textAlign: TextAlign.center,
-                        style: AppText.secondary.copyWith(fontSize: 14, letterSpacing: 0.2),
+                        style: AppText.secondary
+                            .copyWith(fontSize: 14, letterSpacing: 0.2),
                       ),
                     ),
                   ),

@@ -67,5 +67,6 @@ Thumbs.db
 
 # --- Configuración de compilación local (usar dart_defines.example.json) -----
 dart_defines.json
+test/vectores_huella.json
 android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
 ios/Runner/GeneratedPluginRegistrant.*

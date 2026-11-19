@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!mounted) return;
     setState(() {
       _future = _load();
-     });
+    });
   }
 
   Future<HomeSummary> _load() =>
@@ -60,7 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
       _future = _load();
     });
     await _future;
-    
   }
 
   Future<void> _sync() async {
@@ -145,8 +144,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         subtitle:
                             'Consulte y gestione los lotes asignados a su usuario',
                         onTap: widget.onOpenLots ??
-                            () => Navigator.of(context)
-                                .pushNamed(AppRoutes.lots),
+                            () =>
+                                Navigator.of(context).pushNamed(AppRoutes.lots),
                       ),
                       const SizedBox(height: AppSpacing.md),
                       const PlanningInboxCard(
@@ -173,7 +172,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (snap.hasError)
                         AlertBanner(
                           title: 'No se pudo cargar tu jornada',
-                          message: '${snap.error is DataException ? (snap.error as DataException).message : 'Error inesperado.'} '
+                          message:
+                              '${snap.error is DataException ? (snap.error as DataException).message : 'Error inesperado.'} '
                               'Desliza hacia abajo para reintentar.',
                         )
                       else if (!snap.hasData)
@@ -202,8 +202,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   label: 'Pendiente de visita',
                                   caption: snap.data!.nextVisitTime,
                                   // Abre los lotes asignados filtrados en «Pendientes».
-                                  onTap: () => Navigator.of(context)
-                                      .pushNamed(AppRoutes.lots, arguments: LotsFilter.pendientes),
+                                  onTap: () => Navigator.of(context).pushNamed(
+                                      AppRoutes.lots,
+                                      arguments: LotsFilter.pendientes),
                                   imagePath:
                                       'assets/images/stat_pendientes.png',
                                   fallbackIcon: Icons.fact_check_outlined,
@@ -233,8 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   )
                                 : ValueListenableBuilder<bool>(
                                     valueListenable: AppServices.isOnline,
-                                    builder: (_, online, __) =>
-                                        ConnectionChip(
+                                    builder: (_, online, __) => ConnectionChip(
                                       isOnline: online,
                                       onlineLabel: 'En línea',
                                       dense: true,

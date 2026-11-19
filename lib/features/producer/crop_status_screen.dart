@@ -27,7 +27,8 @@ class CropStatusScreen extends StatelessWidget {
                 ? EmptyState(
                     icon: Icons.cloud_off,
                     title: 'No se pudo cargar tu cultivo',
-                    action: SecondaryButton(label: 'Reintentar', onPressed: ctrl.load),
+                    action: SecondaryButton(
+                        label: 'Reintentar', onPressed: ctrl.load),
                   )
                 : const AppLoader();
           }
@@ -40,17 +41,24 @@ class CropStatusScreen extends StatelessWidget {
                 children: [
                   InfoTableCard(rows: [
                     InfoRowData('Cultivo', value: s.crop),
-                    InfoRowData('Última visita', value: s.lastVisit == null ? 'Sin visitas' : Fmt.date(s.lastVisit!)),
+                    InfoRowData('Última visita',
+                        value: s.lastVisit == null
+                            ? 'Sin visitas'
+                            : Fmt.date(s.lastVisit!)),
                     InfoRowData('Lotes revisados', value: '${s.lotsReviewed}'),
                     InfoRowData(
                       'Estado',
                       trailing: s.vigilanceActive
-                          ? const StatusBadge('Vigilancia activa', icon: Icons.check)
-                          : const StatusBadge('Vigilancia inactiva', tone: StatusTone.neutral),
+                          ? const StatusBadge('Vigilancia activa',
+                              icon: Icons.check)
+                          : const StatusBadge('Vigilancia inactiva',
+                              tone: StatusTone.neutral),
                     ),
                     InfoRowData(
                       'Última aplicación',
-                      value: s.lastApplication == null ? 'Sin aplicaciones' : Fmt.ago(s.lastApplication!),
+                      value: s.lastApplication == null
+                          ? 'Sin aplicaciones'
+                          : Fmt.ago(s.lastApplication!),
                     ),
                   ]),
                   const SizedBox(height: AppSpacing.xl),

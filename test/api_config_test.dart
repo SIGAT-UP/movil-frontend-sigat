@@ -5,7 +5,8 @@ import 'package:vigilancia_durazno/core/config/api_config.dart';
 void main() {
   test('en desarrollo (debug/profile) no hay restricción', () {
     expect(ApiConfig.problemaUrl('', release: false), isNull);
-    expect(ApiConfig.problemaUrl('http://10.0.2.2:8000/api/v1', release: false), isNull);
+    expect(ApiConfig.problemaUrl('http://10.0.2.2:8000/api/v1', release: false),
+        isNull);
   });
 
   test('en producción exige API_URL', () {
@@ -14,16 +15,24 @@ void main() {
   });
 
   test('en producción rechaza HTTP y URLs sin servidor', () {
-    expect(ApiConfig.problemaUrl('http://api.ejemplo.org/api/v1', release: true), contains('HTTPS'));
-    expect(ApiConfig.problemaUrl('http://10.0.2.2:8000/api/v1', release: true), contains('HTTPS'));
-    expect(ApiConfig.problemaUrl('https:///api/v1', release: true), contains('HTTPS'));
+    expect(
+        ApiConfig.problemaUrl('http://api.ejemplo.org/api/v1', release: true),
+        contains('HTTPS'));
+    expect(ApiConfig.problemaUrl('http://10.0.2.2:8000/api/v1', release: true),
+        contains('HTTPS'));
+    expect(ApiConfig.problemaUrl('https:///api/v1', release: true),
+        contains('HTTPS'));
   });
 
   test('en producción acepta HTTPS', () {
-    expect(ApiConfig.problemaUrl('https://api.ejemplo.org/api/v1', release: true), isNull);
+    expect(
+        ApiConfig.problemaUrl('https://api.ejemplo.org/api/v1', release: true),
+        isNull);
   });
 
-  test('las pruebas corren en modo debug: la configuración actual no se bloquea', () {
+  test(
+      'las pruebas corren en modo debug: la configuración actual no se bloquea',
+      () {
     expect(ApiConfig.problemaDeConfiguracion, isNull);
   });
 }

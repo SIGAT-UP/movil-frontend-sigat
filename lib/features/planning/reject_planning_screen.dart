@@ -28,7 +28,9 @@ class _RejectPlanningScreenState extends State<RejectPlanningScreen> {
   String? _validate(String? v) {
     final texto = v?.trim() ?? '';
     if (texto.isEmpty) return 'Escribe el motivo del rechazo. Es obligatorio.';
-    if (texto.length < 10) return 'Explica un poco más: al menos 10 caracteres.';
+    if (texto.length < 10) {
+      return 'Explica un poco más: al menos 10 caracteres.';
+    }
     return null;
   }
 
@@ -40,7 +42,8 @@ class _RejectPlanningScreenState extends State<RejectPlanningScreen> {
     final ok = await _ctrl.reject(widget.planningId, _reasonCtrl.text.trim());
     if (!mounted) return;
     if (ok) {
-      AppMessenger.success('Rechazo enviado', message: 'El agrónomo verá tu motivo.');
+      AppMessenger.success('Rechazo enviado',
+          message: 'El agrónomo verá tu motivo.');
       Navigator.of(context).pop(); // vuelve al detalle, ya actualizado
     } else {
       // El texto NO se pierde: el formulario se conserva para reintentar.
@@ -56,58 +59,65 @@ class _RejectPlanningScreenState extends State<RejectPlanningScreen> {
       listenable: Listenable.merge([_reasonCtrl]),
       builder: (context, _) => DiscardChangesGuard(
         hasChanges: _reasonCtrl.text.trim().isNotEmpty,
-        message: 'El motivo que escribiste se perderá y la planificación seguirá pendiente.',
+        message:
+            'El motivo que escribiste se perderá y la planificación seguirá pendiente.',
         child: Scaffold(
-      backgroundColor: AppColors.surface,
-      appBar: const SimpleAppBar(title: 'Rechazar asignación'),
-      body: ResponsiveBody(
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            padding: const EdgeInsets.all(AppSpacing.screenH),
-            children: [
-              const AlertBanner(
-                title: 'Al rechazar esta asignación debes poner la observación',
-                message: 'El agrónomo la necesita para poder reprogramarla.',
+          backgroundColor: AppColors.surface,
+          appBar: const SimpleAppBar(title: 'Rechazar asignación'),
+          body: ResponsiveBody(
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                padding: const EdgeInsets.all(AppSpacing.screenH),
+                children: [
+                  const AlertBanner(
+                    title:
+                        'Al rechazar esta asignación debes poner la observación',
+                    message:
+                        'El agrónomo la necesita para poder reprogramarla.',
+                  ),
+                  if (p != null) ...[
+                    const SizedBox(height: AppSpacing.lg),
+                    const SectionTitle('Resumen de asignación'),
+                    const SizedBox(height: AppSpacing.sm),
+                    InfoTableCard(rows: [
+                      InfoRowData('Actividad', value: p.activity),
+                      InfoRowData('Fecha', value: Fmt.date(p.startDate)),
+                      if (p.lotNames.isNotEmpty)
+                        InfoRowData('Lotes', value: p.lotNames.join(', ')),
+                      InfoRowData('Estado',
+                          trailing: PlanningStatusBadge(p.status)),
+                    ]),
+                  ],
+                  const SizedBox(height: AppSpacing.lg),
+                  AppTextField(
+                    label: 'Motivo del rechazo',
+                    controller: _reasonCtrl,
+                    hint: 'Explica por qué no puedes realizar esta actividad',
+                    maxLines: 4,
+                    enabled: !_ctrl.responding,
+                    validator: _validate,
+                    helper:
+                        'Obligatorio. El agrónomo lo verá en sus planificaciones.',
+                  ),
+                ],
               ),
-              if (p != null) ...[
-                const SizedBox(height: AppSpacing.lg),
-                const SectionTitle('Resumen de asignación'),
-                const SizedBox(height: AppSpacing.sm),
-                InfoTableCard(rows: [
-                  InfoRowData('Actividad', value: p.activity),
-                  InfoRowData('Fecha', value: Fmt.date(p.startDate)),
-                  if (p.lotNames.isNotEmpty) InfoRowData('Lotes', value: p.lotNames.join(', ')),
-                  InfoRowData('Estado', trailing: PlanningStatusBadge(p.status)),
-                ]),
-              ],
-              const SizedBox(height: AppSpacing.lg),
-              AppTextField(
-                label: 'Motivo del rechazo',
-                controller: _reasonCtrl,
-                hint: 'Explica por qué no puedes realizar esta actividad',
-                maxLines: 4,
-                enabled: !_ctrl.responding,
-                validator: _validate,
-                helper: 'Obligatorio. El agrónomo lo verá en sus planificaciones.',
+            ),
+          ),
+          bottomNavigationBar: ListenableBuilder(
+            listenable: _ctrl,
+            builder: (context, _) => BottomActions(children: [
+              DestructiveButton(
+                label: _ctrl.responding ? 'Enviando...' : 'Enviar rechazo',
+                onPressed: _ctrl.responding ? null : _send,
               ),
-            ],
+              SecondaryButton(
+                label: 'Cancelar',
+                onPressed:
+                    _ctrl.responding ? null : () => Navigator.of(context).pop(),
+              ),
+            ]),
           ),
-        ),
-      ),
-      bottomNavigationBar: ListenableBuilder(
-        listenable: _ctrl,
-        builder: (context, _) => BottomActions(children: [
-          DestructiveButton(
-            label: _ctrl.responding ? 'Enviando...' : 'Enviar rechazo',
-            onPressed: _ctrl.responding ? null : _send,
-          ),
-          SecondaryButton(
-            label: 'Cancelar',
-            onPressed: _ctrl.responding ? null : () => Navigator.of(context).pop(),
-          ),
-        ]),
-      ),
         ),
       ),
     );

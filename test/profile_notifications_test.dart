@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vigilancia_durazno/app/app.dart';
@@ -38,10 +37,12 @@ void main() {
     await tester.scrollUntilVisible(
       objetivo,
       200,
-      scrollable: find.descendant(
-        of: find.byType(ProfileScreen),
-        matching: find.byType(Scrollable),
-      ).first,
+      scrollable: find
+          .descendant(
+            of: find.byType(ProfileScreen),
+            matching: find.byType(Scrollable),
+          )
+          .first,
     );
     // Que quede completo en pantalla, no solo asomado, para poder tocarlo.
     await tester.ensureVisible(objetivo);
@@ -63,7 +64,9 @@ void main() {
 
   // Más › Notificaciones abre la BANDEJA (la misma de la campana), con los avisos que
   // entrega el servidor; las preferencias están dentro, en el botón de ajustes.
-  testWidgets('La bandeja muestra los avisos del servidor y los marca como leídos', (tester) async {
+  testWidgets(
+      'La bandeja muestra los avisos del servidor y los marca como leídos',
+      (tester) async {
     backend.agregarAviso(
       usuaId: 7,
       titulo: 'Nueva asignación',
@@ -87,7 +90,9 @@ void main() {
     expect(backend.peticiones, contains('POST /yo/notificaciones/1/leida'));
   });
 
-  testWidgets('Si el servidor aún no guarda preferencias, el interruptor vuelve atrás y lo dice', (tester) async {
+  testWidgets(
+      'Si el servidor aún no guarda preferencias, el interruptor vuelve atrás y lo dice',
+      (tester) async {
     await entrarComoTecnico(tester);
     await tester.tap(find.text('Más'));
     await tester.pumpAndSettle();
@@ -104,7 +109,9 @@ void main() {
 
     // PUT /yo/preferencias-notificacion responde 501: no se finge que se guardó.
     expect(backend.peticiones, contains('PUT /yo/preferencias-notificacion'));
-    expect(find.text('El servidor todavía no guarda tus preferencias de avisos.'), findsWidgets);
+    expect(
+        find.text('El servidor todavía no guarda tus preferencias de avisos.'),
+        findsWidgets);
     expect(find.text('Desactivadas'), findsNothing);
     expect(tester.widget<Switch>(find.byType(Switch)).value, isTrue);
   });

@@ -26,10 +26,14 @@ class _ProducerSyncScreenState extends State<ProducerSyncScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _sync.load());
   }
 
-  RecordStatus _statusOf(int i, SyncItem item) {
-    if (item.synced) return _sync.phase == SyncPhase.done ? RecordStatus.confirmado : RecordStatus.enviado;
+  RecordStatus _statusOf(SyncItem item) {
+    if (item.synced) {
+      return _sync.phase == SyncPhase.done
+          ? RecordStatus.confirmado
+          : RecordStatus.enviado;
+    }
     if (_sync.phase == SyncPhase.syncing) {
-      return _sync.currentIndex == i ? RecordStatus.enviando : RecordStatus.pendiente;
+      return RecordStatus.pendiente;
     }
     if (_sync.phase == SyncPhase.error) return RecordStatus.local;
     return RecordStatus.pendiente;
@@ -58,7 +62,7 @@ class _ProducerSyncScreenState extends State<ProducerSyncScreen> {
                         SyncRecordTile(
                           title: _sync.items[i].label,
                           date: _sync.items[i].observedAt,
-                          status: _statusOf(i, _sync.items[i]),
+                          status: _statusOf(_sync.items[i]),
                         ),
                         const SizedBox(height: 10),
                       ],
@@ -79,21 +83,23 @@ class _ProducerSyncScreenState extends State<ProducerSyncScreen> {
     final total = _sync.items.length;
     switch (_sync.phase) {
       case SyncPhase.syncing:
-        final sending = (_sync.currentIndex ?? _sync.syncedCount) + 1;
         return [
           const Align(
             alignment: Alignment.centerLeft,
-            child: StatusBadge('Sincronizando...', tone: StatusTone.info, icon: Icons.sync),
+            child: StatusBadge('Sincronizando...',
+                tone: StatusTone.info, icon: Icons.sync),
           ),
           const SizedBox(height: AppSpacing.md),
           ProgressHeader(
-            label: 'Enviando ${total == 0 ? 0 : sending.clamp(1, total)} de $total registros...',
+            label: 'Enviando ${_sync.syncedCount} de $total registros...',
             value: total == 0 ? 0 : _sync.syncedCount / total,
           ),
         ];
       case SyncPhase.done:
         return [
-          const Align(alignment: Alignment.centerLeft, child: StatusBadge('Todo actualizado', icon: Icons.check)),
+          const Align(
+              alignment: Alignment.centerLeft,
+              child: StatusBadge('Todo actualizado', icon: Icons.check)),
           const SizedBox(height: AppSpacing.xl),
           SuccessHero(
             title: total == 0 ? 'Todo está al día' : 'Registros sincronizados',
@@ -106,14 +112,18 @@ class _ProducerSyncScreenState extends State<ProducerSyncScreen> {
         return [
           const AlertBanner(
             title: 'No se pudo sincronizar',
-            message: 'Verifica la conexión a Internet e intenta de nuevo. Tus datos no se han perdido.',
+            message:
+                'Verifica la conexión a Internet e intenta de nuevo. Tus datos no se han perdido.',
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text('${_sync.pendingCount} registros sin sincronizar', style: AppText.h3),
+          Text('${_sync.pendingCount} registros sin sincronizar',
+              style: AppText.h3),
         ];
       case SyncPhase.idle:
         return [
-          Align(alignment: Alignment.centerLeft, child: ConnectionChip(isOnline: online)),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: ConnectionChip(isOnline: online)),
           const SizedBox(height: AppSpacing.md),
           Text('${_sync.pendingCount} registros pendientes', style: AppText.h3),
         ];
@@ -125,22 +135,31 @@ class _ProducerSyncScreenState extends State<ProducerSyncScreen> {
     switch (_sync.phase) {
       case SyncPhase.syncing:
         return const [
-          AlertBanner(type: AlertType.warning, title: 'No cierres la app durante la sincronización.'),
+          AlertBanner(
+              type: AlertType.warning,
+              title: 'No cierres la app durante la sincronización.'),
         ];
       case SyncPhase.done:
         return [
-          if (last != null) Text('Sincronizado: ${Fmt.date(last)}, ${Fmt.time24(last)}', style: AppText.caption),
+          if (last != null)
+            Text('Sincronizado: ${Fmt.date(last)}, ${Fmt.time24(last)}',
+                style: AppText.caption),
         ];
       case SyncPhase.error:
         return const [
-          AlertBanner(type: AlertType.info, title: 'Los datos permanecen guardados en tu dispositivo.'),
+          AlertBanner(
+              type: AlertType.info,
+              title: 'Los datos permanecen guardados en tu dispositivo.'),
         ];
       case SyncPhase.idle:
         return [
           if (last != null)
-            Text('Última sincronización: ${Fmt.date(last)}, ${Fmt.time(last)}', style: AppText.caption),
+            Text('Última sincronización: ${Fmt.date(last)}, ${Fmt.time(last)}',
+                style: AppText.caption),
           const SizedBox(height: AppSpacing.md),
-          const AlertBanner(type: AlertType.info, title: 'Solo se sincronizan tus autorreportes.'),
+          const AlertBanner(
+              type: AlertType.info,
+              title: 'Solo se sincronizan tus autorreportes.'),
         ];
     }
   }
@@ -149,12 +168,23 @@ class _ProducerSyncScreenState extends State<ProducerSyncScreen> {
     void home() => ProducerNav.goTo(context, ProducerTab.inicio);
     switch (_sync.phase) {
       case SyncPhase.syncing:
-        return const [PrimaryButton(label: 'Sincronizando...', isLoading: true, onPressed: null)];
+        return const [
+          PrimaryButton(
+              label: 'Sincronizando...', isLoading: true, onPressed: null)
+        ];
       case SyncPhase.done:
-        return [PrimaryButton(label: 'Volver al inicio', color: AppColors.primaryDark, onPressed: home)];
+        return [
+          PrimaryButton(
+              label: 'Volver al inicio',
+              color: AppColors.primaryDark,
+              onPressed: home)
+        ];
       case SyncPhase.error:
         return [
-          PrimaryButton(label: 'Reintentar sincronización', color: AppColors.primaryDark, onPressed: _sync.syncAll),
+          PrimaryButton(
+              label: 'Reintentar sincronización',
+              color: AppColors.primaryDark,
+              onPressed: _sync.syncAll),
           SecondaryButton(label: 'Volver al inicio', onPressed: home),
         ];
       case SyncPhase.idle:

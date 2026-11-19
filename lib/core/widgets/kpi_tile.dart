@@ -8,7 +8,12 @@ import '../theme/app_typography.dart';
 /// Se usa en el resumen fitosanitario del Agrónomo.
 /// Cuando no hay dato, se muestra "Sin registrar" en gris.
 class KpiTile extends StatelessWidget {
-  const KpiTile({super.key, required this.label, required this.value, this.hint, this.icon});
+  const KpiTile(
+      {super.key,
+      required this.label,
+      required this.value,
+      this.hint,
+      this.icon});
 
   final String label;
 

@@ -29,13 +29,19 @@ class HarvestSavedScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xl),
             InfoTableCard(rows: [
-              InfoRowData('Fecha estimada', value: Fmt.dateNumeric(report.expectedDate)),
+              InfoRowData('Fecha estimada',
+                  value: Fmt.dateNumeric(report.expectedDate)),
               InfoRowData('Fecha real',
-                  value: report.actualDate == null ? '— (pendiente)' : Fmt.dateNumeric(report.actualDate!)),
-              InfoRowData('Volumen', value: '${Fmt.decimal(report.volumeKg)} kg'),
+                  value: report.actualDate == null
+                      ? '— (pendiente)'
+                      : Fmt.dateNumeric(report.actualDate!)),
+              InfoRowData('Volumen',
+                  value: '${Fmt.decimal(report.volumeKg)} kg'),
             ]),
             const SizedBox(height: AppSpacing.lg),
-            const Center(child: RecordStatusBadge(RecordStatus.pendiente, label: 'Pendiente de sincronizar')),
+            const Center(
+                child: RecordStatusBadge(RecordStatus.pendiente,
+                    label: 'Pendiente de sincronizar')),
           ],
         ),
       ),

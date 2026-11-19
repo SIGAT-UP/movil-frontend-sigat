@@ -1,5 +1,6 @@
 import '../models/lot.dart';
 import '../models/reading.dart';
+import '../models/sync_models.dart';
 import '../models/trap.dart';
 import '../models/visit.dart';
 
@@ -43,9 +44,21 @@ abstract class ReadingsRepository {
   Future<void> saveReading(Reading reading);
 
   /// Marca una trampa como no registrada con su motivo.
-  Future<void> justifyTrap({required String trapId, required String lotId, required String reason});
+  Future<void> justifyTrap(
+      {required String trapId,
+      required String lotId,
+      required String reason,
+      String? visitId});
 
   Future<List<Reading>> readingsForLot(String lotId);
+
+  Future<void> saveFieldVisit({
+    required String visiId,
+    required String predioId,
+    required String lotId,
+    required DateTime startedAt,
+    required String label,
+  });
 }
 
 abstract class MapRepository {
@@ -53,13 +66,18 @@ abstract class MapRepository {
   Future<bool> isMapDownloaded(String predioId);
 
   /// Descarga el mapa (requiere conexión). `onProgress` de 0 a 1.
-  Future<void> downloadMap(String predioId, {void Function(double progress)? onProgress});
+  Future<void> downloadMap(String predioId,
+      {void Function(double progress)? onProgress});
 }
 
 abstract class SyncRepository {
   Future<List<SyncItem>> getPending();
-  Future<void> syncItem(SyncItem item);
+
   Future<DateTime?> lastSync();
+
+  Future<SyncPushSummary> push();
+
+  Future<List<ServerOperation>> inbox();
 }
 
 abstract class HistoryRepository {

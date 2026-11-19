@@ -29,11 +29,18 @@ class MainShell extends StatelessWidget {
             onOpenSync: () => Navigator.of(context).pushNamed(AppRoutes.sync),
           ),
         ),
-        AppTab.mapa: const RoleTab(item: AppNavItem('Mapa', Icons.map_outlined, Icons.map), page: MapScreen()),
-        AppTab.trampas: const RoleTab(item: AppNavItem('Trampas', Icons.format_list_bulleted), page: TrapsTabScreen()),
+        AppTab.mapa: const RoleTab(
+            item: AppNavItem('Mapa', Icons.map_outlined, Icons.map),
+            page: MapScreen()),
+        AppTab.trampas: const RoleTab(
+            item: AppNavItem('Trampas', Icons.format_list_bulleted),
+            page: TrapsTabScreen()),
         AppTab.visita: const RoleTab(
-            item: AppNavItem('Visita', Icons.fact_check_outlined, Icons.fact_check), page: VisitInProgressScreen()),
-        AppTab.mas: const RoleTab(item: AppNavItem('Más', Icons.more_horiz), page: ProfileScreen()),
+            item: AppNavItem(
+                'Visita', Icons.fact_check_outlined, Icons.fact_check),
+            page: VisitInProgressScreen()),
+        AppTab.mas: const RoleTab(
+            item: AppNavItem('Más', Icons.more_horiz), page: ProfileScreen()),
       },
     );
   }

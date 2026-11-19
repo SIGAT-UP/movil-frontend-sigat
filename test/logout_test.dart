@@ -13,7 +13,8 @@ import 'support/backend_de_prueba.dart';
 /// registros pendientes del teléfono.
 class _AuthQueFalla implements AuthRepository {
   @override
-  Future<void> logout() async => throw StateError('almacenamiento no disponible');
+  Future<void> logout() async =>
+      throw StateError('almacenamiento no disponible');
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
@@ -22,11 +23,15 @@ class _AuthQueFalla implements AuthRepository {
 void main() {
   tearDown(clearSessionState);
 
-  test('sin red: logout borra los tokens del dispositivo y conserva los pendientes', () async {
+  test(
+      'sin red: logout borra los tokens del dispositivo y conserva los pendientes',
+      () async {
     final backend = BackendDePrueba();
-    final clave = backend.crearCuenta(usuario: 'tec.prueba', nombre: 'Técnico Prueba', rol: 'TECNICO', id: 5);
+    final clave = backend.crearCuenta(
+        usuario: 'tec.prueba', nombre: 'Técnico Prueba', rol: 'TECNICO', id: 5);
     final cola = backend.conectarApp();
-    AppServices.session.value = await AppServices.auth.login(username: 'tec.prueba', password: clave, remember: false);
+    AppServices.session.value = await AppServices.auth
+        .login(username: 'tec.prueba', password: clave, remember: false);
     await cola.put(PendingRecord(
       id: 'p-1',
       ownerId: '5',
@@ -46,7 +51,8 @@ void main() {
     expect((await cola.forOwner('5')).single.id, 'p-1');
   });
 
-  testWidgets('si el repositorio falla, la sesión en memoria se cierra igual', (tester) async {
+  testWidgets('si el repositorio falla, la sesión en memoria se cierra igual',
+      (tester) async {
     final real = AppServices.auth;
     AppServices.auth = _AuthQueFalla();
     addTearDown(() => AppServices.auth = real);

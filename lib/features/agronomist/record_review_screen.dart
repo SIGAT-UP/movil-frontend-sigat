@@ -21,7 +21,8 @@ class _RecordReviewScreenState extends State<RecordReviewScreen> {
     final ok = await showAppConfirmDialog(
       context,
       title: 'Aceptar registro',
-      message: 'La visita de ${r.technicianName} quedará aceptada y saldrá de la lista de pendientes.',
+      message:
+          'La visita de ${r.technicianName} quedará aceptada y saldrá de la lista de pendientes.',
       confirmLabel: 'Aceptar registro',
     );
     if (!ok || !mounted) return;
@@ -31,7 +32,8 @@ class _RecordReviewScreenState extends State<RecordReviewScreen> {
       AppMessenger.success('Registro aceptado');
       Navigator.of(context).pop();
     } else {
-      AppMessenger.error('No se pudo aceptar el registro', message: _ctrl.error);
+      AppMessenger.error('No se pudo aceptar el registro',
+          message: _ctrl.error);
     }
   }
 
@@ -49,7 +51,9 @@ class _RecordReviewScreenState extends State<RecordReviewScreen> {
               icon: Icons.task_alt,
               title: 'Registro ya revisado',
               message: 'Este registro ya no está pendiente.',
-              action: SecondaryButton(label: 'Volver', onPressed: () => Navigator.of(context).pop()),
+              action: SecondaryButton(
+                  label: 'Volver',
+                  onPressed: () => Navigator.of(context).pop()),
             );
           }
           return ResponsiveBody(
@@ -57,23 +61,31 @@ class _RecordReviewScreenState extends State<RecordReviewScreen> {
               padding: const EdgeInsets.all(AppSpacing.screenH),
               children: [
                 if (r.reviewReason != null)
-                  AlertBanner(type: AlertType.warning, title: 'Motivo de revisión', message: r.reviewReason),
+                  AlertBanner(
+                      type: AlertType.warning,
+                      title: 'Motivo de revisión',
+                      message: r.reviewReason),
                 const SizedBox(height: AppSpacing.lg),
                 InfoTableCard(rows: [
                   InfoRowData('Lotes visitados', value: '${r.lotsVisited}'),
                   InfoRowData('Trampas en total', value: '${r.trapsTotal}'),
                   InfoRowData('Observación',
-                      value: '${Fmt.dateNumeric(r.observedAt)} · ${Fmt.time24(r.observedAt)}'),
+                      value:
+                          '${Fmt.dateNumeric(r.observedAt)} · ${Fmt.time24(r.observedAt)}'),
                   InfoRowData('Recepción',
-                      value: '${Fmt.dateNumeric(r.receivedAt)} · ${Fmt.time24(r.receivedAt)}'),
+                      value:
+                          '${Fmt.dateNumeric(r.receivedAt)} · ${Fmt.time24(r.receivedAt)}'),
                   InfoRowData('Origen', value: 'Técnico · ${r.technicianName}'),
-                  InfoRowData('Estado', trailing: StatusBadge(r.status.label, tone: StatusTone.warning)),
+                  InfoRowData('Estado',
+                      trailing: StatusBadge(r.status.label,
+                          tone: StatusTone.warning)),
                 ]),
                 const SizedBox(height: AppSpacing.lg),
                 const AlertBanner(
                   type: AlertType.info,
                   title: 'La decisión es del agrónomo',
-                  message: 'Puedes consultar los lotes y las lecturas antes de aceptar el registro.',
+                  message:
+                      'Puedes consultar los lotes y las lecturas antes de aceptar el registro.',
                 ),
               ],
             ),
@@ -89,7 +101,8 @@ class _RecordReviewScreenState extends State<RecordReviewScreen> {
             SecondaryButton(
               label: 'Ver lotes',
               icon: Icons.layers_outlined,
-              onPressed: () => Navigator.of(context).pushNamed(AppRoutes.agroRecordLots, arguments: r.id),
+              onPressed: () => Navigator.of(context)
+                  .pushNamed(AppRoutes.agroRecordLots, arguments: r.id),
             ),
             PrimaryButton(
               label: 'Aceptar registro',

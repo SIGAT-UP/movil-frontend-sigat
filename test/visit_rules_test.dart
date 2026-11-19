@@ -79,7 +79,9 @@ void main() {
     expect(visita.readingsThisVisit, 0);
   });
 
-  test('La lectura queda en el teléfono como pendiente y se respeta al volver al lote', () async {
+  test(
+      'La lectura queda en el teléfono como pendiente y se respeta al volver al lote',
+      () async {
     final lote = await AppServices.lots.getLot('10');
     await visita.startLot(lote);
     final primera = visita.activeTraps.first;
@@ -109,7 +111,9 @@ void main() {
     expect(visita.readingsThisVisit, 1);
   });
 
-  test('Al cerrar sesión se olvida el avance de la visita (lo guardado sigue en el teléfono)', () async {
+  test(
+      'Al cerrar sesión se olvida el avance de la visita (lo guardado sigue en el teléfono)',
+      () async {
     final lote = await AppServices.lots.getLot('10');
     await visita.startLot(lote);
     final t = visita.activeTraps.first;
@@ -120,5 +124,81 @@ void main() {
     await visita.startLot(lote);
     expect(visita.handledCount, 0);
     expect(await pendientes.forOwner('5'), isNotEmpty);
+  });
+
+  test('cada lote tiene su propia visita, estable dentro de la jornada',
+      () async {
+    expect(visita.visiIdParaLote('10'), isNull);
+
+    final lote = await AppServices.lots.getLot('10');
+    await visita.startLot(lote);
+    final primero = visita.visiIdParaLote('10');
+
+    expect(primero, isNotNull);
+    expect(visita.visiIdParaLote('10'), primero);
+    expect(visita.visiIdParaLote('11'), isNot(primero));
+  });
+
+  test('abrir el lote encola su visita antes que las lecturas', () async {
+    final lote = await AppServices.lots.getLot('10');
+    await visita.startLot(lote);
+    final visiId = visita.visiIdParaLote('10')!;
+
+    final cola = await pendientes.forOwner('5');
+    final visitas =
+        cola.where((p) => p.kind == PendingKind.visitaCampo).toList();
+    expect(visitas, hasLength(1));
+    expect(visitas.single.id, visiId);
+    expect(visitas.single.payload['pred_id'], 1);
+    expect(visitas.single.payload['lote_ids'], [10]);
+    expect(visitas.single.payload['ruta_id'], isNull);
+    expect(visitas.single.payload['inicio'], visitas.single.payload['fin']);
+
+    final primera = visita.activeTraps.first;
+    await visita.saveReading(Reading(
+      id: 'r-visita',
+      trapId: primera.id,
+      trapLabel: primera.label,
+      lotId: lote.id,
+      observedAt: DateTime.now(),
+      specimens: 1,
+      condition: TrapCondition.buenEstado,
+    ));
+
+    final despues = await pendientes.forOwner('5');
+    final operaciones = despues
+        .where((p) =>
+            p.kind == PendingKind.visitaCampo || p.kind == PendingKind.lectura)
+        .toList();
+    expect(operaciones.first.kind, PendingKind.visitaCampo,
+        reason: 'La visita debe viajar antes que sus lecturas.');
+    expect(operaciones.first.payload, visitas.single.payload);
+    final lectura = (await AppServices.readings.readingsForLot('10')).single;
+    expect(lectura.visitId, visiId);
+  });
+
+  test('guardar más lecturas no duplica la visita ni la reescribe', () async {
+    final lote = await AppServices.lots.getLot('10');
+    await visita.startLot(lote);
+    final antes = (await pendientes.forOwner('5'))
+        .firstWhere((p) => p.kind == PendingKind.visitaCampo);
+
+    for (final t in visita.activeTraps) {
+      await visita.saveReading(Reading(
+        id: 'r-${t.id}',
+        trapId: t.id,
+        trapLabel: t.label,
+        lotId: lote.id,
+        observedAt: DateTime.now(),
+        specimens: 1,
+        condition: TrapCondition.buenEstado,
+      ));
+    }
+
+    final visitas = (await pendientes.forOwner('5'))
+        .where((p) => p.kind == PendingKind.visitaCampo)
+        .toList();
+    expect(visitas, hasLength(1));
+    expect(visitas.single.payload, antes.payload);
   });
 }

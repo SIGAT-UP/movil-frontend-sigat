@@ -64,7 +64,8 @@ class _AgronomistHomeScreenState extends State<AgronomistHomeScreen> {
                     else if (resumen == null)
                       AlertBanner(
                         title: 'No se pudo cargar el estado del lote',
-                        message: _ctrl.error ?? 'Desliza hacia abajo para reintentar.',
+                        message: _ctrl.error ??
+                            'Desliza hacia abajo para reintentar.',
                       )
                     else
                       AppCard(
@@ -75,24 +76,30 @@ class _AgronomistHomeScreenState extends State<AgronomistHomeScreen> {
                             const Text('Estado actual', style: AppText.caption),
                             const SizedBox(height: 2),
                             Text('Escenario: ${resumen.scenario.toLowerCase()}',
-                                style: AppText.h1.copyWith(color: AppColors.primaryDark)),
+                                style: AppText.h1
+                                    .copyWith(color: AppColors.primaryDark)),
                             const SizedBox(height: AppSpacing.md),
                             InfoRow(
                               InfoRowData(
                                 'MTD (último periodo cerrado)',
-                                value: resumen.mtd == null ? 'Sin cálculo' : Fmt.fixed(resumen.mtd!, 2),
+                                value: resumen.mtd == null
+                                    ? 'Sin cálculo'
+                                    : Fmt.fixed(resumen.mtd!, 2),
                               ),
                               padding: const EdgeInsets.symmetric(vertical: 6),
                             ),
                             InfoRow(
-                              InfoRowData('Umbral de exportación', value: resumen.exportThreshold),
+                              InfoRowData('Umbral de exportación',
+                                  value: resumen.exportThreshold),
                               padding: const EdgeInsets.symmetric(vertical: 6),
                             ),
                             InfoRow(
-                              InfoRowData('Concepto de aptitud', value: resumen.aptitudeConcept),
+                              InfoRowData('Concepto de aptitud',
+                                  value: resumen.aptitudeConcept),
                               padding: const EdgeInsets.symmetric(vertical: 6),
                             ),
-                            const Text('moscas / trampa / día', style: AppText.micro),
+                            const Text('moscas / trampa / día',
+                                style: AppText.micro),
                           ],
                         ),
                       ),
@@ -108,10 +115,12 @@ class _AgronomistHomeScreenState extends State<AgronomistHomeScreen> {
                           Row(
                             children: [
                               const Icon(Icons.warning_amber_rounded,
-                                  size: AppIconSize.md, color: AppColors.warningText),
+                                  size: AppIconSize.md,
+                                  color: AppColors.warningText),
                               const SizedBox(width: AppSpacing.sm),
                               Text('Requiere revisión',
-                                  style: AppText.title.copyWith(color: AppColors.warningText)),
+                                  style: AppText.title
+                                      .copyWith(color: AppColors.warningText)),
                             ],
                           ),
                           const SizedBox(height: AppSpacing.xs),
@@ -125,7 +134,8 @@ class _AgronomistHomeScreenState extends State<AgronomistHomeScreen> {
                           PrimaryButton(
                             label: 'Ver registros',
                             color: AppColors.primaryDark,
-                            onPressed: () => Navigator.of(context).pushNamed(AppRoutes.agroRecords),
+                            onPressed: () => Navigator.of(context)
+                                .pushNamed(AppRoutes.agroRecords),
                           ),
                         ],
                       ),
@@ -137,7 +147,8 @@ class _AgronomistHomeScreenState extends State<AgronomistHomeScreen> {
                       icon: Icons.eco_outlined,
                       title: 'Lote de durazno',
                       subtitle: 'Datos y control vigente',
-                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.agroLotInfo),
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(AppRoutes.agroLotInfo),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     MenuTile(
@@ -145,7 +156,8 @@ class _AgronomistHomeScreenState extends State<AgronomistHomeScreen> {
                       title: 'Resumen del lote',
                       subtitle: 'Tendencia y actividad reciente',
                       iconColor: AppColors.info,
-                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.agroLotSummary),
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(AppRoutes.agroLotSummary),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     MenuTile(
@@ -153,7 +165,8 @@ class _AgronomistHomeScreenState extends State<AgronomistHomeScreen> {
                       title: 'Configuración',
                       subtitle: 'Programa, trampas y umbral',
                       iconColor: AppColors.warningStrong,
-                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.agroConfig),
+                      onTap: () =>
+                          Navigator.of(context).pushNamed(AppRoutes.agroConfig),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     MenuTile(
@@ -161,7 +174,8 @@ class _AgronomistHomeScreenState extends State<AgronomistHomeScreen> {
                       title: 'Planeación',
                       subtitle: 'Planeación y asignación de lotes',
                       iconColor: AppColors.primaryDark,
-                      onTap: () => Navigator.of(context).pushNamed(AppRoutes.agroPlanningHub),
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(AppRoutes.agroPlanningHub),
                     ),
                   ],
                 ),
