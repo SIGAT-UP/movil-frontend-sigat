@@ -32,7 +32,10 @@ class _AgronomistConfigScreenState extends State<AgronomistConfigScreen> {
         builder: (context, _) {
           final c = _ctrl.config;
           if (c == null && _ctrl.configError != null) {
-            return ErrorState(error: _ctrl.configError, what: 'el programa de inspección', onRetry: _ctrl.loadConfig);
+            return ErrorState(
+                error: _ctrl.configError,
+                what: 'el programa de inspección',
+                onRetry: _ctrl.loadConfig);
           }
           if (c == null) return const AppLoader();
           return ResponsiveBody(
@@ -42,8 +45,10 @@ class _AgronomistConfigScreenState extends State<AgronomistConfigScreen> {
                 InfoTableCard(
                   title: 'Programa de inspección',
                   rows: [
-                    InfoRowData('Periodo de lectura', value: '${c.readingPeriodDays} días'),
-                    InfoRowData('Trampas configuradas', value: '${c.trapsConfigured}'),
+                    InfoRowData('Periodo de lectura',
+                        value: '${c.readingPeriodDays} días'),
+                    InfoRowData('Trampas configuradas',
+                        value: '${c.trapsConfigured}'),
                     InfoRowData('Verificación', value: c.verification),
                   ],
                 ),
@@ -51,7 +56,8 @@ class _AgronomistConfigScreenState extends State<AgronomistConfigScreen> {
                 const SectionTitle('Escenarios de trampeo (Tabla 1)'),
                 const SizedBox(height: AppSpacing.sm),
                 AppCard(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg, vertical: 4),
                   child: Column(
                     children: [
                       for (var i = 0; i < c.scenarios.length; i++) ...[
@@ -63,8 +69,10 @@ class _AgronomistConfigScreenState extends State<AgronomistConfigScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(c.scenarios[i].name, style: AppText.bodySmStrong),
-                                    Text(c.scenarios[i].rule, style: AppText.micro),
+                                    Text(c.scenarios[i].name,
+                                        style: AppText.bodySmStrong),
+                                    Text(c.scenarios[i].rule,
+                                        style: AppText.micro),
                                   ],
                                 ),
                               ),
@@ -72,7 +80,8 @@ class _AgronomistConfigScreenState extends State<AgronomistConfigScreen> {
                                 const StatusBadge('Actual', icon: Icons.check)
                               else if (c.scenarios[i].pending)
                                 const StatusBadge('Por definir',
-                                    tone: StatusTone.warning, icon: Icons.warning_amber_rounded),
+                                    tone: StatusTone.warning,
+                                    icon: Icons.warning_amber_rounded),
                             ],
                           ),
                         ),
@@ -86,7 +95,8 @@ class _AgronomistConfigScreenState extends State<AgronomistConfigScreen> {
                 const AlertBanner(
                   type: AlertType.info,
                   title: 'Edición en el cliente web',
-                  message: 'Aquí puedes consultar la configuración vigente. Los cambios se hacen '
+                  message:
+                      'Aquí puedes consultar la configuración vigente. Los cambios se hacen '
                       'desde el cliente web del sistema.',
                 ),
               ],

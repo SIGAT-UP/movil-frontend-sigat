@@ -24,8 +24,10 @@ IconData planningIcon(PlanningStatus s) => switch (s) {
 /// Quien la CREA (agrónomo) ve la misma planificación como "En revisión":
 /// está esperando la respuesta del otro. Por eso hay dos constructores.
 class PlanningStatusBadge extends StatelessWidget {
-  const PlanningStatusBadge(this.status, {super.key, this.label}) : forCreator = false;
-  const PlanningStatusBadge.forCreator(this.status, {super.key, this.label}) : forCreator = true;
+  const PlanningStatusBadge(this.status, {super.key, this.label})
+      : forCreator = false;
+  const PlanningStatusBadge.forCreator(this.status, {super.key, this.label})
+      : forCreator = true;
 
   final PlanningStatus status;
   final String? label;
@@ -33,8 +35,10 @@ class PlanningStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => forCreator
-      ? StatusBadge(label ?? creatorStatusLabel(status), tone: creatorTone(status))
-      : StatusBadge(label ?? status.label, tone: planningTone(status), icon: planningIcon(status));
+      ? StatusBadge(label ?? creatorStatusLabel(status),
+          tone: creatorTone(status))
+      : StatusBadge(label ?? status.label,
+          tone: planningTone(status), icon: planningIcon(status));
 }
 
 /// Estado visto por el agrónomo que creó la planificación.
@@ -56,7 +60,11 @@ StatusTone creatorTone(PlanningStatus s) => switch (s) {
 /// La usan el Técnico ("Planificaciones"), el Productor y el Agrónomo
 /// ("Mis planificaciones"), cambiando solo el subtítulo.
 class PlanningCard extends StatelessWidget {
-  const PlanningCard({super.key, required this.planning, required this.onTap, this.showRecipient = false});
+  const PlanningCard(
+      {super.key,
+      required this.planning,
+      required this.onTap,
+      this.showRecipient = false});
 
   final Planning planning;
   final VoidCallback onTap;
@@ -81,7 +89,9 @@ class PlanningCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
             ),
             child: Icon(
-              planning.target == PlanningTarget.tecnico ? Icons.eco_outlined : Icons.event_note_outlined,
+              planning.target == PlanningTarget.tecnico
+                  ? Icons.eco_outlined
+                  : Icons.event_note_outlined,
               size: 20,
               color: planningTone(planning.status).fg,
             ),
@@ -137,7 +147,8 @@ class DocumentCard extends StatelessWidget {
           children: [
             Icon(Icons.description_outlined, color: AppColors.textHint),
             SizedBox(width: AppSpacing.md),
-            Expanded(child: Text('Sin documento adjunto', style: AppText.secondary)),
+            Expanded(
+                child: Text('Sin documento adjunto', style: AppText.secondary)),
           ],
         ),
       );
@@ -162,7 +173,8 @@ class DocumentCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(d.fileName, style: AppText.title, overflow: TextOverflow.ellipsis),
+                Text(d.fileName,
+                    style: AppText.title, overflow: TextOverflow.ellipsis),
                 Text(d.detailLabel, style: AppText.caption),
               ],
             ),
@@ -184,7 +196,19 @@ class DocumentCard extends StatelessWidget {
 
 /// Ícono, fondo y color de cada tipo de documento. Compartido con el visor.
 (IconData, Color, Color) docKindStyle(DocKind kind) => switch (kind) {
-      DocKind.pdf => (Icons.picture_as_pdf_outlined, AppColors.errorLight, AppColors.error),
-      DocKind.word => (Icons.description_outlined, AppColors.infoLight, AppColors.info),
-      DocKind.imagen => (Icons.image_outlined, AppColors.primaryLight, AppColors.primaryDark),
+      DocKind.pdf => (
+          Icons.picture_as_pdf_outlined,
+          AppColors.errorLight,
+          AppColors.error
+        ),
+      DocKind.word => (
+          Icons.description_outlined,
+          AppColors.infoLight,
+          AppColors.info
+        ),
+      DocKind.imagen => (
+          Icons.image_outlined,
+          AppColors.primaryLight,
+          AppColors.primaryDark
+        ),
     };

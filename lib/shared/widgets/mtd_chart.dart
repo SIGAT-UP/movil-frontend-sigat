@@ -33,8 +33,10 @@ class MtdChart extends StatelessWidget {
       return SizedBox(
         height: height,
         child: const Center(
-          child: Text('Todavía no hay suficientes lecturas para dibujar la tendencia.',
-              textAlign: TextAlign.center, style: AppText.caption),
+          child: Text(
+              'Todavía no hay suficientes lecturas para dibujar la tendencia.',
+              textAlign: TextAlign.center,
+              style: AppText.caption),
         ),
       );
     }
@@ -51,17 +53,20 @@ class MtdChart extends StatelessWidget {
             Text('$limitLabel ${Fmt.decimal(limit)}', style: AppText.micro),
             const Spacer(),
             Text('MTD actual ${Fmt.fixed(ultimo.value, 2)}',
-                style: AppText.micro.copyWith(fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                style: AppText.micro.copyWith(
+                    fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
           ],
         ),
         const SizedBox(height: AppSpacing.sm),
         Semantics(
-          label: 'Tendencia del MTD. Último valor ${Fmt.fixed(ultimo.value, 2)} '
+          label:
+              'Tendencia del MTD. Último valor ${Fmt.fixed(ultimo.value, 2)} '
               'moscas por trampa y día, con un límite de escenario de ${Fmt.decimal(limit)}.',
           child: SizedBox(
             height: height,
             width: double.infinity,
-            child: CustomPaint(painter: _MtdPainter(series: series, limit: limit)),
+            child:
+                CustomPaint(painter: _MtdPainter(series: series, limit: limit)),
           ),
         ),
         const SizedBox(height: 4),
@@ -117,7 +122,8 @@ class _MtdPainter extends CustomPainter {
     area
       ..lineTo(ancho, padTop + alto)
       ..close();
-    canvas.drawPath(area, Paint()..color = AppColors.primary.withValues(alpha: .10));
+    canvas.drawPath(
+        area, Paint()..color = AppColors.primary.withValues(alpha: .10));
 
     // --- Línea de referencia del umbral (discontinua) ---
     final yLimite = y(limit);
@@ -125,7 +131,8 @@ class _MtdPainter extends CustomPainter {
       ..color = AppColors.warningStrong
       ..strokeWidth = 1.5;
     for (double dx = 0; dx < ancho; dx += 8) {
-      canvas.drawLine(Offset(dx, yLimite), Offset((dx + 4).clamp(0, ancho), yLimite), trazo);
+      canvas.drawLine(Offset(dx, yLimite),
+          Offset((dx + 4).clamp(0, ancho), yLimite), trazo);
     }
 
     // --- La serie: línea de 2 px ---
@@ -152,7 +159,10 @@ class _MtdPainter extends CustomPainter {
     final texto = TextPainter(
       text: TextSpan(
         text: series.last.value.toStringAsFixed(2).replaceAll('.', ','),
-        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+        style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+            color: AppColors.textPrimary),
       ),
       textDirection: TextDirection.ltr,
     )..layout();
@@ -160,5 +170,6 @@ class _MtdPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _MtdPainter old) => old.series != series || old.limit != limit;
+  bool shouldRepaint(covariant _MtdPainter old) =>
+      old.series != series || old.limit != limit;
 }

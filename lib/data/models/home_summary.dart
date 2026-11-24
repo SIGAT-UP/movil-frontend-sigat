@@ -28,6 +28,8 @@ class HomeSummary {
         assignedLots: j['assigned_lots'] as int?,
         pendingVisits: j['pending_visits'] as int?,
         nextVisitTime: j['next_visit_time'] as String?,
-        lastSync: j['last_sync'] == null ? null : DateTime.parse(j['last_sync'] as String),
+        lastSync: j['last_sync'] == null
+            ? null
+            : DateTime.parse(j['last_sync'] as String),
       );
 }

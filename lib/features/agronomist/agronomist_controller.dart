@@ -41,14 +41,17 @@ class AgronomistController extends ChangeNotifier {
   Object? historyError;
   Object? configError;
 
-  static String _mensaje(Object e, String otro) => e is DataException ? e.message : otro;
+  static String _mensaje(Object e, String otro) =>
+      e is DataException ? e.message : otro;
 
   /// Lotes del agrónomo; elige el primero si todavía no hay uno seleccionado.
   Future<String> ensureLot() async {
     if (lotId != null) return lotId!;
-    lots = await AppServices.lots.getAssignedLots(AppServices.session.value?.userId ?? '');
+    lots = await AppServices.lots
+        .getAssignedLots(AppServices.session.value?.userId ?? '');
     if (lots.isEmpty) {
-      throw const DataException('No tienes lotes para supervisar. Pide al administrador que te asigne un predio.');
+      throw const DataException(
+          'No tienes lotes para supervisar. Pide al administrador que te asigne un predio.');
     }
     return lotId = lots.first.id;
   }
@@ -65,8 +68,9 @@ class AgronomistController extends ChangeNotifier {
   int get pendingCount => pendingRecords.length;
 
   /// Planificaciones creadas, agrupadas por estado para "Mis planificaciones".
-  List<Planning> planningsBy(PlanningStatus? status) =>
-      status == null ? createdPlannings : createdPlannings.where((p) => p.status == status).toList();
+  List<Planning> planningsBy(PlanningStatus? status) => status == null
+      ? createdPlannings
+      : createdPlannings.where((p) => p.status == status).toList();
 
   Planning? planningById(String id) {
     for (final p in createdPlannings) {
@@ -116,7 +120,8 @@ class AgronomistController extends ChangeNotifier {
   Future<void> loadConfig() async {
     configError = null;
     try {
-      config = await AppServices.agronomist.getInspectionConfig(await ensureLot());
+      config =
+          await AppServices.agronomist.getInspectionConfig(await ensureLot());
     } catch (e) {
       configError = e;
       AppLog.error('Agronomist.loadConfig', e);
@@ -135,7 +140,8 @@ class AgronomistController extends ChangeNotifier {
     try {
       createdPlannings = await AppServices.plannings.getCreated();
     } catch (e) {
-      planningsError = _mensaje(e, 'No se pudieron cargar tus planificaciones.');
+      planningsError =
+          _mensaje(e, 'No se pudieron cargar tus planificaciones.');
       AppLog.error('Agronomist.loadCreatedPlannings', e);
     } finally {
       loadingPlannings = false;

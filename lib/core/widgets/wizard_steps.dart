@@ -39,9 +39,11 @@ class WizardSteps extends StatelessWidget {
                   height: 26,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: i <= current ? AppColors.primary : AppColors.background,
+                    color:
+                        i <= current ? AppColors.primary : AppColors.background,
                     border: Border.all(
-                      color: i <= current ? AppColors.primary : AppColors.border,
+                      color:
+                          i <= current ? AppColors.primary : AppColors.border,
                       width: 1.5,
                     ),
                   ),
@@ -52,7 +54,9 @@ class WizardSteps extends StatelessWidget {
                             '${i + 1}',
                             style: AppText.caption.copyWith(
                               fontWeight: FontWeight.w800,
-                              color: i == current ? Colors.white : AppColors.textHint,
+                              color: i == current
+                                  ? Colors.white
+                                  : AppColors.textHint,
                             ),
                           ),
                         ),
@@ -61,8 +65,11 @@ class WizardSteps extends StatelessWidget {
                 Text(
                   labels[i],
                   style: AppText.micro.copyWith(
-                    fontWeight: i == current ? FontWeight.w700 : FontWeight.w500,
-                    color: i <= current ? AppColors.primaryDark : AppColors.textHint,
+                    fontWeight:
+                        i == current ? FontWeight.w700 : FontWeight.w500,
+                    color: i <= current
+                        ? AppColors.primaryDark
+                        : AppColors.textHint,
                   ),
                 ),
               ],
@@ -92,51 +99,59 @@ class WizardActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(color: AppColors.background, boxShadow: AppShadows.nav),
+      decoration: const BoxDecoration(
+          color: AppColors.background, boxShadow: AppShadows.nav),
       child: SafeArea(
-      top: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, AppSpacing.sm, AppSpacing.screenH, AppSpacing.md),
-        child: Row(
-          children: [
-            if (onBack != null) ...[
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, AppSpacing.sm,
+              AppSpacing.screenH, AppSpacing.md),
+          child: Row(
+            children: [
+              if (onBack != null) ...[
+                Expanded(
+                  child: SizedBox(
+                    height: AppSpacing.buttonHeight,
+                    child: OutlinedButton(
+                      onPressed: isLoading ? null : onBack,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.primaryDark,
+                        side: const BorderSide(color: AppColors.primaryDark),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(AppSpacing.radiusSm)),
+                        textStyle: AppText.button,
+                      ),
+                      child: const Text('Atrás'),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+              ],
               Expanded(
                 child: SizedBox(
                   height: AppSpacing.buttonHeight,
-                  child: OutlinedButton(
-                    onPressed: isLoading ? null : onBack,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.primaryDark,
-                      side: const BorderSide(color: AppColors.primaryDark),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm)),
+                  child: FilledButton(
+                    onPressed: isLoading ? null : onNext,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.primaryDark,
+                      disabledBackgroundColor: isLoading
+                          ? AppColors.primaryDisabled
+                          : AppColors.border,
+                      disabledForegroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(AppSpacing.radiusSm)),
                       textStyle: AppText.button,
                     ),
-                    child: const Text('Atrás'),
+                    child: Text(isLoading ? 'Guardando...' : nextLabel),
                   ),
                 ),
               ),
-              const SizedBox(width: AppSpacing.md),
             ],
-            Expanded(
-              child: SizedBox(
-                height: AppSpacing.buttonHeight,
-                child: FilledButton(
-                  onPressed: isLoading ? null : onNext,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.primaryDark,
-                    disabledBackgroundColor: isLoading ? AppColors.primaryDisabled : AppColors.border,
-                    disabledForegroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm)),
-                    textStyle: AppText.button,
-                  ),
-                  child: Text(isLoading ? 'Guardando...' : nextLabel),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

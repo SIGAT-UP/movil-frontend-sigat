@@ -30,6 +30,7 @@ dependencies:
   # Cola local de registros pendientes de sincronizar (lecturas, autorreportes):
   # sobrevive a cerrar la app. Android, iOS y web.
   shared_preferences: ^2.3.2
+  crypto: ^3.0.8
 
 dev_dependencies:
   flutter_test:

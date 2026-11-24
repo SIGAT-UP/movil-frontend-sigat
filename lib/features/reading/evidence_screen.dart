@@ -65,17 +65,22 @@ class _EvidenceScreenState extends State<EvidenceScreen> {
             const AlertBanner(
               type: AlertType.info,
               title: 'La fotografía se guarda en el dispositivo',
-              message: 'Se enviará al servidor cuando la sincronización esté disponible.',
+              message:
+                  'Se enviará al servidor cuando la sincronización esté disponible.',
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomActions(children: [
-        PrimaryButton(label: 'Subir foto', color: AppColors.primaryDark, onPressed: _confirm),
+        PrimaryButton(
+            label: 'Subir foto',
+            color: AppColors.primaryDark,
+            onPressed: _confirm),
         SecondaryButton(
           label: 'Tomar o elegir otra',
           icon: Icons.refresh,
-          onPressed: () => Navigator.of(context).pop(const EvidenceResult(changeSource: true)),
+          onPressed: () => Navigator.of(context)
+              .pop(const EvidenceResult(changeSource: true)),
         ),
       ]),
     );

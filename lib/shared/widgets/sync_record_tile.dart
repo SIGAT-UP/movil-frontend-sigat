@@ -21,10 +21,12 @@ class SyncRecordTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pendingLike = status == RecordStatus.pendiente || status == RecordStatus.local;
+    final pendingLike =
+        status == RecordStatus.pendiente || status == RecordStatus.local;
     final subtitle = switch (status) {
       RecordStatus.local => 'Guardado localmente',
-      RecordStatus.confirmado when date != null => '${Fmt.date(date!)} · Confirmado',
+      RecordStatus.confirmado when date != null =>
+        '${Fmt.date(date!)} · Confirmado',
       _ when date != null => '${Fmt.date(date!)}, ${Fmt.time24(date!)}',
       _ => null,
     };
@@ -32,7 +34,8 @@ class SyncRecordTile extends StatelessWidget {
     return AppCard(
       color: pendingLike ? AppColors.warningLight : null,
       borderColor: pendingLike ? AppColors.warningBorder : null,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md, vertical: AppSpacing.md),
       child: Row(
         children: [
           if (pendingLike) ...[
@@ -48,7 +51,8 @@ class SyncRecordTile extends StatelessWidget {
               ],
             ),
           ),
-          if (status != RecordStatus.local && status != RecordStatus.confirmado) RecordStatusBadge(status),
+          if (status != RecordStatus.local && status != RecordStatus.confirmado)
+            RecordStatusBadge(status),
         ],
       ),
     );

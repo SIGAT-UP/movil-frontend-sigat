@@ -17,7 +17,8 @@ class FinishLotScreen extends StatefulWidget {
 
 class _FinishLotScreenState extends State<FinishLotScreen> {
   final _visit = VisitController.instance;
-  late final Future<int> _pendingSync = AppServices.sync.getPending().then((l) => l.length);
+  late final Future<int> _pendingSync =
+      AppServices.sync.getPending().then((l) => l.length);
   bool _busy = false;
 
   Future<void> _finish() async {
@@ -43,7 +44,9 @@ class _FinishLotScreenState extends State<FinishLotScreen> {
   @override
   Widget build(BuildContext context) {
     final total = _visit.activeTraps.length;
-    final justified = _visit.trapStates.values.where((s) => s == TrapVisitState.justificada).length;
+    final justified = _visit.trapStates.values
+        .where((s) => s == TrapVisitState.justificada)
+        .length;
 
     return Scaffold(
       appBar: const SimpleAppBar(title: 'Finalizar lote'),
@@ -57,11 +60,18 @@ class _FinishLotScreenState extends State<FinishLotScreen> {
               builder: (_, online, __) => InfoTableCard(
                 title: 'Resumen de la visita · ${_visit.activeLot?.name ?? ''}',
                 rows: [
-                  InfoRowData('Trampas registradas', value: '${_visit.registeredCount}/$total'),
-                  if (justified > 0) InfoRowData('Trampas con observación', value: '$justified'),
-                  InfoRowData('Lecturas guardadas', value: '${_visit.registeredCount}'),
-                  InfoRowData('Pendientes de sincronización', value: snap.hasData ? '${snap.data}' : (snap.hasError ? 'No disponible' : '…')),
-                  InfoRowData('Conexión', trailing: ConnectionChip(isOnline: online)),
+                  InfoRowData('Trampas registradas',
+                      value: '${_visit.registeredCount}/$total'),
+                  if (justified > 0)
+                    InfoRowData('Trampas con observación', value: '$justified'),
+                  InfoRowData('Lecturas guardadas',
+                      value: '${_visit.registeredCount}'),
+                  InfoRowData('Pendientes de sincronización',
+                      value: snap.hasData
+                          ? '${snap.data}'
+                          : (snap.hasError ? 'No disponible' : '…')),
+                  InfoRowData('Conexión',
+                      trailing: ConnectionChip(isOnline: online)),
                 ],
               ),
             ),
@@ -71,12 +81,14 @@ class _FinishLotScreenState extends State<FinishLotScreen> {
             const AlertBanner(
               type: AlertType.info,
               title: 'Puedes finalizar el lote',
-              message: 'Los datos permanecerán guardados hasta que exista conexión.',
+              message:
+                  'Los datos permanecerán guardados hasta que exista conexión.',
             )
           else
             AlertBanner(
               title: 'Aún no puedes finalizar el lote',
-              message: 'Faltan ${_visit.pendingCount} trampa(s) por registrar o justificar.',
+              message:
+                  'Faltan ${_visit.pendingCount} trampa(s) por registrar o justificar.',
             ),
         ],
       ),

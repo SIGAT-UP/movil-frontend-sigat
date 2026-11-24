@@ -84,7 +84,8 @@ class UserSession {
     final u = j['user'] as Map<String, dynamic>;
     final nombre = (u['nombre'] as String).trim();
     final partes = nombre.split(RegExp(r'\s+'));
-    final corto = partes.length > 1 ? '${partes.first[0]}. ${partes.last}' : nombre;
+    final corto =
+        partes.length > 1 ? '${partes.first[0]}. ${partes.last}' : nombre;
     return UserSession(
       userId: u['id'].toString(),
       username: u['usuario'] as String,

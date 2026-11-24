@@ -61,11 +61,13 @@ class _LotsScreenState extends State<LotsScreen> {
         listenable: _visit,
         builder: (context, _) {
           final lots = _filtered(_visit.assignedLots);
-          final selected = _visit.assignedLots.where((l) => l.id == _selectedId).firstOrNull;
+          final selected =
+              _visit.assignedLots.where((l) => l.id == _selectedId).firstOrNull;
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 12, AppSpacing.screenH, 0),
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.screenH, 12, AppSpacing.screenH, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -77,7 +79,8 @@ class _LotsScreenState extends State<LotsScreen> {
                         ),
                         ValueListenableBuilder<bool>(
                           valueListenable: AppServices.isOnline,
-                          builder: (_, online, __) => ConnectionChip(isOnline: online),
+                          builder: (_, online, __) =>
+                              ConnectionChip(isOnline: online),
                         ),
                       ],
                     ),
@@ -90,9 +93,14 @@ class _LotsScreenState extends State<LotsScreen> {
                       ),
                     ],
                     const SizedBox(height: 12),
-                    AppSearchField(hint: 'Buscar lote, productor o código', onChanged: (v) => setState(() => _query = v)),
+                    AppSearchField(
+                        hint: 'Buscar lote, productor o código',
+                        onChanged: (v) => setState(() => _query = v)),
                     const SizedBox(height: 12),
-                    PillTabs(labels: _tabs, selected: _tab, onChanged: (i) => setState(() => _tab = i)),
+                    PillTabs(
+                        labels: _tabs,
+                        selected: _tab,
+                        onChanged: (i) => setState(() => _tab = i)),
                     const SizedBox(height: 12),
                   ],
                 ),
@@ -104,7 +112,9 @@ class _LotsScreenState extends State<LotsScreen> {
                   color: AppColors.primaryDark,
                   onPressed: selected == null
                       ? null
-                      : () => Navigator.of(context).pushNamed(AppRoutes.lotDetail, arguments: selected.id),
+                      : () => Navigator.of(context).pushNamed(
+                          AppRoutes.lotDetail,
+                          arguments: selected.id),
                 ),
               ]),
             ],
@@ -123,7 +133,8 @@ class _LotsScreenState extends State<LotsScreen> {
         icon: Icons.cloud_off,
         title: 'No se pudieron cargar los lotes',
         message: _visit.lotsError,
-        action: SecondaryButton(label: 'Reintentar', onPressed: _visit.loadLots),
+        action:
+            SecondaryButton(label: 'Reintentar', onPressed: _visit.loadLots),
       );
     }
     if (lots.isEmpty) {
@@ -137,7 +148,8 @@ class _LotsScreenState extends State<LotsScreen> {
       onRefresh: _visit.loadLots,
       color: AppColors.primary,
       child: ListView.separated(
-        padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 0, AppSpacing.screenH, 12),
+        padding: const EdgeInsets.fromLTRB(
+            AppSpacing.screenH, 0, AppSpacing.screenH, 12),
         itemCount: lots.length,
         separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (_, i) => LotCard(

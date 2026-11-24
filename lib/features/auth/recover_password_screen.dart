@@ -40,7 +40,10 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
     } on AuthException catch (e) {
       if (mounted) setState(() => _error = e.message ?? e.title);
     } catch (_) {
-      if (mounted) setState(() => _error = 'No pudimos enviar las instrucciones. Intente de nuevo.');
+      if (mounted) {
+        setState(() =>
+            _error = 'No pudimos enviar las instrucciones. Intente de nuevo.');
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -60,8 +63,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
               children: [
                 const SoftIconCircle(icon: Icons.mail_outline),
                 const SizedBox(height: AppSpacing.lg),
-                const Text('¿Olvidaste tu contraseña?',
-                    style: AppText.h1),
+                const Text('¿Olvidaste tu contraseña?', style: AppText.h1),
                 const SizedBox(height: 6),
                 const Text(
                   'Ingresa tu correo electrónico y te enviaremos las instrucciones para crear una nueva contraseña.',
@@ -72,7 +74,8 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                   AlertBanner(
                     type: AlertType.success,
                     title: 'Revisa tu correo',
-                    message: 'Si ${_emailCtrl.text.trim()} está registrado, recibirás las instrucciones en unos minutos.',
+                    message:
+                        'Si ${_emailCtrl.text.trim()} está registrado, recibirás las instrucciones en unos minutos.',
                   ),
                   const SizedBox(height: AppSpacing.lg),
                 ],
@@ -89,14 +92,19 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
                   enabled: !_loading,
                   onSubmitted: (_) => _send(),
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Ingrese su correo';
-                    if (!_emailRegex.hasMatch(v.trim())) return 'Correo no válido';
+                    if (v == null || v.trim().isEmpty) {
+                      return 'Ingrese su correo';
+                    }
+                    if (!_emailRegex.hasMatch(v.trim())) {
+                      return 'Correo no válido';
+                    }
                     return null;
                   },
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 PrimaryButton(
-                  label: _sent ? 'Reenviar instrucciones' : 'Enviar instrucciones',
+                  label:
+                      _sent ? 'Reenviar instrucciones' : 'Enviar instrucciones',
                   loadingLabel: 'Enviando...',
                   isLoading: _loading,
                   color: AppColors.primaryDark,

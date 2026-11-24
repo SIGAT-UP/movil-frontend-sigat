@@ -36,7 +36,8 @@ class _IdentifyTrapScreenState extends State<IdentifyTrapScreen> {
       final lookup = await lookupTrap(_codeCtrl.text);
       if (!mounted) return;
       if (lookup == null) {
-        setState(() => _error = 'El código no está en el catálogo descargado del predio. Revísalo e intenta de nuevo.');
+        setState(() => _error =
+            'El código no está en el catálogo descargado del predio. Revísalo e intenta de nuevo.');
       } else {
         openTrapIdentified(context, lookup, replace: true);
       }
@@ -63,8 +64,10 @@ class _IdentifyTrapScreenState extends State<IdentifyTrapScreen> {
                 children: [
                   Text('Ingresa el código ICA', style: AppText.h2),
                   SizedBox(height: 4),
-                  Text('Escribe el código que aparece impreso en la trampa Jackson',
-                      textAlign: TextAlign.center, style: AppText.caption),
+                  Text(
+                      'Escribe el código que aparece impreso en la trampa Jackson',
+                      textAlign: TextAlign.center,
+                      style: AppText.caption),
                 ],
               ),
             ),
@@ -84,7 +87,9 @@ class _IdentifyTrapScreenState extends State<IdentifyTrapScreen> {
                       if (_error != null) setState(() => _error = null);
                     },
                     onSubmitted: (_) => _validate(),
-                    validator: (v) => (v == null || v.trim().isEmpty) ? 'Ingresa el código' : null,
+                    validator: (v) => (v == null || v.trim().isEmpty)
+                        ? 'Ingresa el código'
+                        : null,
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   if (_error != null) ...[
@@ -93,7 +98,8 @@ class _IdentifyTrapScreenState extends State<IdentifyTrapScreen> {
                   ],
                   const AlertBanner(
                     type: AlertType.warning,
-                    title: 'El código ICA identifica la trampa dentro del lote y permite registrar su lectura.',
+                    title:
+                        'El código ICA identifica la trampa dentro del lote y permite registrar su lectura.',
                   ),
                 ],
               ),
@@ -110,7 +116,9 @@ class _IdentifyTrapScreenState extends State<IdentifyTrapScreen> {
           color: AppColors.primaryDark,
           onPressed: _validate,
         ),
-        SecondaryButton(label: 'Volver al mapa', onPressed: () => ShellNav.goTo(context, AppTab.mapa)),
+        SecondaryButton(
+            label: 'Volver al mapa',
+            onPressed: () => ShellNav.goTo(context, AppTab.mapa)),
       ]),
     );
   }

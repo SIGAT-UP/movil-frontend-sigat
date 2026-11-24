@@ -19,7 +19,8 @@ class _RecordReadingScreenState extends State<RecordReadingScreen> {
   late Future<(Trap, Reading?)> _future = _load();
 
   /// Trampa y su última lectura recibida por el servidor.
-  Future<(Trap, Reading?)> _load() => AppServices.agronomist.trapWithLastReading(widget.trapId);
+  Future<(Trap, Reading?)> _load() =>
+      AppServices.agronomist.trapWithLastReading(widget.trapId);
 
   void _reload() => setState(() => _future = _load());
 
@@ -31,15 +32,21 @@ class _RecordReadingScreenState extends State<RecordReadingScreen> {
       body: FutureBuilder<(Trap, Reading?)>(
         future: _future,
         builder: (context, snap) {
-          if (snap.hasError) return ErrorState(error: snap.error, what: 'la lectura', onRetry: _reload);
+          if (snap.hasError) {
+            return ErrorState(
+                error: snap.error, what: 'la lectura', onRetry: _reload);
+          }
           if (!snap.hasData) return const AppLoader();
           final (trampa, lectura) = snap.data!;
           if (lectura == null) {
             return EmptyState(
               icon: Icons.inbox_outlined,
               title: 'Sin lecturas registradas',
-              message: 'La trampa ${trampa.label} todavía no tiene lecturas en el servidor.',
-              action: SecondaryButton(label: 'Volver', onPressed: () => Navigator.of(context).pop()),
+              message:
+                  'La trampa ${trampa.label} todavía no tiene lecturas en el servidor.',
+              action: SecondaryButton(
+                  label: 'Volver',
+                  onPressed: () => Navigator.of(context).pop()),
             );
           }
           return ResponsiveBody(
@@ -50,16 +57,23 @@ class _RecordReadingScreenState extends State<RecordReadingScreen> {
                 const SizedBox(height: AppSpacing.lg),
                 ReadOnlyField(
                   label: 'Fecha de observación',
-                  value: '${Fmt.dateNumeric(lectura.observedAt)}   ·   ${Fmt.time(lectura.observedAt)}',
+                  value:
+                      '${Fmt.dateNumeric(lectura.observedAt)}   ·   ${Fmt.time(lectura.observedAt)}',
                 ),
                 const SizedBox(height: AppSpacing.md),
-                ReadOnlyField(label: 'Número de especímenes', value: '${lectura.specimens}'),
+                ReadOnlyField(
+                    label: 'Número de especímenes',
+                    value: '${lectura.specimens}'),
                 const SizedBox(height: AppSpacing.md),
-                ReadOnlyField(label: 'Estado de la trampa', value: lectura.condition.label),
+                ReadOnlyField(
+                    label: 'Estado de la trampa',
+                    value: lectura.condition.label),
                 const SizedBox(height: AppSpacing.md),
                 ReadOnlyField(
                   label: 'Observaciones',
-                  value: lectura.observations?.isNotEmpty == true ? lectura.observations! : 'Sin descripción',
+                  value: lectura.observations?.isNotEmpty == true
+                      ? lectura.observations!
+                      : 'Sin descripción',
                 ),
                 if (lectura.evidence.isNotEmpty) ...[
                   const SizedBox(height: AppSpacing.lg),

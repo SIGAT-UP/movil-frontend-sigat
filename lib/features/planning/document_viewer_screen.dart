@@ -54,7 +54,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
         _Modo.representacion => _doc?.pages ?? 1,
       };
 
-  bool get _canDownload => PdfService.instance.canDownloadInstructions(widget.planning);
+  bool get _canDownload =>
+      PdfService.instance.canDownloadInstructions(widget.planning);
 
   @override
   void initState() {
@@ -84,7 +85,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
       await PdfService.instance.downloadInstructions(widget.planning);
     } catch (e) {
       if (mounted) {
-        AppMessenger.error('No se pudo preparar el documento', message: 'Intenta de nuevo.');
+        AppMessenger.error('No se pudo preparar el documento',
+            message: 'Intenta de nuevo.');
       }
     } finally {
       if (mounted) setState(() => _downloading = false);
@@ -114,8 +116,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
           children: [
             if (doc != null)
               Padding(
-                padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.screenH, AppSpacing.md, AppSpacing.screenH, AppSpacing.sm),
+                padding: const EdgeInsets.fromLTRB(AppSpacing.screenH,
+                    AppSpacing.md, AppSpacing.screenH, AppSpacing.sm),
                 child: DocumentCard(doc: doc),
               ),
 
@@ -132,7 +134,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
             if (multipagina || conZoom)
               Container(
                 color: const Color(0xFF1F1F1F),
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md, vertical: AppSpacing.sm),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -141,14 +144,17 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
                         icon: Icons.chevron_left,
                         tooltip: 'Página anterior',
                         color: Colors.white,
-                        onPressed: _page > 1 ? () => setState(() => _page--) : null,
+                        onPressed:
+                            _page > 1 ? () => setState(() => _page--) : null,
                       ),
                       Text('$_page / $_pages', style: AppText.onDarkBody),
                       AppIconButton(
                         icon: Icons.chevron_right,
                         tooltip: 'Página siguiente',
                         color: Colors.white,
-                        onPressed: _page < _pages ? () => setState(() => _page++) : null,
+                        onPressed: _page < _pages
+                            ? () => setState(() => _page++)
+                            : null,
                       ),
                       const SizedBox(width: AppSpacing.md),
                     ],
@@ -157,14 +163,19 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
                         icon: Icons.remove,
                         tooltip: 'Alejar',
                         color: Colors.white,
-                        onPressed: _zoom > .6 ? () => setState(() => _zoom -= .2) : null,
+                        onPressed: _zoom > .6
+                            ? () => setState(() => _zoom -= .2)
+                            : null,
                       ),
-                      Text('${(_zoom * 100).round()} %', style: AppText.onDarkBody),
+                      Text('${(_zoom * 100).round()} %',
+                          style: AppText.onDarkBody),
                       AppIconButton(
                         icon: Icons.add,
                         tooltip: 'Acercar',
                         color: Colors.white,
-                        onPressed: _zoom < 1 ? () => setState(() => _zoom += .2) : null,
+                        onPressed: _zoom < 1
+                            ? () => setState(() => _zoom += .2)
+                            : null,
                       ),
                     ],
                   ],
@@ -176,14 +187,18 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
       bottomNavigationBar: BottomActions(children: [
         if (_canDownload)
           PrimaryButton(
-            label: _modo == _Modo.imagen ? 'Descargar como PDF' : 'Descargar documento',
+            label: _modo == _Modo.imagen
+                ? 'Descargar como PDF'
+                : 'Descargar documento',
             icon: Icons.download_outlined,
             isLoading: _downloading,
             loadingLabel: 'Preparando...',
             color: AppColors.primaryDark,
             onPressed: _download,
           ),
-        SecondaryButton(label: 'Cerrar documento', onPressed: () => Navigator.of(context).pop()),
+        SecondaryButton(
+            label: 'Cerrar documento',
+            onPressed: () => Navigator.of(context).pop()),
       ]),
     );
   }
@@ -216,15 +231,18 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
               children: [
                 const CircularProgressIndicator(color: Colors.white),
                 const SizedBox(height: AppSpacing.md),
-                Text(_rendering ? 'Preparando la página $_page…' : 'Sin páginas',
+                Text(
+                    _rendering ? 'Preparando la página $_page…' : 'Sin páginas',
                     style: AppText.onDarkMuted),
               ],
             ),
           );
         }
         return pagina(Container(
-          decoration: const BoxDecoration(color: Colors.white, boxShadow: AppShadows.raised),
-          child: Image.memory(_paginas[_page - 1], fit: BoxFit.contain, gaplessPlayback: true),
+          decoration: const BoxDecoration(
+              color: Colors.white, boxShadow: AppShadows.raised),
+          child: Image.memory(_paginas[_page - 1],
+              fit: BoxFit.contain, gaplessPlayback: true),
         ));
 
       case _Modo.imagen:
@@ -239,7 +257,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
         );
 
       case _Modo.representacion:
-        return pagina(_DocumentPage(planning: widget.planning, page: _page, pages: _pages));
+        return pagina(_DocumentPage(
+            planning: widget.planning, page: _page, pages: _pages));
     }
   }
 
@@ -251,9 +270,11 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
             children: [
               Icon(icono, size: 48, color: Colors.white70),
               const SizedBox(height: AppSpacing.md),
-              Text(titulo, style: AppText.onDarkTitle, textAlign: TextAlign.center),
+              Text(titulo,
+                  style: AppText.onDarkTitle, textAlign: TextAlign.center),
               const SizedBox(height: AppSpacing.xs),
-              Text(mensaje, style: AppText.onDarkMuted, textAlign: TextAlign.center),
+              Text(mensaje,
+                  style: AppText.onDarkMuted, textAlign: TextAlign.center),
             ],
           ),
         ),
@@ -262,7 +283,8 @@ class _DocumentViewerScreenState extends State<DocumentViewerScreen> {
 
 /// Hoja del documento, con la identidad de la app.
 class _DocumentPage extends StatelessWidget {
-  const _DocumentPage({required this.planning, required this.page, required this.pages});
+  const _DocumentPage(
+      {required this.planning, required this.page, required this.pages});
 
   final Planning planning;
   final int page;
@@ -273,7 +295,8 @@ class _DocumentPage extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(maxWidth: 420),
       padding: const EdgeInsets.all(AppSpacing.xl),
-      decoration: const BoxDecoration(color: Colors.white, boxShadow: AppShadows.raised),
+      decoration: const BoxDecoration(
+          color: Colors.white, boxShadow: AppShadows.raised),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -281,17 +304,20 @@ class _DocumentPage extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           Center(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
               color: AppColors.primaryDark,
               child: Text(
                 'INSTRUCCIONES',
                 textAlign: TextAlign.center,
-                style: AppText.h3.copyWith(color: Colors.white, letterSpacing: 1),
+                style:
+                    AppText.h3.copyWith(color: Colors.white, letterSpacing: 1),
               ),
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text(planning.activity, textAlign: TextAlign.center, style: AppText.h3),
+          Text(planning.activity,
+              textAlign: TextAlign.center, style: AppText.h3),
           const SizedBox(height: AppSpacing.xs),
           Text(
             '${planning.target.label} · ${Fmt.date(planning.startDate)}',

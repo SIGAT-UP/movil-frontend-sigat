@@ -13,8 +13,9 @@ class FieldLabel extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) =>
-      Padding(padding: const EdgeInsets.only(bottom: 6), child: Text(text, style: AppText.secondary));
+  Widget build(BuildContext context) => Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Text(text, style: AppText.secondary));
 }
 
 /// Texto de error bajo un campo que no es TextFormField (fecha, selección).
@@ -25,7 +26,8 @@ class FieldError extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(top: 6, left: 12),
-        child: Text(text, style: AppText.caption.copyWith(color: AppColors.error)),
+        child:
+            Text(text, style: AppText.caption.copyWith(color: AppColors.error)),
       );
 }
 
@@ -59,15 +61,20 @@ class AppNumberField extends StatelessWidget {
   final bool enabled;
   final ValueChanged<String>? onChanged;
 
-  static double? parse(String text) => double.tryParse(text.trim().replaceAll(',', '.'));
+  static double? parse(String text) =>
+      double.tryParse(text.trim().replaceAll(',', '.'));
 
   String? _validate(String? v) {
     final text = v?.trim() ?? '';
     if (text.isEmpty) return required ? 'Campo obligatorio' : null;
     final n = parse(text);
     if (n == null) return 'Número no válido';
-    if (min != null && n < min!) return 'Debe ser mayor o igual a ${Fmt.decimal(min!)}';
-    if (max != null && n > max!) return 'Debe ser menor o igual a ${Fmt.decimal(max!)}';
+    if (min != null && n < min!) {
+      return 'Debe ser mayor o igual a ${Fmt.decimal(min!)}';
+    }
+    if (max != null && n > max!) {
+      return 'Debe ser menor o igual a ${Fmt.decimal(max!)}';
+    }
     return null;
   }
 
@@ -86,7 +93,8 @@ class AppNumberField extends StatelessWidget {
           ? null
           : Padding(
               padding: const EdgeInsets.only(right: 12),
-              child: Align(widthFactor: 1, child: Text(unit!, style: AppText.secondary)),
+              child: Align(
+                  widthFactor: 1, child: Text(unit!, style: AppText.secondary)),
             ),
     );
   }
@@ -97,15 +105,22 @@ class _NumberFormatter extends TextInputFormatter {
   final int decimals;
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    final re = decimals == 0 ? RegExp(r'^\d*$') : RegExp('^\\d*([.,]\\d{0,$decimals})?\$');
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final re = decimals == 0
+        ? RegExp(r'^\d*$')
+        : RegExp('^\\d*([.,]\\d{0,$decimals})?\$');
     return re.hasMatch(newValue.text) ? newValue : oldValue;
   }
 }
 
 /// Buscador con lupa ("Buscar lote, productor o código").
 class AppSearchField extends StatelessWidget {
-  const AppSearchField({super.key, required this.hint, required this.onChanged, this.controller});
+  const AppSearchField(
+      {super.key,
+      required this.hint,
+      required this.onChanged,
+      this.controller});
 
   final String hint;
   final ValueChanged<String> onChanged;
@@ -119,7 +134,8 @@ class AppSearchField extends StatelessWidget {
       style: AppText.body,
       decoration: InputDecoration(
         hintText: hint,
-        prefixIcon: const Icon(Icons.search, size: AppIconSize.md, color: AppColors.textSecondary),
+        prefixIcon: const Icon(Icons.search,
+            size: AppIconSize.md, color: AppColors.textSecondary),
       ),
     );
   }
@@ -157,7 +173,11 @@ class AppDateField extends StatelessWidget {
     var initial = value ?? now;
     if (initial.isBefore(first)) initial = first;
     if (initial.isAfter(last)) initial = last;
-    final picked = await showDatePicker(context: context, initialDate: initial, firstDate: first, lastDate: last);
+    final picked = await showDatePicker(
+        context: context,
+        initialDate: initial,
+        firstDate: first,
+        lastDate: last);
     if (picked != null) onChanged(picked);
   }
 
@@ -182,11 +202,15 @@ class AppDateField extends StatelessWidget {
                       icon: const Icon(Icons.close, size: 18),
                       onPressed: () => onChanged(null),
                     )
-                  : const Icon(Icons.calendar_today_outlined, size: 18, color: AppColors.textSecondary),
+                  : const Icon(Icons.calendar_today_outlined,
+                      size: 18, color: AppColors.textSecondary),
             ),
             child: Text(
               value == null ? 'dd / mm / aaaa' : Fmt.dateNumeric(value!),
-              style: AppText.body.copyWith(color: value == null ? AppColors.textHint : AppColors.textPrimary),
+              style: AppText.body.copyWith(
+                  color: value == null
+                      ? AppColors.textHint
+                      : AppColors.textPrimary),
             ),
           ),
         ),
@@ -209,7 +233,8 @@ class ReadOnlyField extends StatelessWidget {
         FieldLabel(label),
         InputDecorator(
           decoration: const InputDecoration(fillColor: AppColors.surface),
-          child: Text(value, style: AppText.body.copyWith(color: AppColors.textSecondary)),
+          child: Text(value,
+              style: AppText.body.copyWith(color: AppColors.textSecondary)),
         ),
       ],
     );
@@ -244,7 +269,10 @@ class AppDropdownField<T> extends StatelessWidget {
           isExpanded: true,
           icon: const Icon(Icons.keyboard_arrow_down),
           style: AppText.body,
-          items: [for (final i in items) DropdownMenuItem(value: i, child: Text(itemLabel(i)))],
+          items: [
+            for (final i in items)
+              DropdownMenuItem(value: i, child: Text(itemLabel(i)))
+          ],
           onChanged: (v) {
             if (v != null) onChanged(v);
           },
@@ -256,7 +284,11 @@ class AppDropdownField<T> extends StatelessWidget {
 
 /// Casilla con texto (ej. "Recordar usuario"). Toda la fila es pulsable.
 class AppCheckboxRow extends StatelessWidget {
-  const AppCheckboxRow({super.key, required this.label, required this.value, required this.onChanged});
+  const AppCheckboxRow(
+      {super.key,
+      required this.label,
+      required this.value,
+      required this.onChanged});
 
   final String label;
   final bool value;
@@ -277,7 +309,10 @@ class AppCheckboxRow extends StatelessWidget {
             SizedBox(
               width: 24,
               height: 24,
-              child: Checkbox(value: value, onChanged: onChanged == null ? null : (v) => onChanged!(v ?? false)),
+              child: Checkbox(
+                  value: value,
+                  onChanged:
+                      onChanged == null ? null : (v) => onChanged!(v ?? false)),
             ),
             const SizedBox(width: 6),
             Text(label, style: AppText.bodySm),

@@ -43,7 +43,8 @@ class NotificationsController extends ChangeNotifier {
       final fetched = await AppServices.notifications.getForUser(id);
 
       // Avisos que no estaban en la consulta anterior.
-      final nuevos = fetched.where((n) => !n.read && !_known.contains(n.id)).toList();
+      final nuevos =
+          fetched.where((n) => !n.read && !_known.contains(n.id)).toList();
       items = fetched;
       _known
         ..clear()
@@ -51,15 +52,20 @@ class NotificationsController extends ChangeNotifier {
 
       // Solo se alerta de lo que llega DESPUÉS de la primera consulta, y solo
       // si el usuario tiene las notificaciones activadas.
-      if (_firstLoadDone && nuevos.isNotEmpty && ProfileController.instance.notifications.enabled) {
+      if (_firstLoadDone &&
+          nuevos.isNotEmpty &&
+          ProfileController.instance.notifications.enabled) {
         AppMessenger.info(
-          nuevos.length == 1 ? 'Tienes un aviso nuevo' : 'Tienes ${nuevos.length} avisos nuevos',
+          nuevos.length == 1
+              ? 'Tienes un aviso nuevo'
+              : 'Tienes ${nuevos.length} avisos nuevos',
           message: nuevos.first.title,
         );
       }
       _firstLoadDone = true;
     } catch (e) {
-      error = e is DataException ? e.message : 'No se pudieron cargar tus avisos.';
+      error =
+          e is DataException ? e.message : 'No se pudieron cargar tus avisos.';
       AppLog.error('NotificationsController.load', e);
     } finally {
       loading = false;
@@ -72,7 +78,8 @@ class NotificationsController extends ChangeNotifier {
     if (id == null) return;
     final i = items.indexWhere((n) => n.id == notificationId);
     if (i < 0 || items[i].read) return;
-    items[i] = items[i].copyWith(read: true); // la interfaz responde de inmediato
+    items[i] =
+        items[i].copyWith(read: true); // la interfaz responde de inmediato
     notifyListeners();
     try {
       await AppServices.notifications.markAsRead(id, notificationId);

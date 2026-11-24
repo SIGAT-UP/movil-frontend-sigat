@@ -32,7 +32,8 @@ class MapPlaceholder extends StatelessWidget {
 class _GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Offset.zero & size, Paint()..color = AppColors.mapPlaceholder);
+    canvas.drawRect(
+        Offset.zero & size, Paint()..color = AppColors.mapPlaceholder);
     final p = Paint()
       ..color = AppColors.mapGrid
       ..strokeWidth = 1;
@@ -50,7 +51,11 @@ class _GridPainter extends CustomPainter {
 
 /// Contenedor blanco flotante con sombra (base de los overlays del mapa).
 class MapFloatingCard extends StatelessWidget {
-  const MapFloatingCard({super.key, required this.child, this.padding = const EdgeInsets.all(10), this.radius = 12});
+  const MapFloatingCard(
+      {super.key,
+      required this.child,
+      this.padding = const EdgeInsets.all(10),
+      this.radius = 12});
   final Widget child;
   final EdgeInsetsGeometry padding;
   final double radius;
@@ -69,7 +74,12 @@ class MapFloatingCard extends StatelessWidget {
 
 /// Barra superior: "← Mapa del predio / Finca El Mirador    [≡ Lista]".
 class MapTopBar extends StatelessWidget {
-  const MapTopBar({super.key, required this.title, this.subtitle, this.onBack, this.onList});
+  const MapTopBar(
+      {super.key,
+      required this.title,
+      this.subtitle,
+      this.onBack,
+      this.onList});
   final String title;
   final String? subtitle;
   final VoidCallback? onBack;
@@ -95,8 +105,7 @@ class MapTopBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title, style: AppText.title),
-                if (subtitle != null)
-                  Text(subtitle!, style: AppText.caption),
+                if (subtitle != null) Text(subtitle!, style: AppText.caption),
               ],
             ),
           ),
@@ -149,9 +158,16 @@ class MapLegend extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(width: 8, height: 8, decoration: BoxDecoration(color: i.color, shape: BoxShape.circle)),
+                Container(
+                    width: 8,
+                    height: 8,
+                    decoration:
+                        BoxDecoration(color: i.color, shape: BoxShape.circle)),
                 const SizedBox(width: 4),
-                Text(i.label, style: AppText.micro.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                Text(i.label,
+                    style: AppText.micro.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary)),
               ],
             ),
         ],
@@ -162,13 +178,15 @@ class MapLegend extends StatelessWidget {
 
 /// Botones redondos de la derecha: +, −, capas, mi ubicación.
 class MapControls extends StatelessWidget {
-  const MapControls({super.key, this.onZoomIn, this.onZoomOut, this.onLayers, this.onLocate});
+  const MapControls(
+      {super.key, this.onZoomIn, this.onZoomOut, this.onLayers, this.onLocate});
   final VoidCallback? onZoomIn;
   final VoidCallback? onZoomOut;
   final VoidCallback? onLayers;
   final VoidCallback? onLocate;
 
-  Widget _btn(IconData icon, String tip, VoidCallback? onTap, {Color? color}) => Padding(
+  Widget _btn(IconData icon, String tip, VoidCallback? onTap, {Color? color}) =>
+      Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: AppIconButton(
           icon: icon,
@@ -186,14 +204,16 @@ class MapControls extends StatelessWidget {
           _btn(Icons.add, 'Acercar', onZoomIn),
           _btn(Icons.remove, 'Alejar', onZoomOut),
           _btn(Icons.layers_outlined, 'Capas', onLayers),
-          _btn(Icons.my_location, 'Mi ubicación', onLocate, color: AppColors.info),
+          _btn(Icons.my_location, 'Mi ubicación', onLocate,
+              color: AppColors.info),
         ],
       );
 }
 
 /// Botones inferiores: "Escanear trampa" y "# Ingresar código ICA".
 class MapActionBar extends StatelessWidget {
-  const MapActionBar({super.key, required this.onScan, required this.onEnterCode});
+  const MapActionBar(
+      {super.key, required this.onScan, required this.onEnterCode});
   final VoidCallback onScan;
   final VoidCallback onEnterCode;
 
@@ -276,7 +296,10 @@ class MapDownloadCard extends StatelessWidget {
           ],
           const SizedBox(height: 16),
           if (downloading) ...[
-            ProgressHeader(label: 'Descargando mapa...', trailing: '${(progress * 100).round()} %', value: progress),
+            ProgressHeader(
+                label: 'Descargando mapa...',
+                trailing: '${(progress * 100).round()} %',
+                value: progress),
           ] else
             SecondaryButton(label: 'Descargar Mapa', onPressed: onDownload),
         ],
@@ -287,7 +310,8 @@ class MapDownloadCard extends StatelessWidget {
 
 /// S04a — Hoja inferior al tocar un lote en el mapa.
 class LotMapSheet extends StatelessWidget {
-  const LotMapSheet({super.key, required this.lot, required this.onViewDetail, this.onClose});
+  const LotMapSheet(
+      {super.key, required this.lot, required this.onViewDetail, this.onClose});
   final Lot lot;
   final VoidCallback onViewDetail;
   final VoidCallback? onClose;
@@ -303,12 +327,16 @@ class LotMapSheet extends StatelessWidget {
         children: [
           Row(children: [
             Expanded(child: Text(lot.name, style: AppText.h3)),
-            if (onClose != null) IconButton(onPressed: onClose, icon: const Icon(Icons.close, size: 18)),
+            if (onClose != null)
+              IconButton(
+                  onPressed: onClose, icon: const Icon(Icons.close, size: 18)),
           ]),
-          Text('${lot.trapCount} trampas · ${lot.control?.exportThreshold ?? ''}',
+          Text(
+              '${lot.trapCount} trampas · ${lot.control?.exportThreshold ?? ''}',
               style: AppText.caption),
           const SizedBox(height: 8),
-          MtdIndicator(value: mtd, thresholdLabel: lot.control?.exportThreshold),
+          MtdIndicator(
+              value: mtd, thresholdLabel: lot.control?.exportThreshold),
           const SizedBox(height: 12),
           PrimaryButton(label: 'Ver detalle del lote', onPressed: onViewDetail),
         ],
@@ -348,14 +376,16 @@ class TrapMapSheet extends StatelessWidget {
           if (headline != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 4),
-              child: StatusBadge(headline!, tone: StatusTone.warning, icon: Icons.directions_walk),
+              child: StatusBadge(headline!,
+                  tone: StatusTone.warning, icon: Icons.directions_walk),
             ),
           Row(children: [
             Expanded(
-              child: Text('${trap.label} · ${trap.type}',
-                  style: AppText.h3),
+              child: Text('${trap.label} · ${trap.type}', style: AppText.h3),
             ),
-            if (onClose != null) IconButton(onPressed: onClose, icon: const Icon(Icons.close, size: 18)),
+            if (onClose != null)
+              IconButton(
+                  onPressed: onClose, icon: const Icon(Icons.close, size: 18)),
           ]),
           Text(
             '$lotName · Última lectura ${trap.lastReadingDate == null ? '-' : Fmt.date(trap.lastReadingDate!)}',
@@ -376,7 +406,8 @@ class TrapMapSheet extends StatelessWidget {
                 ),
               ),
               StatusBadge(trap.active ? 'Activa' : 'Inactiva',
-                  tone: trap.active ? StatusTone.success : StatusTone.neutral, icon: Icons.check),
+                  tone: trap.active ? StatusTone.success : StatusTone.neutral,
+                  icon: Icons.check),
             ],
           ),
           const SizedBox(height: 12),

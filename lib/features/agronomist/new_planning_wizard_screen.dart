@@ -26,7 +26,8 @@ class NewPlanningWizardScreen extends StatefulWidget {
   final Planning? from;
 
   @override
-  State<NewPlanningWizardScreen> createState() => _NewPlanningWizardScreenState();
+  State<NewPlanningWizardScreen> createState() =>
+      _NewPlanningWizardScreenState();
 }
 
 class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
@@ -61,21 +62,26 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
   // Paso 3
   final _obsCtrl = TextEditingController();
 
-  late final Future<List<Recipient>> _recipients = AppServices.plannings.getRecipients(widget.target);
-  late final Future<List<String>> _assignableLots = AppServices.plannings.getAssignableLots();
+  late final Future<List<Recipient>> _recipients =
+      AppServices.plannings.getRecipients(widget.target);
+  late final Future<List<String>> _assignableLots =
+      AppServices.plannings.getAssignableLots();
 
   @override
   void initState() {
     super.initState();
     final base = widget.from;
     if (base != null) {
-      _recipient = Recipient(id: base.recipientId, name: base.recipientName, target: base.target);
+      _recipient = Recipient(
+          id: base.recipientId, name: base.recipientName, target: base.target);
       _activityCtrl.text = base.activity;
       _lots.addAll(base.lotNames);
       _obsCtrl.text = base.observations ?? '';
       _attachment = base.doc;
     } else {
-      _activityCtrl.text = _esTecnico ? 'Muestreo de cultivos' : 'Actividades de riego y revisión';
+      _activityCtrl.text = _esTecnico
+          ? 'Muestreo de cultivos'
+          : 'Actividades de riego y revisión';
     }
   }
 
@@ -126,14 +132,19 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
   bool _validateStep1() {
     final sinPersona = _recipient == null;
     final sinFecha = _startDate == null;
-    final fechasAlReves = _startDate != null && _endDate != null && _endDate!.isBefore(_startDate!);
+    final fechasAlReves = _startDate != null &&
+        _endDate != null &&
+        _endDate!.isBefore(_startDate!);
     setState(() {
       _dateError = sinFecha
           ? 'Selecciona la fecha de asignación'
-          : (fechasAlReves ? 'La fecha de finalización no puede ser anterior a la de inicio' : null);
+          : (fechasAlReves
+              ? 'La fecha de finalización no puede ser anterior a la de inicio'
+              : null);
     });
     if (sinPersona) {
-      AppMessenger.warning(_esTecnico ? 'Selecciona un técnico' : 'Selecciona un productor');
+      AppMessenger.warning(
+          _esTecnico ? 'Selecciona un técnico' : 'Selecciona un productor');
       return false;
     }
     if (_activityCtrl.text.trim().isEmpty) {
@@ -145,7 +156,8 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
 
   bool _validateStep2() {
     if (_esTecnico) {
-      setState(() => _lotsError = _lots.isEmpty ? 'Selecciona al menos un lote' : null);
+      setState(() =>
+          _lotsError = _lots.isEmpty ? 'Selecciona al menos un lote' : null);
       if (_lots.isEmpty) {
         AppMessenger.warning('Selecciona al menos un lote');
         return false;
@@ -156,7 +168,8 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
       setState(() => _instructionsError = sinTexto
           ? 'Sube el documento de instrucciones o, si no lo tienes, escribe una observación.'
           : 'La observación debe tener al menos $_minObservacion caracteres.');
-      AppMessenger.warning('Faltan las instrucciones', message: _instructionsError);
+      AppMessenger.warning('Faltan las instrucciones',
+          message: _instructionsError);
       return false;
     }
     setState(() => _instructionsError = null);
@@ -179,7 +192,8 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
   /// Dos orígenes: documento (PDF o Word) o imagen de la galería. Sin cámara.
   Future<void> _attach() async {
     if (_picking) return;
-    final choice = await showDocumentSourceSheet(context, allowRemove: _attachment != null);
+    final choice = await showDocumentSourceSheet(context,
+        allowRemove: _attachment != null);
     if (choice == null || !mounted) return;
     if (choice == DocumentSourceChoice.quitar) {
       setState(() => _attachment = null);
@@ -197,9 +211,14 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
         });
       }
     } on DocumentException catch (e) {
-      if (mounted) AppMessenger.warning('No se puede usar ese archivo', message: e.message);
+      if (mounted) {
+        AppMessenger.warning('No se puede usar ese archivo',
+            message: e.message);
+      }
     } on PhotoException catch (e) {
-      if (mounted) AppMessenger.warning('No se puede usar esa imagen', message: e.message);
+      if (mounted) {
+        AppMessenger.warning('No se puede usar esa imagen', message: e.message);
+      }
     } finally {
       if (mounted) setState(() => _picking = false);
     }
@@ -249,35 +268,38 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
         if (!didPop) _onBack();
       },
       child: Scaffold(
-      backgroundColor: AppColors.surface,
-      appBar: SimpleAppBar(title: _esTecnico ? 'Nueva asignación' : 'Nueva planeación'),
-      body: ResponsiveBody(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.screenH, AppSpacing.lg, AppSpacing.screenH, AppSpacing.lg),
-              child: WizardSteps(labels: pasos, current: _step),
-            ),
-            Expanded(
-              child: switch (_step) {
-                0 => _paso1(),
-                1 => _esTecnico ? _paso2Lotes() : _paso2Instrucciones(),
-                _ => _paso3(),
-              },
-            ),
-          ],
+        backgroundColor: AppColors.surface,
+        appBar: SimpleAppBar(
+            title: _esTecnico ? 'Nueva asignación' : 'Nueva planeación'),
+        body: ResponsiveBody(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(AppSpacing.screenH,
+                    AppSpacing.lg, AppSpacing.screenH, AppSpacing.lg),
+                child: WizardSteps(labels: pasos, current: _step),
+              ),
+              Expanded(
+                child: switch (_step) {
+                  0 => _paso1(),
+                  1 => _esTecnico ? _paso2Lotes() : _paso2Instrucciones(),
+                  _ => _paso3(),
+                },
+              ),
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: ListenableBuilder(
-        listenable: _ctrl,
-        builder: (context, _) => WizardActions(
-          nextLabel: _step < 2 ? 'Siguiente' : (_esTecnico ? 'Guardar asignación' : 'Guardar planeación'),
-          isLoading: _ctrl.busy,
-          onBack: _step == 0 ? null : _onBack,
-          onNext: _next,
+        bottomNavigationBar: ListenableBuilder(
+          listenable: _ctrl,
+          builder: (context, _) => WizardActions(
+            nextLabel: _step < 2
+                ? 'Siguiente'
+                : (_esTecnico ? 'Guardar asignación' : 'Guardar planeación'),
+            isLoading: _ctrl.busy,
+            onBack: _step == 0 ? null : _onBack,
+            onNext: _next,
+          ),
         ),
-      ),
       ),
     );
   }
@@ -286,9 +308,11 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
 
   Widget _paso1() {
     return ListView(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.xl),
       children: [
-        Text(_esTecnico ? 'Seleccionar el técnico' : 'Seleccionar el productor', style: AppText.label),
+        Text(_esTecnico ? 'Seleccionar el técnico' : 'Seleccionar el productor',
+            style: AppText.label),
         const SizedBox(height: AppSpacing.sm),
         AppSearchField(
           hint: _esTecnico ? 'Buscar técnico...' : 'Buscar productor...',
@@ -298,12 +322,19 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
         FutureBuilder<List<Recipient>>(
           future: _recipients,
           builder: (context, snap) {
-            if (snap.hasError) return ErrorState(error: snap.error, what: 'los destinatarios');
-            if (!snap.hasData) return const AppLoader(padding: EdgeInsets.all(AppSpacing.lg));
+            if (snap.hasError) {
+              return ErrorState(error: snap.error, what: 'los destinatarios');
+            }
+            if (!snap.hasData) {
+              return const AppLoader(padding: EdgeInsets.all(AppSpacing.lg));
+            }
             final q = _search.trim().toLowerCase();
-            final lista = snap.data!.where((r) => r.name.toLowerCase().contains(q)).toList();
+            final lista = snap.data!
+                .where((r) => r.name.toLowerCase().contains(q))
+                .toList();
             if (lista.isEmpty) {
-              return const EmptyState(icon: Icons.person_search, title: 'Sin resultados');
+              return const EmptyState(
+                  icon: Icons.person_search, title: 'Sin resultados');
             }
             return Column(
               children: [
@@ -364,9 +395,12 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
 
   Widget _paso2Lotes() {
     return ListView(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.xl),
       children: [
-        AppSearchField(hint: 'Buscar lote...', onChanged: (v) => setState(() => _search = v)),
+        AppSearchField(
+            hint: 'Buscar lote...',
+            onChanged: (v) => setState(() => _search = v)),
         const SizedBox(height: AppSpacing.md),
         if (_lotsError != null) ...[
           AlertBanner(title: _lotsError!),
@@ -375,12 +409,19 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
         FutureBuilder<List<String>>(
           future: _assignableLots,
           builder: (context, snap) {
-            if (snap.hasError) return ErrorState(error: snap.error, what: 'los lotes asignables');
-            if (!snap.hasData) return const AppLoader(padding: EdgeInsets.all(AppSpacing.lg));
+            if (snap.hasError) {
+              return ErrorState(
+                  error: snap.error, what: 'los lotes asignables');
+            }
+            if (!snap.hasData) {
+              return const AppLoader(padding: EdgeInsets.all(AppSpacing.lg));
+            }
             final q = _search.trim().toLowerCase();
-            final lista = snap.data!.where((l) => l.toLowerCase().contains(q)).toList();
+            final lista =
+                snap.data!.where((l) => l.toLowerCase().contains(q)).toList();
             if (lista.isEmpty) {
-              return const EmptyState(icon: Icons.search_off, title: 'Sin resultados');
+              return const EmptyState(
+                  icon: Icons.search_off, title: 'Sin resultados');
             }
             return Column(
               children: [
@@ -403,7 +444,8 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
         ),
         if (_lots.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.sm),
-          Text('${_lots.length} lote(s) seleccionado(s)', style: AppText.caption),
+          Text('${_lots.length} lote(s) seleccionado(s)',
+              style: AppText.caption),
         ],
       ],
     );
@@ -414,26 +456,33 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
   Widget _paso2Instrucciones() {
     final sinDocumento = _attachment == null;
     return ListView(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.xl),
       children: [
         if (_instructionsError != null) ...[
-          AlertBanner(title: 'Faltan las instrucciones', message: _instructionsError),
+          AlertBanner(
+              title: 'Faltan las instrucciones', message: _instructionsError),
           const SizedBox(height: AppSpacing.md),
         ],
         AppCard(
-          borderColor: _instructionsError != null && sinDocumento ? AppColors.errorBorder : null,
+          borderColor: _instructionsError != null && sinDocumento
+              ? AppColors.errorBorder
+              : null,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('Subir documento (instrucciones)', style: AppText.h3, textAlign: TextAlign.center),
+              const Text('Subir documento (instrucciones)',
+                  style: AppText.h3, textAlign: TextAlign.center),
               const SizedBox(height: AppSpacing.lg),
               if (_attachment == null) ...[
                 Center(
                   child: Container(
                     width: 90,
                     height: 90,
-                    decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
-                    child: const Icon(Icons.upload_file_outlined, size: 42, color: AppColors.primaryDark),
+                    decoration: const BoxDecoration(
+                        color: AppColors.primaryLight, shape: BoxShape.circle),
+                    child: const Icon(Icons.upload_file_outlined,
+                        size: 42, color: AppColors.primaryDark),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
@@ -450,14 +499,16 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
                   style: AppText.micro,
                 ),
               ] else ...[
-                if (_attachment!.kind == DocKind.imagen && _attachment!.bytes != null) ...[
+                if (_attachment!.kind == DocKind.imagen &&
+                    _attachment!.bytes != null) ...[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     child: AspectRatio(
                       aspectRatio: 4 / 3,
                       child: Container(
                         color: AppColors.surface,
-                        child: Image.memory(_attachment!.bytes!, fit: BoxFit.contain),
+                        child: Image.memory(_attachment!.bytes!,
+                            fit: BoxFit.contain),
                       ),
                     ),
                   ),
@@ -477,7 +528,9 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
         const SizedBox(height: AppSpacing.lg),
         // Sin documento, la observación es obligatoria; con documento, opcional.
         AppTextField(
-          label: sinDocumento ? 'Observación (obligatoria sin documento)' : 'Observaciones (opcional)',
+          label: sinDocumento
+              ? 'Observación (obligatoria sin documento)'
+              : 'Observaciones (opcional)',
           controller: _obsCtrl,
           hint: sinDocumento
               ? 'Explica las instrucciones o por qué no hay documento'
@@ -495,7 +548,8 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
         const AlertBanner(
           type: AlertType.info,
           title: 'El archivo queda en este dispositivo',
-          message: 'Se enviará al servidor cuando esté conectado. Mientras tanto, solo se '
+          message:
+              'Se enviará al servidor cuando esté conectado. Mientras tanto, solo se '
               'puede ver desde este teléfono.',
         ),
       ],
@@ -507,30 +561,45 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
   Widget _paso3() {
     final r = _recipient!;
     return ListView(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.screenH, 0, AppSpacing.screenH, AppSpacing.xl),
       children: [
         AppCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(_esTecnico ? 'Resumen de asignación' : 'Resumen de planeación', style: AppText.h3),
+              Text(
+                  _esTecnico
+                      ? 'Resumen de asignación'
+                      : 'Resumen de planeación',
+                  style: AppText.h3),
               const SizedBox(height: AppSpacing.md),
-              _fila(Icons.person_outline, _esTecnico ? 'Técnico' : 'Productor', r.name),
-              _fila(Icons.event_outlined, 'Periodo',
+              _fila(Icons.person_outline, _esTecnico ? 'Técnico' : 'Productor',
+                  r.name),
+              _fila(
+                  Icons.event_outlined,
+                  'Periodo',
                   _endDate == null
                       ? Fmt.date(_startDate!)
                       : '${Fmt.dayMonth(_startDate!)} – ${Fmt.date(_endDate!)}'
                           '${_endDate!.difference(_startDate!).inDays > 0 ? ' · ${_endDate!.difference(_startDate!).inDays} días' : ''}'),
               _fila(Icons.task_alt, 'Actividad', _activityCtrl.text.trim()),
               if (_esTecnico)
-                _fila(Icons.eco_outlined, 'Lotes', (_lots.toList()..sort()).join(', '))
+                _fila(Icons.eco_outlined, 'Lotes',
+                    (_lots.toList()..sort()).join(', '))
               else ...[
-                _fila(Icons.description_outlined, 'Documento',
+                _fila(
+                    Icons.description_outlined,
+                    'Documento',
                     _attachment == null
                         ? 'Sin documento adjunto'
                         : '${_attachment!.fileName} · ${_attachment!.detailLabel}'),
-                _fila(Icons.notes_outlined, 'Observaciones',
-                    _obsCtrl.text.trim().isEmpty ? 'Sin observaciones' : _obsCtrl.text.trim()),
+                _fila(
+                    Icons.notes_outlined,
+                    'Observaciones',
+                    _obsCtrl.text.trim().isEmpty
+                        ? 'Sin observaciones'
+                        : _obsCtrl.text.trim()),
               ],
             ],
           ),
@@ -547,7 +616,9 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
         const SizedBox(height: AppSpacing.md),
         AlertBanner(
           type: AlertType.info,
-          title: _esTecnico ? 'Al guardar quedará asignada' : 'Al guardar quedará pendiente de respuesta',
+          title: _esTecnico
+              ? 'Al guardar quedará asignada'
+              : 'Al guardar quedará pendiente de respuesta',
           message: _esTecnico
               ? '${r.name} verá la actividad ya autorizada y se completa al terminar sus visitas en los lotes.'
               : '${r.name} podrá aceptarla o rechazarla desde su aplicación.',
@@ -564,7 +635,8 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
             Container(
               width: 30,
               height: 30,
-              decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
+              decoration: const BoxDecoration(
+                  color: AppColors.primaryLight, shape: BoxShape.circle),
               child: Icon(icono, size: 16, color: AppColors.primaryDark),
             ),
             const SizedBox(width: AppSpacing.md),
@@ -573,7 +645,8 @@ class _NewPlanningWizardScreenState extends State<NewPlanningWizardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(etiqueta, style: AppText.micro),
-                  Text(valor.isEmpty ? 'Sin registrar' : valor, style: AppText.bodySmStrong),
+                  Text(valor.isEmpty ? 'Sin registrar' : valor,
+                      style: AppText.bodySmStrong),
                 ],
               ),
             ),

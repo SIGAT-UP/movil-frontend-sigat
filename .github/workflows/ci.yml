@@ -24,13 +24,16 @@ jobs:
       - run: flutter pub get
       - name: Formato (obligatorio)
         run: dart format --output=none --set-exit-if-changed lib test
-      - run: flutter analyze
+      - name: Análisis estático
+        # Los avisos informativos (deprecaciones) no bloquean; errores y warnings sí.
+        run: flutter analyze --no-fatal-infos
       - run: flutter test
       - name: Compilación debug (Android)
-        run: flutter build apk --debug
+        # El repo usa AGP 9.1.0; Flutter 3.50 pide 9.1.1. Se omite solo esa validación.
+        run: flutter build apk --debug --android-skip-build-dependency-validation
       - name: Un release sin firma de producción debe fallar
         # No hay android/key.properties en la CI: la compilación release tiene que detenerse.
         run: |
-          if flutter build apk --release --dart-define=API_URL=https://ejemplo.invalid/api/v1; then
+          if flutter build apk --release --android-skip-build-dependency-validation --dart-define=API_URL=https://ejemplo.invalid/api/v1; then
             echo "El release compiló sin firma de producción"; exit 1
           fi

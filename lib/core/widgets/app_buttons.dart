@@ -34,15 +34,22 @@ class PrimaryButton extends StatelessWidget {
       onPressed: isLoading ? null : onPressed,
       style: FilledButton.styleFrom(
         backgroundColor: color,
-        disabledBackgroundColor: isLoading ? AppColors.primaryDisabled : AppColors.border,
+        disabledBackgroundColor:
+            isLoading ? AppColors.primaryDisabled : AppColors.border,
         disabledForegroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusSm)),
         textStyle: AppText.button,
       ),
-      child: _ButtonContent(label: isLoading ? (loadingLabel ?? label) : label, icon: isLoading ? null : icon),
+      child: _ButtonContent(
+          label: isLoading ? (loadingLabel ?? label) : label,
+          icon: isLoading ? null : icon),
     );
-    return SizedBox(width: expand ? double.infinity : null, height: AppSpacing.buttonHeight, child: button);
+    return SizedBox(
+        width: expand ? double.infinity : null,
+        height: AppSpacing.buttonHeight,
+        child: button);
   }
 }
 
@@ -75,7 +82,8 @@ class SecondaryButton extends StatelessWidget {
           backgroundColor: AppColors.background,
           side: BorderSide(color: onPressed == null ? AppColors.border : color),
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSm)),
           textStyle: AppText.button,
         ),
         child: _ButtonContent(label: label, icon: icon),
@@ -86,15 +94,16 @@ class SecondaryButton extends StatelessWidget {
 
 /// Acción destructiva (Cerrar sesión, descartar). Mismo formato que el secundario, en rojo.
 class DestructiveButton extends StatelessWidget {
-  const DestructiveButton({super.key, required this.label, required this.onPressed, this.icon});
+  const DestructiveButton(
+      {super.key, required this.label, required this.onPressed, this.icon});
 
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
 
   @override
-  Widget build(BuildContext context) =>
-      SecondaryButton(label: label, onPressed: onPressed, icon: icon, color: AppColors.error);
+  Widget build(BuildContext context) => SecondaryButton(
+      label: label, onPressed: onPressed, icon: icon, color: AppColors.error);
 }
 
 /// Variantes del botón de solo ícono.
@@ -132,10 +141,26 @@ class AppIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (Color bg, Color fg, double elevation) = switch (variant) {
-      AppIconButtonVariant.plain => (Colors.transparent, AppColors.textPrimary, 0.0),
-      AppIconButtonVariant.floating => (AppColors.background, AppColors.textPrimary, 3.0),
-      AppIconButtonVariant.overlay => (AppColors.overlayDark, Colors.white, 0.0),
-      AppIconButtonVariant.soft => (AppColors.primaryLight, AppColors.primaryDark, 0.0),
+      AppIconButtonVariant.plain => (
+          Colors.transparent,
+          AppColors.textPrimary,
+          0.0
+        ),
+      AppIconButtonVariant.floating => (
+          AppColors.background,
+          AppColors.textPrimary,
+          3.0
+        ),
+      AppIconButtonVariant.overlay => (
+          AppColors.overlayDark,
+          Colors.white,
+          0.0
+        ),
+      AppIconButtonVariant.soft => (
+          AppColors.primaryLight,
+          AppColors.primaryDark,
+          0.0
+        ),
     };
     return Material(
       color: bg,
@@ -152,7 +177,11 @@ class AppIconButton extends StatelessWidget {
 
 /// Enlace verde (¿Olvidó su contraseña?, Volver a iniciar sesión).
 class AppLinkButton extends StatelessWidget {
-  const AppLinkButton({super.key, required this.label, required this.onPressed, this.fontSize = 12});
+  const AppLinkButton(
+      {super.key,
+      required this.label,
+      required this.onPressed,
+      this.fontSize = 12});
 
   final String label;
   final VoidCallback? onPressed;
@@ -182,7 +211,10 @@ class _ButtonContent extends StatelessWidget {
   Widget build(BuildContext context) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[Icon(icon, size: 18), const SizedBox(width: AppSpacing.sm)],
+          if (icon != null) ...[
+            Icon(icon, size: 18),
+            const SizedBox(width: AppSpacing.sm)
+          ],
           Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
         ],
       );

@@ -1,4 +1,3 @@
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vigilancia_durazno/data/models/lot.dart';
 import 'package:vigilancia_durazno/data/models/planning.dart';
@@ -92,7 +91,7 @@ void main() {
         );
 
     test('en buen estado = condición 1 (Normal) y leída', () {
-      final p = lectura(TrapCondition.buenEstado).toSyncPayload(visitId: 'v');
+      final p = lectura(TrapCondition.buenEstado).toSyncDatos();
       expect(p['cond_id'], 1);
       expect(p['lect_leida'], isTrue);
       expect(p['lect_especimenes'], 2);
@@ -104,12 +103,12 @@ void main() {
         TrapCondition.caida,
         TrapCondition.sinAtrayente,
       ]) {
-        expect(lectura(c).toSyncPayload(visitId: 'v')['cond_id'], 2);
+        expect(lectura(c).toSyncDatos()['cond_id'], 2);
       }
     });
 
     test('no encontrada = no leída, sin conteo y con justificación', () {
-      final p = lectura(TrapCondition.noEncontrada).toSyncPayload(visitId: 'v');
+      final p = lectura(TrapCondition.noEncontrada).toSyncDatos();
       expect(p['lect_leida'], isFalse);
       expect(p['lect_especimenes'], isNull);
       expect(p['lect_justificacion'], 'nota');

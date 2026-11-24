@@ -23,8 +23,10 @@ enum NotificationCategory {
 
   /// `categoria` del backend (`alertas_fitosanitarias`…) → valor de la app.
   static NotificationCategory fromApi(String? codigo) {
-    final camel = (codigo ?? '').replaceAllMapped(RegExp(r'_([a-z])'), (m) => m[1]!.toUpperCase());
-    return NotificationCategory.values.firstWhere((c) => c.name == camel, orElse: () => NotificationCategory.avisosPredio);
+    final camel = (codigo ?? '')
+        .replaceAllMapped(RegExp(r'_([a-z])'), (m) => m[1]!.toUpperCase());
+    return NotificationCategory.values.firstWhere((c) => c.name == camel,
+        orElse: () => NotificationCategory.avisosPredio);
   }
 }
 
@@ -35,7 +37,8 @@ enum NotificationCategory {
 /// permitan mostrarlas es otra cosa y se consultará aparte cuando exista el
 /// envío de notificaciones push.
 class NotificationPreferences {
-  const NotificationPreferences({this.enabled = true, this.categories = const {}});
+  const NotificationPreferences(
+      {this.enabled = true, this.categories = const {}});
 
   /// Interruptor general. Es el único que la app usa hoy.
   final bool enabled;
@@ -45,10 +48,14 @@ class NotificationPreferences {
 
   String get label => enabled ? 'Activadas' : 'Desactivadas';
 
-  NotificationPreferences copyWith({bool? enabled, Map<NotificationCategory, bool>? categories}) =>
-      NotificationPreferences(enabled: enabled ?? this.enabled, categories: categories ?? this.categories);
+  NotificationPreferences copyWith(
+          {bool? enabled, Map<NotificationCategory, bool>? categories}) =>
+      NotificationPreferences(
+          enabled: enabled ?? this.enabled,
+          categories: categories ?? this.categories);
 
-  factory NotificationPreferences.fromJson(Map<String, dynamic> j) => NotificationPreferences(
+  factory NotificationPreferences.fromJson(Map<String, dynamic> j) =>
+      NotificationPreferences(
         enabled: j['enabled'] as bool? ?? true,
         categories: {
           for (final c in NotificationCategory.values)
@@ -93,7 +100,8 @@ class UserProfile {
   final NotificationPreferences notifications;
 
   bool get hasPhoto => photoBytes != null || photoRemoteRef != null;
-  bool get photoPendingUpload => photoStatus == UploadStatus.local || photoStatus == UploadStatus.failed;
+  bool get photoPendingUpload =>
+      photoStatus == UploadStatus.local || photoStatus == UploadStatus.failed;
 
   UserProfile copyWith({
     Uint8List? photoBytes,
@@ -106,8 +114,10 @@ class UserProfile {
       UserProfile(
         userId: userId,
         photoBytes: clearPhoto ? null : (photoBytes ?? this.photoBytes),
-        photoLocalPath: clearPhoto ? null : (photoLocalPath ?? this.photoLocalPath),
-        photoRemoteRef: clearPhoto ? null : (photoRemoteRef ?? this.photoRemoteRef),
+        photoLocalPath:
+            clearPhoto ? null : (photoLocalPath ?? this.photoLocalPath),
+        photoRemoteRef:
+            clearPhoto ? null : (photoRemoteRef ?? this.photoRemoteRef),
         photoStatus: clearPhoto ? null : (photoStatus ?? this.photoStatus),
         notifications: notifications ?? this.notifications,
       );
@@ -119,6 +129,7 @@ class UserProfile {
         photoStatus: j['photo_url'] == null ? null : UploadStatus.uploaded,
         notifications: j['notifications'] == null
             ? const NotificationPreferences()
-            : NotificationPreferences.fromJson(j['notifications'] as Map<String, dynamic>),
+            : NotificationPreferences.fromJson(
+                j['notifications'] as Map<String, dynamic>),
       );
 }

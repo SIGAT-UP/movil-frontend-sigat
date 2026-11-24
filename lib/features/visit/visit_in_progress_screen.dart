@@ -62,7 +62,8 @@ class _VisitInProgressScreenState extends State<VisitInProgressScreen> {
     }
 
     if (_selectedId != next.id) {
-      setState(() => _error = 'Selecciona ${next.label} para continuar el recorrido.');
+      setState(() =>
+          _error = 'Selecciona ${next.label} para continuar el recorrido.');
       return;
     }
 
@@ -76,7 +77,8 @@ class _VisitInProgressScreenState extends State<VisitInProgressScreen> {
       await _visit.justifyTrap(next, reason);
       if (!mounted) return;
       setState(() => _busy = false);
-      AppMessenger.info('${next.label} quedó como no registrada', message: reason);
+      AppMessenger.info('${next.label} quedó como no registrada',
+          message: reason);
       return;
     }
 
@@ -89,7 +91,10 @@ class _VisitInProgressScreenState extends State<VisitInProgressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const SimpleAppBar(title: 'Visita en curso', showBack: false, actions: [LocalStorageBadge()]),
+      appBar: const SimpleAppBar(
+          title: 'Visita en curso',
+          showBack: false,
+          actions: [LocalStorageBadge()]),
       body: ListenableBuilder(
         listenable: _visit,
         builder: (context, _) {
@@ -109,12 +114,14 @@ class _VisitInProgressScreenState extends State<VisitInProgressScreen> {
                       alignment: Alignment.centerLeft,
                       child: ValueListenableBuilder<bool>(
                         valueListenable: AppServices.isOnline,
-                        builder: (_, online, __) => ConnectionChip(isOnline: online),
+                        builder: (_, online, __) =>
+                            ConnectionChip(isOnline: online),
                       ),
                     ),
                     const SizedBox(height: 12),
                     ProgressHeader(
-                      label: '${_visit.registeredCount} de $total trampas registradas del ${lot.name}',
+                      label:
+                          '${_visit.registeredCount} de $total trampas registradas del ${lot.name}',
                       value: total == 0 ? 0 : _visit.handledCount / total,
                     ),
                     const SizedBox(height: AppSpacing.lg),
@@ -128,7 +135,8 @@ class _VisitInProgressScreenState extends State<VisitInProgressScreen> {
                         isNext: next?.id == t.id,
                         onTap: t.id == next?.id
                             ? () => setState(() {
-                                  _selectedId = _selectedId == t.id ? null : t.id;
+                                  _selectedId =
+                                      _selectedId == t.id ? null : t.id;
                                   _error = null;
                                 })
                             : null,
@@ -140,7 +148,8 @@ class _VisitInProgressScreenState extends State<VisitInProgressScreen> {
                       AppTextField(
                         label: 'Observación',
                         controller: _obsCtrl,
-                        hint: 'Solo si no puedes registrar ${next.label}: escribe aquí el motivo',
+                        hint:
+                            'Solo si no puedes registrar ${next.label}: escribe aquí el motivo',
                         maxLines: 2,
                         enabled: selectedNext,
                         onChanged: (_) => setState(() => _error = null),
@@ -158,7 +167,9 @@ class _VisitInProgressScreenState extends State<VisitInProgressScreen> {
                   label: _buttonLabel(next, selectedNext),
                   loadingLabel: 'Guardando...',
                   isLoading: _busy,
-                  icon: selectedNext && _obsCtrl.text.trim().isEmpty ? Icons.map_outlined : null,
+                  icon: selectedNext && _obsCtrl.text.trim().isEmpty
+                      ? Icons.map_outlined
+                      : null,
                   color: AppColors.primaryDark,
                   onPressed: _continue,
                 ),
@@ -172,7 +183,9 @@ class _VisitInProgressScreenState extends State<VisitInProgressScreen> {
 
   String _buttonLabel(Trap? next, bool selectedNext) {
     if (next == null) return 'Continuar';
-    if (selectedNext && _obsCtrl.text.trim().isNotEmpty) return 'Guardar motivo y continuar';
+    if (selectedNext && _obsCtrl.text.trim().isNotEmpty) {
+      return 'Guardar motivo y continuar';
+    }
     if (selectedNext) return 'Continuar al mapa';
     return 'Continuar';
   }
@@ -205,7 +218,8 @@ class _VisitInProgressScreenState extends State<VisitInProgressScreen> {
           : PrimaryButton(
               label: 'Finalizar visita',
               color: AppColors.primaryDark,
-              onPressed: () => Navigator.of(context).pushNamed(AppRoutes.finishVisit),
+              onPressed: () =>
+                  Navigator.of(context).pushNamed(AppRoutes.finishVisit),
             ),
     );
   }

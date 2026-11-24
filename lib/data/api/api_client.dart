@@ -26,6 +26,27 @@ class ApiException implements Exception {
   String toString() => 'ApiException($status, $code)';
 }
 
+/// Resultado de una consulta condicional (`If-None-Match`).
+class RespuestaCondicional {
+  const RespuestaCondicional(
+      {required this.modificado, this.cuerpo, this.etag});
+
+  /// false = 304: el dispositivo ya tiene la versión vigente y no llega cuerpo.
+  final bool modificado;
+  final Map<String, dynamic>? cuerpo;
+
+  /// Valor del header `ETag` (con comillas), para la próxima consulta.
+  final String? etag;
+}
+
+/// Respuesta interna: estado, cuerpo decodificado y ETag.
+class _Respuesta {
+  const _Respuesta(this.status, this.datos, this.etag);
+  final int status;
+  final Object? datos;
+  final String? etag;
+}
+
 /// Cliente HTTP único para `sigat-durazno-api`.
 ///
 /// * Agrega `Authorization: Bearer <token>` y `X-App-Version`.
@@ -48,45 +69,72 @@ class ApiClient {
       for (final e in (query ?? const <String, Object?>{}).entries)
         if (e.value != null) e.key: e.value.toString(),
     };
-    return q.isEmpty ? u : u.replace(queryParameters: {...u.queryParameters, ...q});
+    return q.isEmpty
+        ? u
+        : u.replace(queryParameters: {...u.queryParameters, ...q});
   }
 
   /// Respuesta que es un objeto JSON.
-  Future<Map<String, dynamic>?> get(String path, {Map<String, Object?>? query}) async {
-    final r = await _send('GET', path, query: query);
+  Future<Map<String, dynamic>?> get(String path,
+      {Map<String, Object?>? query}) async {
+    final r = (await _send('GET', path, query: query)).datos;
     return r is Map<String, dynamic> ? r : null;
   }
 
   /// Respuesta que es una lista JSON (p. ej. `GET /yo/predios`).
-  Future<List<Map<String, dynamic>>> getList(String path, {Map<String, Object?>? query}) async {
-    final r = await _send('GET', path, query: query);
+  Future<List<Map<String, dynamic>>> getList(String path,
+      {Map<String, Object?>? query}) async {
+    final r = (await _send('GET', path, query: query)).datos;
     if (r is! List) return const [];
-    return [for (final x in r) if (x is Map<String, dynamic>) x];
+    return [
+      for (final x in r)
+        if (x is Map<String, dynamic>) x
+    ];
+  }
+
+  /// GET condicional: con [etag] (la versión que ya tiene el dispositivo) el servidor responde
+  /// 304 si no cambió, y eso NO es un error.
+  Future<RespuestaCondicional> getCondicional(String path,
+      {String? etag}) async {
+    final r = await _send('GET', path, etag: etag, aceptarNoModificado: true);
+    if (r.status == 304) {
+      return RespuestaCondicional(modificado: false, etag: etag);
+    }
+    final datos = r.datos;
+    return RespuestaCondicional(
+      modificado: true,
+      cuerpo: datos is Map<String, dynamic> ? datos : null,
+      etag: r.etag,
+    );
   }
 
   /// [auth] = false para las rutas públicas (login, recuperación).
-  Future<Map<String, dynamic>?> post(String path, {Object? body, bool auth = true}) async {
-    final r = await _send('POST', path, body: body, auth: auth);
+  Future<Map<String, dynamic>?> post(String path,
+      {Object? body, bool auth = true}) async {
+    final r = (await _send('POST', path, body: body, auth: auth)).datos;
     return r is Map<String, dynamic> ? r : null;
   }
 
   Future<Map<String, dynamic>?> put(String path, {Object? body}) async {
-    final r = await _send('PUT', path, body: body);
+    final r = (await _send('PUT', path, body: body)).datos;
     return r is Map<String, dynamic> ? r : null;
   }
 
-  Future<Object?> _send(
+  Future<_Respuesta> _send(
     String method,
     String path, {
     Object? body,
     Map<String, Object?>? query,
     bool auth = true,
     bool reintento = false,
+    String? etag,
+    bool aceptarNoModificado = false,
   }) async {
     final headers = <String, String>{
       'Accept': 'application/json',
       'X-App-Version': ApiConfig.appVersion,
       if (body != null) 'Content-Type': 'application/json',
+      if (etag != null) 'If-None-Match': etag,
     };
     final token = auth ? await store.accessToken : null;
     if (token != null) headers['Authorization'] = 'Bearer $token';
@@ -100,7 +148,8 @@ class ApiClient {
 
     final http.Response res;
     try {
-      res = await http.Response.fromStream(await _http.send(request).timeout(ApiConfig.timeout));
+      res = await http.Response.fromStream(
+          await _http.send(request).timeout(ApiConfig.timeout));
     } on TimeoutException {
       throw const ApiException(
         0,
@@ -115,13 +164,30 @@ class ApiClient {
       );
     }
 
-    if (res.statusCode == 401 && token != null && !reintento && await _renovar()) {
-      return _send(method, path, body: body, query: query, auth: auth, reintento: true);
+    if (res.statusCode == 401 &&
+        token != null &&
+        !reintento &&
+        await _renovar()) {
+      return _send(method, path,
+          body: body,
+          query: query,
+          auth: auth,
+          reintento: true,
+          etag: etag,
+          aceptarNoModificado: aceptarNoModificado);
+    }
+    if (aceptarNoModificado && res.statusCode == 304) {
+      return _Respuesta(304, null, etag);
     }
     final data = _decode(res);
-    if (res.statusCode >= 200 && res.statusCode < 300) return data;
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      return _Respuesta(res.statusCode, data, _etag(res));
+    }
     throw _error(res.statusCode, data is Map<String, dynamic> ? data : null);
   }
+
+  static String? _etag(http.Response res) =>
+      res.headers['etag'] ?? res.headers['ETag'];
 
   /// Una sola renovación a la vez aunque fallen varias peticiones juntas.
   Future<bool> _renovar() {
@@ -139,15 +205,19 @@ class ApiClient {
       if (refresco == null) return false;
       final peticion = http.Request('POST', uri('/auth/refresco'))
         ..followRedirects = false
-        ..headers.addAll({'Content-Type': 'application/json', 'Accept': 'application/json'})
+        ..headers.addAll(
+            {'Content-Type': 'application/json', 'Accept': 'application/json'})
         ..body = jsonEncode({'token_refresco': refresco});
-      final res = await http.Response.fromStream(await _http.send(peticion).timeout(ApiConfig.timeout));
+      final res = await http.Response.fromStream(
+          await _http.send(peticion).timeout(ApiConfig.timeout));
       final data = _json(res);
       if (res.statusCode != 200 || data == null || data['token'] is! String) {
         await store.clearTokens();
         return false;
       }
-      await store.saveTokens(access: data['token'] as String, refresh: data['token_refresco'] as String?);
+      await store.saveTokens(
+          access: data['token'] as String,
+          refresh: data['token_refresco'] as String?);
       return true;
     } catch (_) {
       return false;
@@ -185,9 +255,15 @@ class ApiClient {
     if (status == 401) return 'Su sesión terminó. Inicie sesión de nuevo.';
     if (status == 403) return 'No tiene permiso para realizar esta acción.';
     if (status == 404) return 'No se encontró la información solicitada.';
-    if (status == 429) return 'Demasiados intentos. Espere unos minutos e intente de nuevo.';
-    if (status == 501) return 'Esta función todavía no está disponible en el servidor.';
-    if (status >= 500) return 'El servidor tuvo un problema. Intente de nuevo en unos minutos.';
+    if (status == 429) {
+      return 'Demasiados intentos. Espere unos minutos e intente de nuevo.';
+    }
+    if (status == 501) {
+      return 'Esta función todavía no está disponible en el servidor.';
+    }
+    if (status >= 500) {
+      return 'El servidor tuvo un problema. Intente de nuevo en unos minutos.';
+    }
     return 'No se pudo completar la solicitud.';
   }
 }

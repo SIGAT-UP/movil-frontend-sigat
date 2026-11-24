@@ -8,7 +8,11 @@ class MtdPoint {
 /// Escenario de trampeo (Tabla 1 de la norma de vigilancia).
 /// Los rangos los define la norma: aquí solo se muestran.
 class TrappingScenario {
-  const TrappingScenario({required this.name, required this.rule, this.isCurrent = false, this.pending = false});
+  const TrappingScenario(
+      {required this.name,
+      required this.rule,
+      this.isCurrent = false,
+      this.pending = false});
   final String name;
   final String rule;
 
@@ -66,6 +70,7 @@ class LotSummary {
     required this.activeFindings,
     this.pendingReviewLabel,
     this.expectedHarvest,
+    this.cachedAt,
   });
 
   final String lotId;
@@ -111,4 +116,7 @@ class LotSummary {
   final String? pendingReviewLabel;
 
   final DateTime? expectedHarvest;
+
+  /// Momento en que se guardó la copia que se muestra (null = datos en vivo).
+  final DateTime? cachedAt;
 }

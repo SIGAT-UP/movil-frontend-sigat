@@ -20,7 +20,9 @@ class VigilanciaDuraznoApp extends StatelessWidget {
       // Al terminar, la splash decide: inicio del rol si hay sesión, o login.
       // Hoy la sesión no se guarda en el dispositivo, así que va al login;
       // cuando se restaure el token antes de runApp, irá directo al inicio.
-      onGenerateInitialRoutes: (_) => [AppRoutes.onGenerateRoute(const RouteSettings(name: AppRoutes.splash))!],
+      onGenerateInitialRoutes: (_) => [
+        AppRoutes.onGenerateRoute(const RouteSettings(name: AppRoutes.splash))!
+      ],
       onGenerateRoute: AppRoutes.onGenerateRoute,
     );
   }

@@ -4,7 +4,8 @@ import '../repositories/field_repositories.dart';
 /// No hay una sesión válida a la que asociar un registro local.
 class SinSesionException extends DataException {
   const SinSesionException([
-    super.message = 'No hay una sesión válida. Inicie sesión de nuevo; lo guardado en este teléfono se conserva.',
+    super.message =
+        'No hay una sesión válida. Inicie sesión de nuevo; lo guardado en este teléfono se conserva.',
   ]);
 }
 
@@ -27,7 +28,8 @@ class RecordOwner {
   static final _formato = RegExp(r'^[0-9]{1,18}$');
 
   /// `usua_id` del backend: solo dígitos, no vacío.
-  static bool esValido(String? userId) => userId != null && _formato.hasMatch(userId);
+  static bool esValido(String? userId) =>
+      userId != null && _formato.hasMatch(userId);
 
   /// Usuario de la sesión actual. Lanza [SinSesionException] si no hay sesión o el id no es válido.
   static String requerido() {
@@ -40,7 +42,8 @@ class RecordOwner {
   static String exigirMismoUsuario(String userId) {
     final yo = requerido();
     if (userId != yo) {
-      throw const SinSesionException('El registro no corresponde al usuario de la sesión actual.');
+      throw const SinSesionException(
+          'El registro no corresponde al usuario de la sesión actual.');
     }
     return yo;
   }

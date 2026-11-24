@@ -18,7 +18,8 @@ enum RecordStatus {
   final StatusTone tone;
   final IconData icon;
 
-  bool get isDone => this == enviado || this == sincronizado || this == confirmado;
+  bool get isDone =>
+      this == enviado || this == sincronizado || this == confirmado;
 }
 
 /// Badge de estado de registro. `label` permite un texto más largo
@@ -29,5 +30,6 @@ class RecordStatusBadge extends StatelessWidget {
   final String? label;
 
   @override
-  Widget build(BuildContext context) => StatusBadge(label ?? status.label, tone: status.tone, icon: status.icon);
+  Widget build(BuildContext context) =>
+      StatusBadge(label ?? status.label, tone: status.tone, icon: status.icon);
 }

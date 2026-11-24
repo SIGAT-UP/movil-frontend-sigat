@@ -10,12 +10,14 @@ void main() {
 
   group('PhotoRules.sniffMimeType', () {
     test('reconoce JPEG', () {
-      expect(PhotoRules.sniffMimeType(bytesOf([0xFF, 0xD8, 0xFF, 0xE0])), 'image/jpeg');
+      expect(PhotoRules.sniffMimeType(bytesOf([0xFF, 0xD8, 0xFF, 0xE0])),
+          'image/jpeg');
     });
 
     test('reconoce PNG', () {
       expect(
-        PhotoRules.sniffMimeType(bytesOf([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])),
+        PhotoRules.sniffMimeType(
+            bytesOf([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])),
         'image/png',
       );
     });
@@ -35,7 +37,8 @@ void main() {
     });
 
     test('rechaza un archivo demasiado corto', () {
-      expect(PhotoRules.sniffMimeType(Uint8List.fromList([0xFF, 0xD8])), isNull);
+      expect(
+          PhotoRules.sniffMimeType(Uint8List.fromList([0xFF, 0xD8])), isNull);
     });
   });
 

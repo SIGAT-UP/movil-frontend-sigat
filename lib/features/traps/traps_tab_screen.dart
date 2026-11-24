@@ -28,7 +28,8 @@ class TrapsTabScreen extends StatelessWidget {
               message: 'Inicia la inspección de un lote para ver sus trampas.',
               action: SecondaryButton(
                 label: 'Ver lotes asignados',
-                onPressed: () => Navigator.of(context).pushNamed(AppRoutes.lots),
+                onPressed: () =>
+                    Navigator.of(context).pushNamed(AppRoutes.lots),
               ),
             );
           }
@@ -39,9 +40,13 @@ class TrapsTabScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(AppSpacing.screenH),
                   children: [
                     ProgressHeader(
-                      label: '${lot.name} · ${visit.activeTraps.length} trampas',
-                      trailing: '${visit.handledCount} de ${visit.activeTraps.length}',
-                      value: visit.activeTraps.isEmpty ? 0 : visit.handledCount / visit.activeTraps.length,
+                      label:
+                          '${lot.name} · ${visit.activeTraps.length} trampas',
+                      trailing:
+                          '${visit.handledCount} de ${visit.activeTraps.length}',
+                      value: visit.activeTraps.isEmpty
+                          ? 0
+                          : visit.handledCount / visit.activeTraps.length,
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     for (final t in visit.activeTraps) ...[
@@ -53,14 +58,18 @@ class TrapsTabScreen extends StatelessWidget {
                         isNext: visit.nextTrap?.id == t.id,
                         onTap: switch (visit.stateOf(t)) {
                           // Siguiente del recorrido → ubicarla en el mapa.
-                          TrapVisitState.pendiente when visit.nextTrap?.id == t.id => () {
+                          TrapVisitState.pendiente
+                              when visit.nextTrap?.id == t.id =>
+                            () {
                               visit.focusTrap(t);
                               ShellNav.tab.value = AppTab.mapa;
                             },
                           // Ya registrada → se puede revisar / actualizar.
                           TrapVisitState.registrada => () {
                               lookupTrap(t.icaCode).then((lookup) {
-                                if (lookup != null && context.mounted) openTrapIdentified(context, lookup);
+                                if (lookup != null && context.mounted) {
+                                  openTrapIdentified(context, lookup);
+                                }
                               });
                             },
                           _ => null,
@@ -79,7 +88,8 @@ class TrapsTabScreen extends StatelessWidget {
                         label: 'Escanear',
                         icon: Icons.qr_code_scanner,
                         color: AppColors.primaryDark,
-                        onPressed: () => Navigator.of(context).pushNamed(AppRoutes.scanTrap),
+                        onPressed: () =>
+                            Navigator.of(context).pushNamed(AppRoutes.scanTrap),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -87,7 +97,8 @@ class TrapsTabScreen extends StatelessWidget {
                       child: SecondaryButton(
                         label: 'Código ICA',
                         icon: Icons.tag,
-                        onPressed: () => Navigator.of(context).pushNamed(AppRoutes.identifyTrap),
+                        onPressed: () => Navigator.of(context)
+                            .pushNamed(AppRoutes.identifyTrap),
                       ),
                     ),
                   ],

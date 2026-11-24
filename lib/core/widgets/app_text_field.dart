@@ -96,12 +96,16 @@ class _AppTextFieldState extends State<AppTextField> {
             helperStyle: AppText.micro,
             prefixIcon: widget.icon == null
                 ? null
-                : Icon(widget.icon, size: AppIconSize.md, color: AppColors.textSecondary),
+                : Icon(widget.icon,
+                    size: AppIconSize.md, color: AppColors.textSecondary),
             suffixIcon: widget.isPassword
                 ? IconButton(
-                    tooltip: _obscure ? 'Mostrar contraseña' : 'Ocultar contraseña',
+                    tooltip:
+                        _obscure ? 'Mostrar contraseña' : 'Ocultar contraseña',
                     icon: Icon(
-                      _obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                      _obscure
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
                       size: AppIconSize.md,
                       color: AppColors.textSecondary,
                     ),

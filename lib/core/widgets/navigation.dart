@@ -24,7 +24,8 @@ class RoleTab {
 /// Estado de navegación de un rol: pestaña activa + ruta raíz del rol.
 /// Cada rol tiene SU instancia, así nunca se mezclan las opciones entre roles.
 class RoleNav<T extends Enum> {
-  RoleNav({required this.homeRoute, required this.initial}) : tab = ValueNotifier<T>(initial);
+  RoleNav({required this.homeRoute, required this.initial})
+      : tab = ValueNotifier<T>(initial);
 
   final String homeRoute;
   final T initial;
@@ -32,7 +33,8 @@ class RoleNav<T extends Enum> {
 
   /// Cierra las pantallas abiertas encima del menú del rol y cambia de pestaña.
   void goTo(BuildContext context, T target) {
-    Navigator.of(context).popUntil((r) => r.settings.name == homeRoute || r.isFirst);
+    Navigator.of(context)
+        .popUntil((r) => r.settings.name == homeRoute || r.isFirst);
     tab.value = target;
   }
 
@@ -44,7 +46,12 @@ class RoleNav<T extends Enum> {
 ///  * web / tablet: menú lateral con marca y pie (usuario, conexión).
 /// Cada pestaña conserva su estado (IndexedStack).
 class RoleShell<T extends Enum> extends StatelessWidget {
-  const RoleShell({super.key, required this.nav, required this.tabs, this.sideHeader, this.sideFooter});
+  const RoleShell(
+      {super.key,
+      required this.nav,
+      required this.tabs,
+      this.sideHeader,
+      this.sideFooter});
 
   final RoleNav<T> nav;
 
@@ -68,7 +75,8 @@ class RoleShell<T extends Enum> extends StatelessWidget {
         void select(int i) => nav.tab.value = keys[i];
         // IndexedStack conserva el estado de cada pestaña; _TabFade solo
         // anima la aparición de la que se acaba de elegir.
-        final body = _TabFade(index: index, child: IndexedStack(index: index, children: pages));
+        final body = _TabFade(
+            index: index, child: IndexedStack(index: index, children: pages));
 
         // Botón atrás del sistema (Android, gesto, navegador): en cualquier
         // pestaña que no sea la inicial vuelve a Inicio en lugar de cerrar la
@@ -84,14 +92,20 @@ class RoleShell<T extends Enum> extends StatelessWidget {
     );
   }
 
-  Widget _layout(List<AppNavItem> items, int index, void Function(int) select, Widget body) {
+  Widget _layout(List<AppNavItem> items, int index, void Function(int) select,
+      Widget body) {
     return LayoutBuilder(builder: (context, c) {
       if (c.maxWidth >= AppSpacing.wideBreakpoint) {
         return Scaffold(
           backgroundColor: AppColors.surface,
           body: Row(
             children: [
-              AppSideNav(items: items, currentIndex: index, onTap: select, header: sideHeader, footer: sideFooter),
+              AppSideNav(
+                  items: items,
+                  currentIndex: index,
+                  onTap: select,
+                  header: sideHeader,
+                  footer: sideFooter),
               const VerticalDivider(width: 1, color: AppColors.border),
               Expanded(child: body),
             ],
@@ -102,7 +116,8 @@ class RoleShell<T extends Enum> extends StatelessWidget {
         // Gris hoja detrás de las esquinas redondeadas de la barra inferior.
         backgroundColor: AppColors.surface,
         body: body,
-        bottomNavigationBar: AppBottomNav(items: items, currentIndex: index, onTap: select),
+        bottomNavigationBar:
+            AppBottomNav(items: items, currentIndex: index, onTap: select),
       );
     });
   }
@@ -114,7 +129,11 @@ class RoleShell<T extends Enum> extends StatelessWidget {
 /// La pestaña activa lleva una píldora verde que crece detrás del ícono; las
 /// inactivas usan un gris con contraste suficiente para leerse al sol.
 class AppBottomNav extends StatelessWidget {
-  const AppBottomNav({super.key, required this.items, required this.currentIndex, required this.onTap});
+  const AppBottomNav(
+      {super.key,
+      required this.items,
+      required this.currentIndex,
+      required this.onTap});
 
   final List<AppNavItem> items;
   final int currentIndex;
@@ -131,7 +150,8 @@ class AppBottomNav extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.sm, AppSpacing.sm, AppSpacing.sm, 6),
+          padding: const EdgeInsets.fromLTRB(
+              AppSpacing.sm, AppSpacing.sm, AppSpacing.sm, 6),
           child: Row(
             children: [
               for (var i = 0; i < items.length; i++)
@@ -151,7 +171,8 @@ class AppBottomNav extends StatelessWidget {
 }
 
 class _BottomNavButton extends StatelessWidget {
-  const _BottomNavButton({required this.item, required this.active, required this.onTap});
+  const _BottomNavButton(
+      {required this.item, required this.active, required this.onTap});
   final AppNavItem item;
   final bool active;
   final VoidCallback onTap;
@@ -197,7 +218,8 @@ class _BottomNavButton extends StatelessWidget {
                   fontWeight: active ? FontWeight.w800 : FontWeight.w600,
                   color: active ? AppColors.navInk : AppColors.navIdle,
                 ),
-                child: Text(item.label, maxLines: 1, overflow: TextOverflow.ellipsis),
+                child: Text(item.label,
+                    maxLines: 1, overflow: TextOverflow.ellipsis),
               ),
             ],
           ),
@@ -241,7 +263,8 @@ class AppSideNav extends StatelessWidget {
           children: [
             if (header != null)
               Padding(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.xl, AppSpacing.lg, AppSpacing.lg),
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg, AppSpacing.xl, AppSpacing.lg, AppSpacing.lg),
                 child: header,
               ),
             const Padding(
@@ -251,8 +274,12 @@ class AppSideNav extends StatelessWidget {
             const SizedBox(height: AppSpacing.md),
             for (var i = 0; i < items.length; i++)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 3),
-                child: _SideNavButton(item: items[i], active: i == currentIndex, onTap: () => onTap(i)),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md, vertical: 3),
+                child: _SideNavButton(
+                    item: items[i],
+                    active: i == currentIndex,
+                    onTap: () => onTap(i)),
               ),
             const Spacer(),
             if (footer != null)
@@ -273,7 +300,8 @@ class AppSideNav extends StatelessWidget {
 }
 
 class _SideNavButton extends StatelessWidget {
-  const _SideNavButton({required this.item, required this.active, required this.onTap});
+  const _SideNavButton(
+      {required this.item, required this.active, required this.onTap});
   final AppNavItem item;
   final bool active;
   final VoidCallback onTap;
@@ -301,7 +329,8 @@ class _SideNavButton extends StatelessWidget {
             splashColor: const Color(0x1FFFFFFF),
             onTap: onTap,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.sm, AppSpacing.md, AppSpacing.md, AppSpacing.md),
+              padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.sm, AppSpacing.md, AppSpacing.md, AppSpacing.md),
               child: Row(
                 children: [
                   AnimatedContainer(
@@ -317,7 +346,8 @@ class _SideNavButton extends StatelessWidget {
                   Icon(
                     active ? (item.activeIcon ?? item.icon) : item.icon,
                     size: 22,
-                    color: active ? AppColors.navOnInk : AppColors.navOnInkMuted,
+                    color:
+                        active ? AppColors.navOnInk : AppColors.navOnInkMuted,
                   ),
                   const SizedBox(width: AppSpacing.md),
                   Expanded(
@@ -327,7 +357,9 @@ class _SideNavButton extends StatelessWidget {
                       style: AppText.label.copyWith(
                         fontSize: 14,
                         fontWeight: active ? FontWeight.w800 : FontWeight.w600,
-                        color: active ? AppColors.navOnInk : AppColors.navOnInkMuted,
+                        color: active
+                            ? AppColors.navOnInk
+                            : AppColors.navOnInkMuted,
                       ),
                     ),
                   ),
@@ -352,13 +384,14 @@ class _TabFade extends StatefulWidget {
   State<_TabFade> createState() => _TabFadeState();
 }
 
-class _TabFadeState extends State<_TabFade> with SingleTickerProviderStateMixin {
-  late final AnimationController _c =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 180), value: 1);
+class _TabFadeState extends State<_TabFade>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 180), value: 1);
 
   static final _opacidad = CurveTween(curve: Curves.easeOut);
-  static final _subida =
-      Tween(begin: const Offset(0, 0.012), end: Offset.zero).chain(CurveTween(curve: Curves.easeOutCubic));
+  static final _subida = Tween(begin: const Offset(0, 0.012), end: Offset.zero)
+      .chain(CurveTween(curve: Curves.easeOutCubic));
 
   @override
   void didUpdateWidget(covariant _TabFade old) {
@@ -382,10 +415,13 @@ class _TabFadeState extends State<_TabFade> with SingleTickerProviderStateMixin 
   @override
   Widget build(BuildContext context) => FadeTransition(
         opacity: _c.drive(_opacidad),
-        child: SlideTransition(position: _c.drive(_subida), child: widget.child),
+        child:
+            SlideTransition(position: _c.drive(_subida), child: widget.child),
       );
 }
 
 /// Duración de una animación, o cero si el sistema pide reducir el movimiento.
 Duration _motion(BuildContext context, Duration d) =>
-    (MediaQuery.maybeOf(context)?.disableAnimations ?? false) ? Duration.zero : d;
+    (MediaQuery.maybeOf(context)?.disableAnimations ?? false)
+        ? Duration.zero
+        : d;

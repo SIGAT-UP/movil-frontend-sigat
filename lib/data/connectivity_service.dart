@@ -53,7 +53,9 @@ class ConnectivityService {
         online = false;
       }
     }
-    if (AppServices.isOnline.value != online) AppServices.isOnline.value = online;
+    if (AppServices.isOnline.value != online) {
+      AppServices.isOnline.value = online;
+    }
   }
 
   Future<void> dispose() async {

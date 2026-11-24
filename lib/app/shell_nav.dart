@@ -16,30 +16,35 @@ enum AgronomistTab { inicio, trampas, revisiones, historial, perfil }
 class ShellNav {
   ShellNav._();
 
-  static final nav = RoleNav<AppTab>(homeRoute: AppRoutes.home, initial: AppTab.inicio);
+  static final nav =
+      RoleNav<AppTab>(homeRoute: AppRoutes.home, initial: AppTab.inicio);
   static ValueNotifier<AppTab> get tab => nav.tab;
 
   /// Ej.: después de "Guardar lectura" → ShellNav.goTo(context, AppTab.visita).
-  static void goTo(BuildContext context, AppTab target) => nav.goTo(context, target);
+  static void goTo(BuildContext context, AppTab target) =>
+      nav.goTo(context, target);
 }
 
 /// Navegación del productor.
 class ProducerNav {
   ProducerNav._();
 
-  static final nav = RoleNav<ProducerTab>(homeRoute: AppRoutes.producerHome, initial: ProducerTab.inicio);
+  static final nav = RoleNav<ProducerTab>(
+      homeRoute: AppRoutes.producerHome, initial: ProducerTab.inicio);
   static ValueNotifier<ProducerTab> get tab => nav.tab;
 
-  static void goTo(BuildContext context, ProducerTab target) => nav.goTo(context, target);
+  static void goTo(BuildContext context, ProducerTab target) =>
+      nav.goTo(context, target);
 }
 
 /// Navegación del agrónomo.
 class AgronomistNav {
   AgronomistNav._();
 
-  static final nav =
-      RoleNav<AgronomistTab>(homeRoute: AppRoutes.agronomistHome, initial: AgronomistTab.inicio);
+  static final nav = RoleNav<AgronomistTab>(
+      homeRoute: AppRoutes.agronomistHome, initial: AgronomistTab.inicio);
   static ValueNotifier<AgronomistTab> get tab => nav.tab;
 
-  static void goTo(BuildContext context, AgronomistTab target) => nav.goTo(context, target);
+  static void goTo(BuildContext context, AgronomistTab target) =>
+      nav.goTo(context, target);
 }

@@ -17,7 +17,8 @@ import 'dart:typed_data';
 class ImageMetadata {
   ImageMetadata._();
 
-  static Uint8List? strip(Uint8List bytes, String mimeType) => switch (mimeType) {
+  static Uint8List? strip(Uint8List bytes, String mimeType) =>
+      switch (mimeType) {
         'image/jpeg' => _jpeg(bytes),
         'image/png' => _png(bytes),
         'image/webp' => _webp(bytes),
@@ -149,7 +150,8 @@ class ImageMetadata {
     for (var k = 0; k < 8; k++) {
       if (b[k] != _firmaPng[k]) return null;
     }
-    final salida = BytesBuilder(copy: false)..add(Uint8List.sublistView(b, 0, 8));
+    final salida = BytesBuilder(copy: false)
+      ..add(Uint8List.sublistView(b, 0, 8));
     final d = ByteData.sublistView(b);
     var i = 8;
     var vioFin = false;
@@ -173,11 +175,15 @@ class ImageMetadata {
 
   static Uint8List? _webp(Uint8List b) {
     if (b.length < 12) return null;
-    if (String.fromCharCodes(b, 0, 4) != 'RIFF' || String.fromCharCodes(b, 8, 12) != 'WEBP') return null;
+    if (String.fromCharCodes(b, 0, 4) != 'RIFF' ||
+        String.fromCharCodes(b, 8, 12) != 'WEBP') {
+      return null;
+    }
     final d = ByteData.sublistView(b);
     final finRiff = 8 + d.getUint32(4, Endian.little);
     if (finRiff > b.length) return null;
-    final cuerpo = BytesBuilder(copy: false)..add(const [0x57, 0x45, 0x42, 0x50]); // 'WEBP'
+    final cuerpo = BytesBuilder(copy: false)
+      ..add(const [0x57, 0x45, 0x42, 0x50]); // 'WEBP'
     var i = 12;
     while (i + 8 <= finRiff) {
       final tipo = String.fromCharCodes(b, i, i + 4);
@@ -189,7 +195,8 @@ class ImageMetadata {
         // se descarta
       } else if (tipo == 'VP8X' && largo >= 1) {
         final copia = Uint8List.fromList(b.sublist(i, fin));
-        copia[8] = copia[8] & ~0x0C; // apaga las banderas EXIF (0x08) y XMP (0x04)
+        copia[8] =
+            copia[8] & ~0x0C; // apaga las banderas EXIF (0x08) y XMP (0x04)
         cuerpo.add(copia);
       } else {
         cuerpo.add(Uint8List.sublistView(b, i, fin));

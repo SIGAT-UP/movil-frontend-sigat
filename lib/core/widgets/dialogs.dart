@@ -19,9 +19,13 @@ Future<bool> showAppConfirmDialog(
       title: Text(title, style: AppText.h3),
       content: Text(message, style: AppText.body),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(cancelLabel)),
+        TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(cancelLabel)),
         FilledButton(
-          style: FilledButton.styleFrom(backgroundColor: destructive ? AppColors.error : AppColors.primaryDark),
+          style: FilledButton.styleFrom(
+              backgroundColor:
+                  destructive ? AppColors.error : AppColors.primaryDark),
           onPressed: () => Navigator.pop(ctx, true),
           child: Text(confirmLabel),
         ),

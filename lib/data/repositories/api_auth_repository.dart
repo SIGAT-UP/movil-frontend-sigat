@@ -21,7 +21,10 @@ class ApiAuthRepository implements AuthRepository {
   final ApiClient _api;
 
   @override
-  Future<UserSession> login({required String username, required String password, required bool remember}) async {
+  Future<UserSession> login(
+      {required String username,
+      required String password,
+      required bool remember}) async {
     final disp = await _api.store.deviceId;
     final Map<String, dynamic>? r;
     try {
@@ -44,8 +47,11 @@ class ApiAuthRepository implements AuthRepository {
       throw AuthException(_titulo(e), e.detail);
     }
 
-    if (r == null || r['token'] is! String || r['user'] is! Map<String, dynamic>) {
-      throw const AuthException('No pudimos iniciar sesión', 'El servidor no devolvió una sesión válida.');
+    if (r == null ||
+        r['token'] is! String ||
+        r['user'] is! Map<String, dynamic>) {
+      throw const AuthException('No pudimos iniciar sesión',
+          'El servidor no devolvió una sesión válida.');
     }
     final session = UserSession.fromApi(r);
     if (session.role == UserRole.desconocido) {
@@ -55,7 +61,8 @@ class ApiAuthRepository implements AuthRepository {
         'Su cuenta tiene un rol que esta versión de la app no conoce. Actualice la app o contacte al administrador.',
       );
     }
-    await _api.store.saveTokens(access: r['token'] as String, refresh: r['token_refresco'] as String?);
+    await _api.store.saveTokens(
+        access: r['token'] as String, refresh: r['token_refresco'] as String?);
     final dispId = r['disp_id'];
     if (dispId is String) await _api.store.saveDeviceId(dispId);
     await _api.store.saveRememberedUser(remember ? username.trim() : null);
@@ -68,11 +75,15 @@ class ApiAuthRepository implements AuthRepository {
   /// campo y lo que registre queda en el teléfono hasta que haya red.
   @override
   Future<UserSession?> restoreSession() async {
-    if (await _api.store.refreshToken == null && await _api.store.accessToken == null) return null;
+    if (await _api.store.refreshToken == null &&
+        await _api.store.accessToken == null) {
+      return null;
+    }
     try {
       final r = await _api.get('/auth/sesion');
       if (r == null) return null;
-      final session = UserSession.fromApi({'token': await _api.store.accessToken ?? '', 'user': r});
+      final session = UserSession.fromApi(
+          {'token': await _api.store.accessToken ?? '', 'user': r});
       if (session.role == UserRole.desconocido) return null;
       await _api.store.saveSessionUser(jsonEncode(session.toJson()));
       return session;
@@ -81,7 +92,8 @@ class ApiAuthRepository implements AuthRepository {
         final guardada = await _api.store.sessionUser;
         if (guardada == null) return null;
         try {
-          final s = UserSession.fromJson(jsonDecode(guardada) as Map<String, dynamic>);
+          final s = UserSession.fromJson(
+              jsonDecode(guardada) as Map<String, dynamic>);
           return s.role == UserRole.desconocido ? null : s;
         } catch (_) {
           return null;
@@ -96,7 +108,8 @@ class ApiAuthRepository implements AuthRepository {
   @override
   Future<void> requestPasswordReset(String email) async {
     try {
-      await _api.post('/auth/recuperacion', auth: false, body: {'identificador': email.trim()});
+      await _api.post('/auth/recuperacion',
+          auth: false, body: {'identificador': email.trim()});
     } on ApiException catch (e) {
       throw AuthException(_titulo(e), e.detail);
     }
@@ -120,7 +133,10 @@ class ApiAuthRepository implements AuthRepository {
     if (e.isNetwork) return e.title;
     return switch (e.code) {
       'LOGIN_BLOQUEADO' => 'Demasiados intentos',
-      'ROL_SOLO_MOVIL' || 'CUENTA_INCOMPLETA' || 'REQUIERE_RESTABLECER' => 'No se puede ingresar',
+      'ROL_SOLO_MOVIL' ||
+      'CUENTA_INCOMPLETA' ||
+      'REQUIERE_RESTABLECER' =>
+        'No se puede ingresar',
       'USAR_PROVEEDOR_INSTITUCIONAL' => 'Ingreso institucional',
       _ => 'No pudimos iniciar sesión',
     };

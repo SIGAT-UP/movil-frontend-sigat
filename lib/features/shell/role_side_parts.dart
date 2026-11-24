@@ -27,8 +27,12 @@ class RoleSideHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('SIGAT', style: AppText.title.copyWith(color: AppColors.navOnInk, fontSize: 15)),
-                Text('Vigilancia del durazno', style: AppText.caption.copyWith(color: AppColors.navOnInkMuted)),
+                Text('SIGAT',
+                    style: AppText.title
+                        .copyWith(color: AppColors.navOnInk, fontSize: 15)),
+                Text('Vigilancia del durazno',
+                    style: AppText.caption
+                        .copyWith(color: AppColors.navOnInkMuted)),
               ],
             ),
           ),
@@ -64,7 +68,9 @@ class RoleSideFooter extends StatelessWidget {
                   Text(s?.shortName ?? '',
                       style: AppText.label.copyWith(color: AppColors.navOnInk),
                       overflow: TextOverflow.ellipsis),
-                  Text(s?.role.label ?? '', style: AppText.caption.copyWith(color: AppColors.navOnInkMuted)),
+                  Text(s?.role.label ?? '',
+                      style: AppText.caption
+                          .copyWith(color: AppColors.navOnInkMuted)),
                 ],
               ),
             ),

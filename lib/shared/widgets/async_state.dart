@@ -9,7 +9,11 @@ import '../../data/repositories/field_repositories.dart';
 /// * [NotAvailableYet] → la función existe en la app pero el servidor aún no la ofrece (501).
 /// * Otro error → el mensaje del servidor, si lo hay.
 class ErrorState extends StatelessWidget {
-  const ErrorState({super.key, required this.error, this.onRetry, this.what = 'la información'});
+  const ErrorState(
+      {super.key,
+      required this.error,
+      this.onRetry,
+      this.what = 'la información'});
 
   final Object? error;
   final VoidCallback? onRetry;
@@ -28,8 +32,11 @@ class ErrorState extends StatelessWidget {
     return EmptyState(
       icon: icon,
       title: title,
-      message: e is DataException ? e.message : 'Intenta de nuevo en unos minutos.',
-      action: onRetry == null ? null : SecondaryButton(label: 'Reintentar', onPressed: onRetry!),
+      message:
+          e is DataException ? e.message : 'Intenta de nuevo en unos minutos.',
+      action: onRetry == null
+          ? null
+          : SecondaryButton(label: 'Reintentar', onPressed: onRetry!),
     );
   }
 }
@@ -65,9 +72,13 @@ class AsyncBody<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (snapshot.hasError) return ErrorState(error: snapshot.error, onRetry: onRetry, what: what);
+    if (snapshot.hasError) {
+      return ErrorState(error: snapshot.error, onRetry: onRetry, what: what);
+    }
     if (snapshot.connectionState != ConnectionState.done || !snapshot.hasData) {
-      if (snapshot.connectionState == ConnectionState.done && null is T) return builder(snapshot.data as T);
+      if (snapshot.connectionState == ConnectionState.done && null is T) {
+        return builder(snapshot.data as T);
+      }
       return const AppLoader();
     }
     final data = snapshot.data as T;

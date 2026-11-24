@@ -11,7 +11,11 @@ StatusTone lotTone(LotStatus s) => switch (s) {
 
 /// Tarjeta seleccionable de lote (S02 Lotes asignados).
 class LotCard extends StatelessWidget {
-  const LotCard({super.key, required this.lot, required this.selected, required this.onTap});
+  const LotCard(
+      {super.key,
+      required this.lot,
+      required this.selected,
+      required this.onTap});
 
   final Lot lot;
   final bool selected;
@@ -28,8 +32,7 @@ class LotCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(lot.code,
-                  style: AppText.overline),
+              Text(lot.code, style: AppText.overline),
               const SizedBox(width: 8),
               Icon(
                 selected ? Icons.check_circle : Icons.circle,
@@ -40,9 +43,12 @@ class LotCard extends StatelessWidget {
               Text(selected ? 'Seleccionado' : 'Seleccionar',
                   style: AppText.caption.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: selected ? AppColors.primaryDark : AppColors.textSecondary)),
+                      color: selected
+                          ? AppColors.primaryDark
+                          : AppColors.textSecondary)),
               const Spacer(),
-              StatusBadge(lot.status.label, tone: lotTone(lot.status), icon: Icons.schedule),
+              StatusBadge(lot.status.label,
+                  tone: lotTone(lot.status), icon: Icons.schedule),
             ],
           ),
           const SizedBox(height: 10),
@@ -59,7 +65,9 @@ class LotCard extends StatelessWidget {
           ),
           const Divider(height: 20, color: AppColors.border),
           Text(
-            lot.lastInspection == null ? 'Sin inspecciones' : 'Última inspección: ${Fmt.date(lot.lastInspection!)}',
+            lot.lastInspection == null
+                ? 'Sin inspecciones'
+                : 'Última inspección: ${Fmt.date(lot.lastInspection!)}',
             style: AppText.caption,
           ),
         ],

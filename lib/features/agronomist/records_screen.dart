@@ -33,12 +33,15 @@ class _RecordsScreenState extends State<RecordsScreen> {
       body: ListenableBuilder(
         listenable: _ctrl,
         builder: (context, _) {
-          if (_ctrl.loading && _ctrl.pendingRecords.isEmpty) return const AppLoader();
+          if (_ctrl.loading && _ctrl.pendingRecords.isEmpty) {
+            return const AppLoader();
+          }
           if (_ctrl.pendingRecords.isEmpty) {
             return const EmptyState(
               icon: Icons.task_alt,
               title: 'No hay registros pendientes',
-              message: 'Cuando un técnico envíe una visita para revisar, aparecerá aquí.',
+              message:
+                  'Cuando un técnico envíe una visita para revisar, aparecerá aquí.',
             );
           }
           return RefreshIndicator(
@@ -53,8 +56,9 @@ class _RecordsScreenState extends State<RecordsScreen> {
                   for (final r in _ctrl.pendingRecords) ...[
                     _RecordCard(
                       record: r,
-                      onTap: () =>
-                          Navigator.of(context).pushNamed(AppRoutes.agroRecordReview, arguments: r.id),
+                      onTap: () => Navigator.of(context).pushNamed(
+                          AppRoutes.agroRecordReview,
+                          arguments: r.id),
                     ),
                     const SizedBox(height: AppSpacing.md),
                   ],
@@ -87,7 +91,8 @@ class _RecordCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Visita Técnico ${record.technicianName.split(' ').first}', style: AppText.title),
+                Text('Visita Técnico ${record.technicianName.split(' ').first}',
+                    style: AppText.title),
                 const SizedBox(height: 2),
                 Text(
                   '${Fmt.date(record.observedAt)} · ${record.lotsVisited} lotes · ${record.trapsTotal} trampas',
@@ -99,7 +104,9 @@ class _RecordCard extends StatelessWidget {
                   tone: record.status == RecordReviewStatus.aceptado
                       ? StatusTone.success
                       : StatusTone.warning,
-                  icon: record.status == RecordReviewStatus.aceptado ? Icons.check : Icons.schedule,
+                  icon: record.status == RecordReviewStatus.aceptado
+                      ? Icons.check
+                      : Icons.schedule,
                 ),
               ],
             ),

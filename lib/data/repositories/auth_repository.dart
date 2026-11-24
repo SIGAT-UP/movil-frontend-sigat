@@ -12,7 +12,10 @@ class AuthException implements Exception {
 /// Contrato de autenticación. La UI SOLO conoce esta interfaz.
 /// Implementación real: `ApiAuthRepository` (backend `sigat-durazno-api`).
 abstract class AuthRepository {
-  Future<UserSession> login({required String username, required String password, required bool remember});
+  Future<UserSession> login(
+      {required String username,
+      required String password,
+      required bool remember});
 
   Future<void> requestPasswordReset(String email);
 

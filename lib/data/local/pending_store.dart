@@ -7,7 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum PendingKind {
   lectura('lectura_trampa', 'Lectura de trampa'),
   justificacion('lectura_trampa', 'Trampa no leída'),
-  visita('visita', 'Visita'),
+
+  visitaCampo('visita', 'Visita de campo'),
+
+  visita('visita', 'Historial de visita'),
   resultadoLote('planificacion_lote', 'Resultado de actividad'),
   aplicacion('aplicacion_fitosanitaria', 'Aplicación fitosanitaria'),
   cosecha('cosecha', 'Cosecha');
@@ -18,8 +21,8 @@ enum PendingKind {
   final String entity;
   final String label;
 
-  static PendingKind fromName(String v) =>
-      PendingKind.values.firstWhere((k) => k.name == v, orElse: () => PendingKind.lectura);
+  static PendingKind fromName(String v) => PendingKind.values
+      .firstWhere((k) => k.name == v, orElse: () => PendingKind.lectura);
 }
 
 /// Registro capturado en el teléfono y TODAVÍA NO CONFIRMADO por el servidor.
@@ -89,7 +92,9 @@ class PendingRecord {
         payload: Map<String, dynamic>.from(j['payload'] as Map),
         lotId: j['lot_id'] as String?,
         lastError: j['last_error'] as String?,
-        lastAttemptAt: j['last_attempt_at'] == null ? null : DateTime.parse(j['last_attempt_at'] as String),
+        lastAttemptAt: j['last_attempt_at'] == null
+            ? null
+            : DateTime.parse(j['last_attempt_at'] as String),
       );
 }
 
@@ -120,10 +125,14 @@ class SharedPrefsPendingStore implements PendingStore {
     if (texto == null || texto.isEmpty) return [];
     try {
       final lista = jsonDecode(texto) as List;
-      return [for (final x in lista) PendingRecord.fromJson(Map<String, dynamic>.from(x as Map))];
+      return [
+        for (final x in lista)
+          PendingRecord.fromJson(Map<String, dynamic>.from(x as Map))
+      ];
     } catch (_) {
       // Un valor dañado no debe bloquear la app; se conserva tal cual para revisarlo.
-      await prefs.setString('$_clave.danado.${DateTime.now().millisecondsSinceEpoch}', texto);
+      await prefs.setString(
+          '$_clave.danado.${DateTime.now().millisecondsSinceEpoch}', texto);
       await prefs.remove(_clave);
       return [];
     }
@@ -131,7 +140,8 @@ class SharedPrefsPendingStore implements PendingStore {
 
   Future<void> _guardar(List<PendingRecord> lista) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_clave, jsonEncode([for (final r in lista) r.toJson()]));
+    await prefs.setString(
+        _clave, jsonEncode([for (final r in lista) r.toJson()]));
   }
 
   @override
@@ -180,7 +190,8 @@ class InMemoryPendingStore implements PendingStore {
 void _noDeOtroDueno(Iterable<PendingRecord> existentes, PendingRecord nuevo) {
   for (final e in existentes) {
     if (e.ownerId != nuevo.ownerId) {
-      throw StateError('El registro ${nuevo.id} pertenece a otra cuenta y no se reemplaza.');
+      throw StateError(
+          'El registro ${nuevo.id} pertenece a otra cuenta y no se reemplaza.');
     }
   }
 }

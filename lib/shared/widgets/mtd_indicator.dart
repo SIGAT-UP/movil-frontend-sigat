@@ -29,7 +29,8 @@ class MtdIndicator extends StatelessWidget {
 
   static const unit = 'moscas / trampa / día';
 
-  String get _text => value == null ? 'Sin cálculo válido' : Fmt.fixed(value!, 2);
+  String get _text =>
+      value == null ? 'Sin cálculo válido' : Fmt.fixed(value!, 2);
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +38,10 @@ class MtdIndicator extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text('Último MTD: $_text', style: AppText.bodySmStrong, textAlign: TextAlign.right),
-          if (note != null) Text(note!, style: AppText.micro, textAlign: TextAlign.right),
+          Text('Último MTD: $_text',
+              style: AppText.bodySmStrong, textAlign: TextAlign.right),
+          if (note != null)
+            Text(note!, style: AppText.micro, textAlign: TextAlign.right),
         ],
       );
     }
@@ -54,7 +57,8 @@ class MtdIndicator extends StatelessWidget {
             ],
           ),
         ),
-        if (thresholdLabel != null) StatusBadge(thresholdLabel!, tone: thresholdTone, icon: Icons.check),
+        if (thresholdLabel != null)
+          StatusBadge(thresholdLabel!, tone: thresholdTone, icon: Icons.check),
       ],
     );
   }
